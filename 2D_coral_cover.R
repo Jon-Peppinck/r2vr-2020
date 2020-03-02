@@ -24,12 +24,19 @@ outer_radius = inner_radius + 0.02
 # image_path_2d <- paste("./data/2D_images/", image_id_path, ".jpg", sep = "")
 r2vr_pkg <- "https://cdn.jsdelivr.net/gh/milesmcbain/r2vr@master/inst"
 
-img_paths <- paste(r2vr_pkg,
-                   c("/ext/images/reef/100030039.jpg", 
-                     "/ext/images/reef/120261897.jpg", 
-                     "/ext/images/reef/130030287.jpg",
-                     "/ext/images/reef/130050093.jpg"),
-                   sep = "")
+# img_paths <- paste(r2vr_pkg,
+#                    c("/ext/images/reef/100030039.jpg", 
+#                      "/ext/images/reef/120261897.jpg", 
+#                      "/ext/images/reef/130030287.jpg",
+#                      "/ext/images/reef/130050093.jpg"),
+#                    sep = "")
+
+img_paths <- c(
+                    "./2dimages/10003003901.jpg", 
+                     "./2dimages/12026189701.jpg", 
+                     "./2dimages/13003028701.jpg",
+                     "./2dimages/130005009301.jpg"
+)
 
 # Create asset for image
 # image_2d <- a_asset(
@@ -264,6 +271,73 @@ animals <- a_scene(
 #####
 
 start(IPv4_ADDRESS)
+
+# go(image_paths = img_paths, index = 1)
+# go(image_paths = img_paths, index = 2)
+# go(image_paths = img_paths, index = 3)
+# go(image_paths = img_paths, index = 4)
+
+go2 <- function(image_paths, index = NA){
+  
+  white <- "#ffffff"
+  
+  # Current image number
+  if(is.na(index)) { CONTEXT_INDEX <- 1 }
+  if(!is.na(index)){ CONTEXT_INDEX <- index }
+  
+  animal_contexts <- paste("img", seq(1,length(image_paths),1), sep="")
+  
+  # TODO: Refactor as an argument?
+  context_rotations <- list(list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0))
+  
+  if(is.na(index)) {
+    CONTEXT_INDEX <<- ifelse(CONTEXT_INDEX > length(animal_contexts) - 1,
+                             yes = 1,
+                             no = CONTEXT_INDEX + 1)
+  }
+  
+  next_image <- animal_contexts[[CONTEXT_INDEX]]
+  print(next_image)
+  
+  
+    setup_scene <- list(
+      a_update(id = "canvas2d",
+               component = "material",
+               attributes = list(src = paste0("#",next_image))),
+      a_update(id = "canvas2d",
+               component = "src",
+               attributes = paste0("#",next_image)),
+      a_update(id = "canvas2d",
+               component = "rotation",
+               attributes = context_rotations[[CONTEXT_INDEX]]),
+      a_update(id = "canvas2d",
+               component = "class",
+               attributes = img_paths[CONTEXT_INDEX])
+    )
+  
+  for(jj in 1:length(setup_scene)){
+    if(setup_scene[[jj]]$id == "canvas2d"){
+      if(setup_scene[[jj]]$component == "material"){
+        setup_scene[[jj]]$attributes <- list(src = paste0("#",next_image))
+      }
+      if(setup_scene[[jj]]$component == "src"){
+        setup_scene[[jj]]$attributes <- paste0("#",next_image)
+      }
+      if(setup_scene[[jj]]$component == "rotation"){
+        setup_scene[[jj]]$attributes <- context_rotations[[CONTEXT_INDEX]]
+      }
+      if(setup_scene[[jj]]$component == "class"){
+        setup_scene[[jj]]$attributes <- image_paths[CONTEXT_INDEX]
+      }
+    }
+  }
+  
+  # TODO: Consider passing this in as an argument as binary and multiple selections differ
+  animals$send_messages(setup_scene)
+} 
 
 #####
 
