@@ -5,8 +5,12 @@ document.addEventListener("DOMContentLoaded", e => {
   // seperate variables to avoid incrementation errors
   let last_observation_number_for_delete;
   // Get image file and image id
-  const image_id_el = document.getElementById("reef2d");
-  image_file = image_id_el.src.split("/").pop();
+  // const image_id_el = document.getElementById("reef2d");
+  // image_file = image_id_el.src.split("/").pop();
+  // image_id = image_file.split(".")[0];
+
+  const canvas_2d = document.getElementById("canvas2d");
+  image_file = canvas_2d.getAttribute('class').split("/").pop();
   image_id = image_file.split(".")[0];
 
   // Select all markers (invisible circle within ring)
