@@ -80,12 +80,14 @@ AFRAME.registerComponent('r2vr-message-router', {
                 }
                 else if (r2vr_message.class == "add_entity"){
                     var sceneEl = document.querySelector('a-scene');
-                    // var entityEl = document.createElement('a-entity');
+                    var entityEl = document.createElement('a-entity');
+                    entityEl.id = r2vr_message.id
                     // entityEl.setAttribute('do-something-once-loaded', '');
-                    target.setAttribute(r2vr_message.component,
-                        r2vr_message.attributes,
-                        r2vr_message.replaces_component);
-                    sceneEl.appendChild(target);
+                    // target for existing id's ?
+                    // target.setAttribute(r2vr_message.component,
+                    //     r2vr_message.attributes,
+                    //     r2vr_message.replaces_component);
+                    sceneEl.appendChild(entityEl);
 
                 }
                 else{

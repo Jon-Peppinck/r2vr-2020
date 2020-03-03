@@ -87,11 +87,9 @@ a_remove_entity <- function(id){
 }
 
 ##' TODO: describe function
-a_add_entity <- function(id, component, attributes){
+a_add_entity <- function(id){
   add <- list(class = "add_entity",
-                  id = id,
-                  component = component,
-                  attributes = attributes)
+                  id = id)
   class(add) <- c("list", "r2vr_message")
   add
 }
