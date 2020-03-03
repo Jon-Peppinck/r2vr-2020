@@ -104,7 +104,7 @@ initial_list_length <- length(list_of_children_entities)
 epsilon = 0.00001
 delta = 100*epsilon
 
-# Generate markers
+### START GENERATE POINTS ###
 for (i in 1:number_of_points) {
   # Generation of points - distribution => Uniform (random)
   # Note: Canvas: -0.5 < x < 0.5, -0.5 < y < 0.5
@@ -170,7 +170,7 @@ for (i in 1:number_of_points) {
   # Marker ring for annotation via selecting option
   marker_circumference <- a_entity(
     .tag = "ring",
-    class = "marker-circumference",
+    class = paste("marker-circumference", i, sep = ""),
     # = list(marker_inside, menu_coral, menu_not_coral),
     position = c(random_coordinate_x, random_coordinate_y, marker_z),
     color = "#ffffff",
@@ -181,7 +181,8 @@ for (i in 1:number_of_points) {
   # Marker container to nest marker and menu options inside for apt z-indexing
   marker_container <- a_entity(
     .tag = "ring",
-    class = "marker-container",
+    id = paste0("markerContainer", i),
+    class = paste("markerContainer", i, sep = ""),
     .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
     position = c(random_coordinate_x, random_coordinate_y, marker_z),
     color = "#000000",
@@ -194,6 +195,9 @@ for (i in 1:number_of_points) {
   marker_i <- paste("marker", i, sep = "")
   list_of_children_entities[[initial_list_length + i]] <- assign(marker_i, marker_container)
 }
+
+
+### END POINT GENERATION ###
 
 # Add difficulty label
 estimated_cc_label <- a_label(
@@ -272,10 +276,12 @@ animals <- a_scene(
 
 start(IPv4_ADDRESS)
 
-# go(image_paths = img_paths, index = 1)
-# go(image_paths = img_paths, index = 2)
-# go(image_paths = img_paths, index = 3)
-# go(image_paths = img_paths, index = 4)
+# go2(image_paths = img_paths, index = 1)
+# go2(image_paths = img_paths, index = 2)
+# go2(image_paths = img_paths, index = 3)
+# go2(image_paths = img_paths, index = 4)
+# pop2(FALSE)
+# pop2()
 
 go2 <- function(image_paths, index = NA){
   
@@ -338,6 +344,31 @@ go2 <- function(image_paths, index = NA){
   # TODO: Consider passing this in as an argument as binary and multiple selections differ
   animals$send_messages(setup_scene)
 } 
+
+change_message <- function(messages, is_visible){
+  ## Helper function for pop()
+  for(jj in 1:length(messages)){
+    if(messages[[jj]]$component == "visible")
+      messages[[jj]]$attributes <- is_visible
+  }
+  return(messages)
+}
+
+pop2 <- function(visible = TRUE){
+  for (i in 1:number_of_points) {
+      show_messages <- list(
+      a_update(id = paste0("markerContainer", i),
+                component = "visible",
+                attributes = TRUE)
+      )
+
+      visible_message <- change_message(show_messages, visible)
+      animals$send_messages(visible_message)
+  }
+}
+
+
+
 
 #####
 

@@ -78,6 +78,16 @@ AFRAME.registerComponent('r2vr-message-router', {
                 else if (r2vr_message.class == "remove_entity"){
                     target.removeFromParent();
                 }
+                else if (r2vr_message.class == "add_entity"){
+                    var sceneEl = document.querySelector('a-scene');
+                    // var entityEl = document.createElement('a-entity');
+                    // entityEl.setAttribute('do-something-once-loaded', '');
+                    target.setAttribute(r2vr_message.component,
+                        r2vr_message.attributes,
+                        r2vr_message.replaces_component);
+                    sceneEl.appendChild(target);
+
+                }
                 else{
                     throw new Error("r2vr-message-router received a message of unknown class.");
                 }
