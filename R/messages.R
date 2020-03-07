@@ -86,7 +86,16 @@ a_remove_entity <- function(id){
   removal
 }
 
-##' TODO: describe function
+## TODO: Done by hand to test - refactor
+
+##' Add an A-Frame entity from the scene
+##'
+##' Add the entity identified by and 'id' input.
+##'
+##' @title a_add_entity
+##' @param id id of the entity to be added.
+##' @return An object that represents an A-Frame Event.
+##' @export
 a_add_entity <- function(id){
   add <- list(class = "add_entity",
                   id = id)
