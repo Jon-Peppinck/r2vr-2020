@@ -283,7 +283,7 @@ start(IPv4_ADDRESS)
 # pop2(FALSE)
 # pop2()
 
-go2 <- function(image_paths, index = NA){
+go2 <- function(image_paths = img_paths, index = NA){
   
   white <- "#ffffff"
   
@@ -367,6 +367,13 @@ add2 <- function(id){
   )
   
   animals$send_messages(add_entities)
+}
+
+add3 <- function(){
+  add <- list(class = "add_entity",
+              id = "newEntity")
+  class(add) <- c("list", "r2vr_message")
+  add
 }
 
 pop2 <- function(visible = TRUE){
