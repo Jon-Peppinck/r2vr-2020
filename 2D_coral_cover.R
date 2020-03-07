@@ -354,17 +354,19 @@ change_message <- function(messages, is_visible){
   return(messages)
 }
 
-add2 <- function(id, component, attributes){
+add2 <- function(id){
   # add <- list(class = "add_entity",
   #             id = id,
   #             component = component,
   #             attributes = attributes)
   # class(add) <- c("list", "r2vr_message")
   # add
-  a_add_entity(id = "newEntity",
-           component = "visible",
-           attributes = TRUE)
-  animals$send_messages()
+  
+  add_entities <- list(
+                       a_add_entity(id = "newEntity")
+  )
+  
+  animals$send_messages(add_entities)
 }
 
 pop2 <- function(visible = TRUE){
