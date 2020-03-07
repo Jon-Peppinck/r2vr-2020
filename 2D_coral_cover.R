@@ -341,7 +341,6 @@ go2 <- function(image_paths = img_paths, index = NA){
     }
   }
   
-  # TODO: Consider passing this in as an argument as binary and multiple selections differ
   animals$send_messages(setup_scene)
 } 
 

@@ -31,31 +31,28 @@ AFRAME.registerComponent('r2vr-message-router', {
 
     init: function() {
         this.ws = new WebSocket("ws://" + this.data.host + ":" + this.data.port);
-        var sceneEl = this.el.sceneEl;
+        // var sceneEl = this.el.sceneEl;
         var ws = this.ws;
 
-        //notify that the connection was opened.
+        // notify that the connection was opened.
         ws.onopen = function(){
             console.log('r2vr-message-router: Established connection with server session.');
         };
 
-        //setup incoming channel.
+        // setup incoming channel.
         ws.onmessage = function(msg) {
             console.log(msg);
 
-            //parse out message
+            // parse out message
             var payload = JSON.parse(msg.data);
 
-            //Assume payload is a list of events
+            // Assume payload is a list of events
             payload.map((r2vr_message) => {
-                //find target by id
-                var target = sceneEl.querySelector("#" + r2vr_message.id);
-
-                if (target === null){
-                    throw new Error("r2vr-message-router received a message for entity with id '" +
-                                    target + "', but no entity with this id was found.");
+                // find target by id
+                var target = '';
+                if (r2vr_message.id) {
+                    target = sceneEl.querySelector("#" + r2vr_message.id);
                 }
-
                 if (r2vr_message.class == "event"){
                     //emit message
                     target.emit(r2vr_message.message.eventName,
@@ -82,11 +79,6 @@ AFRAME.registerComponent('r2vr-message-router', {
                     var sceneEl = document.querySelector('a-scene');
                     var entityEl = document.createElement('a-entity');
                     entityEl.id = r2vr_message.id
-                    // entityEl.setAttribute('do-something-once-loaded', '');
-                    // target for existing id's ?
-                    // target.setAttribute(r2vr_message.component,
-                    //     r2vr_message.attributes,
-                    //     r2vr_message.replaces_component);
                     sceneEl.appendChild(entityEl);
 
                 }
