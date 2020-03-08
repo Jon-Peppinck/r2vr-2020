@@ -99,7 +99,7 @@ a_remove_entity <- function(id){
 ##' @export
 a_add_entity <- function(tag, id){
   add <- list(class = "add_entity",
-                  .tag = tag,
+                  tag = tag,
                   id = id)
   class(add) <- c("list", "r2vr_message")
   add

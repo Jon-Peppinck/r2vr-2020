@@ -353,7 +353,7 @@ change_message <- function(messages, is_visible){
   return(messages)
 }
 
-add2 <- function(id){
+add2 <- function(tag, id){
   # add <- list(class = "add_entity",
   #             id = id,
   #             component = component,
@@ -362,11 +362,19 @@ add2 <- function(id){
   # add
   
   add_entities <- list(
-                       a_add_entity(id = "newEntity")
+                       a_add_entity(tag = tag, id = id)
   )
   
   animals$send_messages(add_entities)
 }
+
+# a_add_entity <- function(tag, id){
+#   add <- list(class = "add_entity",
+#               .tag = tag,
+#               id = id)
+#   class(add) <- c("list", "r2vr_message")
+#   add
+# }
 
 add3 <- function(){
   add <- list(class = "add_entity",
