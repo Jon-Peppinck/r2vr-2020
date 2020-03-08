@@ -86,19 +86,21 @@ a_remove_entity <- function(id){
   removal
 }
 
-## TODO: Done by hand to test - refactor
+## TODO: Done by hand to test - look into R way (roxygen etc.)
 
 ##' Add an A-Frame entity from the scene
 ##'
-##' Add the entity identified by and 'id' input.
+##' Add the entity identified by a 'tag' and an 'id' input.
 ##'
 ##' @title a_add_entity
-##' @param id id of the entity to be added.
+##' @param tag primitive A-Frame entity.
+##' @param id the id of the new entity to be created
 ##' @return An object that represents an A-Frame Event.
 ##' @export
-a_add_entity <- function(id){
+a_add_entity <- function(tag, id){
   add <- list(class = "add_entity",
-                  id = id)
+                  .tag = tag,
+                  id = id
   class(add) <- c("list", "r2vr_message")
   add
 }
