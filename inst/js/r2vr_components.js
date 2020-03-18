@@ -22,21 +22,21 @@
 //     {...},
 //     ...
 // ]
-AFRAME.registerComponent("r2vr-message-router", {
+AFRAME.registerComponent('r2vr-message-router', {
   schema: {
-    host: { type: "string", default: "localhost" },
-    port: { type: "number", default: 8080 }
+    host: { type: 'string', default: 'localhost' },
+    port: { type: 'number', default: 8080 }
   },
 
   init: function() {
-    this.ws = new WebSocket("ws://" + this.data.host + ":" + this.data.port);
+    this.ws = new WebSocket('ws://' + this.data.host + ':' + this.data.port);
     // var sceneEl = this.el.sceneEl;
     var ws = this.ws;
 
     // notify that the connection was opened.
     ws.onopen = function() {
       console.log(
-        "r2vr-message-router: Established connection with server session."
+        'r2vr-message-router: Established connection with server session.'
       );
     };
 
@@ -50,18 +50,18 @@ AFRAME.registerComponent("r2vr-message-router", {
       // Assume payload is a list of events
       payload.map(r2vr_message => {
         // find target by id
-        var target = "";
+        var target = '';
         if (r2vr_message.id) {
-          target = document.querySelector("#" + r2vr_message.id);
+          target = document.querySelector('#' + r2vr_message.id);
         }
-        if (r2vr_message.class == "event") {
+        if (r2vr_message.class == 'event') {
           //emit message
           target.emit(
             r2vr_message.message.eventName,
             r2vr_message.message.eventDetail,
             r2vr_message.message.bubbles
           );
-        } else if (r2vr_message.class == "update") {
+        } else if (r2vr_message.class == 'update') {
           // core properties should be set at three.js level
           // as advised in: https://github.com/aframevr/aframe/blob/master/docs/introduction/javascript-events-dom-apis.md
           // You would write custom message handler if you need this
@@ -72,41 +72,41 @@ AFRAME.registerComponent("r2vr-message-router", {
             r2vr_message.attributes,
             r2vr_message.replaces_component
           );
-        } else if (r2vr_message.class == "remove_component") {
+        } else if (r2vr_message.class == 'remove_component') {
           target.removeAttribute(r2vr_message.component);
-        } else if (r2vr_message.class == "remove_entity") {
+        } else if (r2vr_message.class == 'remove_entity') {
           target.removeFromParent();
-        } else if (r2vr_message.class == "add_entity") {
+          target.parentNode.removeChild(target);
+        } else if (r2vr_message.class == 'add_entity') {
           console.log(r2vr_message.tag);
-          // TODO: check multiple worded entities i.e. - vs _
           const validEntities = [
-            "box",
-            "camera",
-            "circle",
-            "cone",
-            "cursor",
-            "curvedimage",
-            "cylinder",
-            "dodecahedron",
-            "gltf-model",
-            "icosahedron",
-            "image",
-            "light",
-            "link",
-            "obj-model",
-            "octahedron",
-            "plane",
-            "ring",
-            "sky",
-            "sound",
-            "sphere",
-            "tetrahedron",
-            "text",
-            "torus-knot",
-            "torus",
-            "triangle",
-            "video",
-            "videosphere"
+            'box',
+            'camera',
+            'circle',
+            'cone',
+            'cursor',
+            'curvedimage',
+            'cylinder',
+            'dodecahedron',
+            'gltf-model',
+            'icosahedron',
+            'image',
+            'light',
+            'link',
+            'obj-model',
+            'octahedron',
+            'plane',
+            'ring',
+            'sky',
+            'sound',
+            'sphere',
+            'tetrahedron',
+            'text',
+            'torus-knot',
+            'torus',
+            'triangle',
+            'video',
+            'videosphere'
           ];
           const isValidEntity = validEntities.includes(r2vr_message.tag);
           if (!isValidEntity) {
@@ -114,14 +114,14 @@ AFRAME.registerComponent("r2vr-message-router", {
               `${r2vr_message.tag} is not a primitive A-Frame entity.`
             );
           }
-          var sceneEl = document.querySelector("a-scene");
+          var sceneEl = document.querySelector('a-scene');
           var entityEl = document.createElement(`a-${r2vr_message.tag}`);
           console.log(entityEl);
           entityEl.id = r2vr_message.id;
           sceneEl.appendChild(entityEl);
         } else {
           throw new Error(
-            "r2vr-message-router received a message of unknown class."
+            'r2vr-message-router received a message of unknown class.'
           );
         }
       });
@@ -133,6 +133,6 @@ AFRAME.registerComponent("r2vr-message-router", {
       ws.send(event.detail);
     }
 
-    this.el.addEventListener("r_server_message", handle_r_server_message);
+    this.el.addEventListener('r_server_message', handle_r_server_message);
   }
 });

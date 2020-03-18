@@ -105,96 +105,96 @@ epsilon = 0.00001
 delta = 100*epsilon
 
 ### START GENERATE POINTS ###
-for (i in 1:number_of_points) {
-  # Generation of points - distribution => Uniform (random)
-  # Note: Canvas: -0.5 < x < 0.5, -0.5 < y < 0.5
-  random_coordinate_x <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius)
-  random_coordinate_y <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius) 
-  
-  # Invisible inner circle for client side events based on ID
-  marker_inside <- a_entity(
-    .tag = "circle",
-    id= paste("marker", i, sep = ""),
-    class = "marker",
-    position = c(random_coordinate_x, random_coordinate_y, -1),
-    color = "#ffffff",
-    opacity = 0,
-    radius = outer_radius
-  )
-  # Label for coral             
-  coral_label <- a_label(
-    text = "C",
-    color = "#000000",
-    font = "mozillavr",
-    height = 0.5,
-    width = 2,
-    position = c(-0.15, 0.2, 0)
-  )
-  # Coral menu option
-  menu_coral <- a_entity(
-    .tag = "ring",
-    .children = list(coral_label),
-    id= paste("menuCoral", i, sep = ""),
-    visible = FALSE,
-    class = "menu-item",
-    position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
-    color = "#FF95BC",
-    radius_inner = outer_radius,
-    radius_outer = outer_radius + 0.2,
-    theta_length = 90,
-    theta_start = 90
-  )
-  # Label for not coral   
-  not_coral_label <- a_label(
-    text = "N",
-    color = "#000000",
-    font = "mozillavr",
-    height = 0.5,
-    width = 2,
-    position = c(0.15, 0.2, 0)
-  )
-  # Not coral menu option
-  menu_not_coral <- a_entity(
-    .tag = "ring",
-    .children = list(not_coral_label),
-    id = paste("menuNotCoral", i, sep = ""),
-    visible = FALSE,
-    class = "menu-item",
-    position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
-    color = "#969696",
-    radius_inner = outer_radius,
-    radius_outer = outer_radius + 0.2,
-    theta_length = 90
-  )
-  
-  # Marker ring for annotation via selecting option
-  marker_circumference <- a_entity(
-    .tag = "ring",
-    class = paste("marker-circumference", i, sep = ""),
-    # = list(marker_inside, menu_coral, menu_not_coral),
-    position = c(random_coordinate_x, random_coordinate_y, marker_z),
-    color = "#ffffff",
-    radius_inner = inner_radius,
-    radius_outer = outer_radius
-  )
-  
-  # Marker container to nest marker and menu options inside for apt z-indexing
-  marker_container <- a_entity(
-    .tag = "ring",
-    id = paste0("markerContainer", i),
-    class = paste("markerContainer", i, sep = ""),
-    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
-    position = c(random_coordinate_x, random_coordinate_y, marker_z),
-    color = "#000000",
-    opacity = 0,
-    radius_inner = epsilon,
-    radius_outer = epsilon,
-  )
-  
-  # Add markers to the list of entities to be rendered
-  marker_i <- paste("marker", i, sep = "")
-  list_of_children_entities[[initial_list_length + i]] <- assign(marker_i, marker_container)
-}
+# for (i in 1:number_of_points) {
+#   # Generation of points - distribution => Uniform (random)
+#   # Note: Canvas: -0.5 < x < 0.5, -0.5 < y < 0.5
+#   random_coordinate_x <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius)
+#   random_coordinate_y <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius) 
+#   
+#   # Invisible inner circle for client side events based on ID
+#   marker_inside <- a_entity(
+#     .tag = "circle",
+#     id= paste("marker", i, sep = ""),
+#     class = "marker",
+#     position = c(random_coordinate_x, random_coordinate_y, -1),
+#     color = "#ffffff",
+#     opacity = 0,
+#     radius = outer_radius
+#   )
+#   # Label for coral             
+#   coral_label <- a_label(
+#     text = "C",
+#     color = "#000000",
+#     font = "mozillavr",
+#     height = 0.5,
+#     width = 2,
+#     position = c(-0.15, 0.2, 0)
+#   )
+#   # Coral menu option
+#   menu_coral <- a_entity(
+#     .tag = "ring",
+#     .children = list(coral_label),
+#     id= paste("menuCoral", i, sep = ""),
+#     visible = FALSE,
+#     class = "menu-item",
+#     position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
+#     color = "#FF95BC",
+#     radius_inner = outer_radius,
+#     radius_outer = outer_radius + 0.2,
+#     theta_length = 90,
+#     theta_start = 90
+#   )
+#   # Label for not coral   
+#   not_coral_label <- a_label(
+#     text = "N",
+#     color = "#000000",
+#     font = "mozillavr",
+#     height = 0.5,
+#     width = 2,
+#     position = c(0.15, 0.2, 0)
+#   )
+#   # Not coral menu option
+#   menu_not_coral <- a_entity(
+#     .tag = "ring",
+#     .children = list(not_coral_label),
+#     id = paste("menuNotCoral", i, sep = ""),
+#     visible = FALSE,
+#     class = "menu-item",
+#     position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
+#     color = "#969696",
+#     radius_inner = outer_radius,
+#     radius_outer = outer_radius + 0.2,
+#     theta_length = 90
+#   )
+#   
+#   # Marker ring for annotation via selecting option
+#   marker_circumference <- a_entity(
+#     .tag = "ring",
+#     class = paste("marker-circumference", i, sep = ""),
+#     # = list(marker_inside, menu_coral, menu_not_coral),
+#     position = c(random_coordinate_x, random_coordinate_y, marker_z),
+#     color = "#ffffff",
+#     radius_inner = inner_radius,
+#     radius_outer = outer_radius
+#   )
+#   
+#   # Marker container to nest marker and menu options inside for apt z-indexing
+#   marker_container <- a_entity(
+#     .tag = "ring",
+#     id = paste0("markerContainer", i),
+#     class = paste("markerContainer", i, sep = ""),
+#     .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
+#     position = c(random_coordinate_x, random_coordinate_y, marker_z),
+#     color = "#000000",
+#     opacity = 0,
+#     radius_inner = epsilon,
+#     radius_outer = epsilon,
+#   )
+#   
+#   # Add markers to the list of entities to be rendered
+#   marker_i <- paste("marker", i, sep = "")
+#   list_of_children_entities[[initial_list_length + i]] <- assign(marker_i, marker_container)
+# }
 
 
 ### END POINT GENERATION ###
@@ -269,7 +269,8 @@ animals <- a_scene(
   .children = list_of_children_entities,
   .websocket = TRUE,
   .websocket_host = IPv4_ADDRESS,
-  .template = "empty"
+  .template = "empty",
+  debug = "" # https://aframe.io/docs/master/components/debug.html#sidebar
 )
 
 #####
@@ -353,35 +354,50 @@ change_message <- function(messages, is_visible){
   return(messages)
 }
 
+
 add2 <- function(tag, id){
-  # add <- list(class = "add_entity",
-  #             id = id,
-  #             component = component,
-  #             attributes = attributes)
-  # class(add) <- c("list", "r2vr_message")
-  # add
   
   add_entities <- list(
-                       a_add_entity(tag = tag, id = id)
+                       a_add_entity(tag, id)
   )
   
   animals$send_messages(add_entities)
 }
 
-# a_add_entity <- function(tag, id){
-#   add <- list(class = "add_entity",
-#               .tag = tag,
-#               id = id)
-#   class(add) <- c("list", "r2vr_message")
-#   add
-# }
-
-add3 <- function(){
-  add <- list(class = "add_entity",
-              id = "newEntity")
-  class(add) <- c("list", "r2vr_message")
-  add
+update2 <- function() {
+  
+  context_rotations <- list(list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0))
+  
+  update22 <- list(
+    a_update(id = "newE",
+              component = "position",
+              attributes = context_rotations[[1]])
+    )
+  
+  for(jj in 1:length(update22)){
+    if(update22[[jj]]$id == "newE"){
+      if(update22[[jj]]$component == "position"){
+        update22[[jj]]$attributes <- context_rotations[[1]]
+      }
+    }
+  }
+  
+  animals$send_messages(update22)
 }
+
+
+pop3 <- function(){
+    show_messages <- list(
+      a_update(id = "markerContainer1",
+               component = "position",
+               attributes = list(x = 0, y = 0, z = 0))
+    )
+    animals$send_messages(show_messages)
+}
+
 
 pop2 <- function(visible = TRUE){
   for (i in 1:number_of_points) {
@@ -442,3 +458,167 @@ pop2 <- function(visible = TRUE){
 #   # NOTE: Assumed working directory "C:/r2vr/r2vr/RDevDemos"
 #   source(paste(getwd(), '/data/db_data_to_files.R', sep=""))
 # }
+
+######
+
+points <- function(numberOfPoints){
+  
+  epsilon = 0.00001
+  delta = 100*epsilon
+  
+  for (i in 1:numberOfPoints) {
+    # Generation of points - distribution => Uniform (random)
+    # Note: Canvas: -0.5 < x < 0.5, -0.5 < y < 0.5
+    random_coordinate_x <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius)
+    random_coordinate_y <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius)
+    
+    # Create entities (TODO: consider setting attributes without the need for a_update)
+    add_entities <- list(
+      # a_add_entity("circle", paste0("marker", i)),
+      # a_add_entity(tag, id) # coral label
+      # a_add_entity("ring", paste0("menuCoral", i)),
+      # a_add_entity(tag, id) # not coral label
+      # a_add_entity("ring", paste0("menuNotCoral", i)),
+      # a_add_entity("ring", paste0("marker-circumference", i)),
+      a_add_entity("ring", paste0("markerContainer", i))
+    )
+    animals$send_messages(add_entities)
+    
+    # Update entities with attributes
+   update_entities <- list(
+      a_update(id = paste0("markerContainer", i),
+               component = "position",
+               attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
+               ),
+      a_update(id = paste0("markerContainer", i),
+               component = "color",
+               attributes = "green"
+      ),
+      a_update(id = paste0("markerContainer", i),
+               component = "radius-outer",
+               attributes = 0.05
+      ),
+      a_update(id = paste0("markerContainer", i),
+               component = "radius-inner",
+               attributes = 0.04
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+}
+
+rme <- function(){
+  
+  rm_entities <- list(
+    a_remove_entity("markerContainer1")
+  )
+  
+  animals$send_messages(rm_entities)
+}
+  
+
+######
+
+epsilon = 0.00001
+delta = 100*epsilon
+
+### START GENERATE POINTS ###
+for (i in 1:number_of_points) {
+  # Generation of points - distribution => Uniform (random)
+  # Note: Canvas: -0.5 < x < 0.5, -0.5 < y < 0.5
+  random_coordinate_x <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius)
+  random_coordinate_y <- runif(1, -0.5 + outer_radius, 0.5 - outer_radius) 
+  
+  # Invisible inner circle for client side events based on ID
+  marker_inside <- a_entity(
+    .tag = "circle",
+    id= paste("marker", i, sep = ""),
+    class = "marker",
+    position = c(random_coordinate_x, random_coordinate_y, -1),
+    color = "#ffffff",
+    opacity = 0,
+    radius = outer_radius
+  )
+  # Label for coral             
+  coral_label <- a_label(
+    text = "C",
+    color = "#000000",
+    font = "mozillavr",
+    height = 0.5,
+    width = 2,
+    position = c(-0.15, 0.2, 0)
+  )
+  # Coral menu option
+  menu_coral <- a_entity(
+    .tag = "ring",
+    .children = list(coral_label),
+    id= paste("menuCoral", i, sep = ""),
+    visible = FALSE,
+    class = "menu-item",
+    position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
+    color = "#FF95BC",
+    radius_inner = outer_radius,
+    radius_outer = outer_radius + 0.2,
+    theta_length = 90,
+    theta_start = 90
+  )
+  # Label for not coral   
+  not_coral_label <- a_label(
+    text = "N",
+    color = "#000000",
+    font = "mozillavr",
+    height = 0.5,
+    width = 2,
+    position = c(0.15, 0.2, 0)
+  )
+  # Not coral menu option
+  menu_not_coral <- a_entity(
+    .tag = "ring",
+    .children = list(not_coral_label),
+    id = paste("menuNotCoral", i, sep = ""),
+    visible = FALSE,
+    class = "menu-item",
+    position = c(random_coordinate_x, random_coordinate_y, marker_z + delta),
+    color = "#969696",
+    radius_inner = outer_radius,
+    radius_outer = outer_radius + 0.2,
+    theta_length = 90
+  )
+  
+  # Marker ring for annotation via selecting option
+  marker_circumference <- a_entity(
+    .tag = "ring",
+    class = paste("marker-circumference", i, sep = ""),
+    # = list(marker_inside, menu_coral, menu_not_coral),
+    position = c(random_coordinate_x, random_coordinate_y, marker_z),
+    color = "#ffffff",
+    radius_inner = inner_radius,
+    radius_outer = outer_radius
+  )
+  
+  # Marker container to nest marker and menu options inside for apt z-indexing
+  marker_container <- a_entity(
+    .tag = "ring",
+    id = paste0("markerContainer", i),
+    class = paste("markerContainer", i, sep = ""),
+    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
+    position = c(random_coordinate_x, random_coordinate_y, marker_z),
+    color = "#000000",
+    opacity = 0,
+    radius_inner = epsilon,
+    radius_outer = epsilon
+  )
+  
+  # Add markers to the list of entities to be rendered
+  marker_i <- paste("marker", i, sep = "")
+  list_of_children_entities[[initial_list_length + i]] <- assign(marker_i, marker_container)
+}
+
+
+# go2(image_paths = img_paths, index = 1)
+# go2(image_paths = img_paths, index = 2)
+# go2(image_paths = img_paths, index = 3)
+# go2(image_paths = img_paths, index = 4)
+# points(2)
+# pop2(FALSE)
+# pop2()
