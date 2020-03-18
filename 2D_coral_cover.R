@@ -461,10 +461,31 @@ pop2 <- function(visible = TRUE){
 
 ######
 
-points <- function(numberOfPoints){
+prevNumberOfPoints = NULL
+
+points <- function(numberOfPoints = 3){
+  # If points has been called before, and aren't previously 0...
+  if (!is.null(prevNumberOfPoints) && prevNumberOfPoints != 0) {
+    # ... The previous number of points should be removed from the DOM
+    for (i in 1:prevNumberOfPoints) {
+      
+      rm_entities <- list(
+        a_remove_entity(paste0("markerContainer", i ))
+      )
+      animals$send_messages(rm_entities)
+    }
+    print(paste0('previousNumberOfPoints: ', prevNumberOfPoints ))
+    print(paste0('numberOfPoints: ', numberOfPoints ))
+  }
   
   epsilon = 0.00001
   delta = 100*epsilon
+  
+  # If the number of points is 0, no points need to be added
+  # This return out of functions since points are deleted
+  if (numberOfPoints == 0) {
+    return()
+  }
   
   for (i in 1:numberOfPoints) {
     # Generation of points - distribution => Uniform (random)
@@ -505,6 +526,7 @@ points <- function(numberOfPoints){
     )
     animals$send_messages(update_entities)
   }
+  prevNumberOfPoints <<- numberOfPoints
 }
 
 rme <- function(){
