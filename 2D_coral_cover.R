@@ -461,32 +461,25 @@ pop2 <- function(visible = TRUE){
 
 ######
 
-prevNumberOfPoints = NULL
+pointsCalled = FALSE
 
 points <- function(numberOfPoints = 3){
-  # If points has been called before, and aren't previously 0...
-  if (!is.null(prevNumberOfPoints) && prevNumberOfPoints != 0) {
-    # ... The previous number of points should be removed from the DOM
-    for (i in 1:prevNumberOfPoints) {
-      
-      rm_entities <- list(
-        a_remove_entity(paste0("markerContainer", i ))
-      )
-      animals$send_messages(rm_entities)
-    }
-    print(paste0('previousNumberOfPoints: ', prevNumberOfPoints ))
-    print(paste0('numberOfPoints: ', numberOfPoints ))
+  # If points has been called before, remove points from DOM
+  if (pointsCalled) {
+    remove_entities <- list(
+      a_remove_entity_class("marker-container")
+    )
+    animals$send_messages(remove_entities)
   }
+  
+  if (numberOfPoints == 0) {
+    return()
+  }
+  
+  pointsCalled <<- TRUE
   
   epsilon = 0.00001
   delta = 100*epsilon
-  
-  # If the number of points is 0, no points need to be added
-  # This return out of functions since points are deleted
-  if (numberOfPoints == 0) {
-    prevNumberOfPoints <<- numberOfPoints
-    return()
-  }
   
   for (i in 1:numberOfPoints) {
     # Generation of points - distribution => Uniform (random)
@@ -496,47 +489,30 @@ points <- function(numberOfPoints = 3){
     
     # Create entities (TODO: consider setting attributes without the need for a_update)
     add_entities <- list(
-      # a_add_entity("circle", paste0("marker", i)),
-      # a_add_entity(tag, id) # coral label
-      # a_add_entity("ring", paste0("menuCoral", i)),
-      # a_add_entity(tag, id) # not coral label
-      # a_add_entity("ring", paste0("menuNotCoral", i)),
-      a_add_entity("ring", paste0("markerCircumference", i)),
-      a_add_entity("ring", paste0("markerContainer", i))
+      a_add_entity("ring", paste0("markerContainer", i)),
+      a_add_entity("ring", paste0("markerCircumference", i), paste0("marker-circumference", i), paste0("markerContainer", i))
+      # ,
+      # a_add_entity("circle", paste0("marker", i), "marker", paste0("markerContainer", i))
+      #,
+    #   a_add_entity("ring", paste0("menuCoral", i), "menu-item", paste0("markerContainer", i)),
+    #   a_add_entity("text", "", "", paste0("menuCoral", i)),
+    #   
+    #   a_add_entity("ring", paste0("menuNotCoral", i), "menu-item", paste0("markerContainer", i)),
+    #   a_add_entity("text", "", "", paste0("menuNotCoral", i))
     )
     animals$send_messages(add_entities)
     
-    # list_of_children_entities[[length(list_of_children_entities) + 1]]  <- a_entity(
-    #   .tag = "circle",
-    #   id = "reset",
-    #   .children = list(reset_page_label),
-    #   position = c(-0.9, -1.5, -2),
-    #   color = "red",
-    #   radius = 0.1,
-    #   opacity = 1
-    # )
     
-    # Update entities with attributes
+   #  # Update entities with attributes
    update_entities <- list(
-     # marker_container <- a_entity(
-     #   .tag = "ring",
-     #   id = paste0("markerContainer", i),
-     #   class = paste("markerContainer", i, sep = ""),
-     #   .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
-     #   position = c(random_coordinate_x, random_coordinate_y, marker_z),
-     #   color = "#000000",
-     #   opacity = 0,
-     #   radius_inner = epsilon,
-     #   radius_outer = epsilon
-     # )
-     a_update(id = paste0("markerContainer", i),
-              component = "class",
-              attributes = paste("markerContainer", i, sep = ""),
-     ),
+      a_update(id = paste0("markerContainer", i),
+               component = "class",
+               attributes = paste0("marker-container markerContainer", i),
+      ),
       a_update(id = paste0("markerContainer", i),
                component = "position",
                attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
-               ),
+      ),
       a_update(id = paste0("markerContainer", i),
                component = "color",
                attributes = "#000000"
@@ -548,16 +524,14 @@ points <- function(numberOfPoints = 3){
       a_update(id = paste0("markerContainer", i),
                component = "radius-inner",
                attributes = epsilon
-      ),
-      a_update(id = paste0("markerContainer", i),
-               component = "opacity",
-               attributes = 0
-      ),
-      ###
-     a_update(id = paste0("markerCircumference", i),
-              component = "class",
-              attributes = paste0("marker-circumference", i)
-     ),
+      )
+      ,
+      # a_update(id = paste0("markerContainer", i),
+      #          component = "opacity",
+      #          attributes = 0
+      # ),
+   #    ###
+
      a_update(id = paste0("markerCircumference", i),
               component = "class",
               attributes = paste0("marker-circumference", i)
@@ -572,16 +546,15 @@ points <- function(numberOfPoints = 3){
      ),
      a_update(id = paste0("markerCircumference", i),
               component = "radius-outer",
-              attributes = 0.05
+              attributes = 0.10
      ),
      a_update(id = paste0("markerCircumference", i),
               component = "radius-inner",
-              attributes = 0.04
+              attributes = 0.08
      )
-    )
-    animals$send_messages(update_entities)
+     )
+   animals$send_messages(update_entities)
   }
-  prevNumberOfPoints <<- numberOfPoints
 }
 
 rme <- function(){
@@ -593,27 +566,27 @@ rme <- function(){
   animals$send_messages(rm_entities)
 }
 
-rmec <- function(){
-  
-  rm_entities_class <- list(
-    a_remove_entity_class("classm")
-  )
-  
-  animals$send_messages(rm_entities_class)
-}
+# rmec <- function(){
+#   
+#   rm_entities_class <- list(
+#     a_remove_entity_class("classm")
+#   )
+#   
+#   animals$send_messages(rm_entities_class)
+# }
 
-addec <- function() {
-  
-  add_entities_c <- list(
-    a_add_entity("ring", "m1"),
-    a_add_entity("ring", "m2", "classm"),
-    a_add_entity("ring", "m3", "classm"),
-    a_add_entity("ring", "m4", "classn"),
-    a_add_entity("ring", "m5", "classq")
-  )
-  
-  animals$send_messages(add_entities_c)
-}
+# addec <- function() {
+#   
+#   add_entities_c <- list(
+#     a_add_entity("ring", "m1"),
+#     a_add_entity("ring", "m2", "classm"),
+#     a_add_entity("ring", "m3", "classm"),
+#     a_add_entity("ring", "m4", "classn"),
+#     a_add_entity("ring", "m5", "classm", "canvas2d")
+#   )
+#   
+#   animals$send_messages(add_entities_c)
+# }
   
 
 ######
@@ -631,7 +604,7 @@ for (i in 1:number_of_points) {
   # Invisible inner circle for client side events based on ID
   marker_inside <- a_entity(
     .tag = "circle",
-    id= paste("marker", i, sep = ""),
+    id = paste("marker", i, sep = ""),
     class = "marker",
     position = c(random_coordinate_x, random_coordinate_y, -1),
     color = "#ffffff",
