@@ -608,8 +608,8 @@ addec <- function() {
     a_add_entity("ring", "m1"),
     a_add_entity("ring", "m2", "classm"),
     a_add_entity("ring", "m3", "classm"),
-    a_add_entity("ring", "m3", "classn")
-    #a_add_entity("ring", "m3", "classm", "canvas2d")
+    a_add_entity("ring", "m4", "classn"),
+    a_add_entity("ring", "m5", "classq")
   )
   
   animals$send_messages(add_entities_c)
