@@ -484,6 +484,7 @@ points <- function(numberOfPoints = 3){
   # If the number of points is 0, no points need to be added
   # This return out of functions since points are deleted
   if (numberOfPoints == 0) {
+    prevNumberOfPoints <<- numberOfPoints
     return()
   }
   
@@ -500,29 +501,73 @@ points <- function(numberOfPoints = 3){
       # a_add_entity("ring", paste0("menuCoral", i)),
       # a_add_entity(tag, id) # not coral label
       # a_add_entity("ring", paste0("menuNotCoral", i)),
-      # a_add_entity("ring", paste0("marker-circumference", i)),
+      a_add_entity("ring", paste0("markerCircumference", i)),
       a_add_entity("ring", paste0("markerContainer", i))
     )
     animals$send_messages(add_entities)
     
     # Update entities with attributes
    update_entities <- list(
+     # marker_container <- a_entity(
+     #   .tag = "ring",
+     #   id = paste0("markerContainer", i),
+     #   class = paste("markerContainer", i, sep = ""),
+     #   .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
+     #   position = c(random_coordinate_x, random_coordinate_y, marker_z),
+     #   color = "#000000",
+     #   opacity = 0,
+     #   radius_inner = epsilon,
+     #   radius_outer = epsilon
+     # )
+     a_update(id = paste0("markerContainer", i),
+              component = "class",
+              attributes = paste("markerContainer", i, sep = ""),
+     ),
       a_update(id = paste0("markerContainer", i),
                component = "position",
                attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
                ),
       a_update(id = paste0("markerContainer", i),
                component = "color",
-               attributes = "green"
+               attributes = "#000000"
       ),
       a_update(id = paste0("markerContainer", i),
                component = "radius-outer",
-               attributes = 0.05
+               attributes = epsilon
       ),
       a_update(id = paste0("markerContainer", i),
                component = "radius-inner",
-               attributes = 0.04
-      )
+               attributes = epsilon
+      ),
+      a_update(id = paste0("markerContainer", i),
+               component = "opacity",
+               attributes = 0
+      ),
+      ###
+     a_update(id = paste0("markerCircumference", i),
+              component = "class",
+              attributes = paste0("marker-circumference", i)
+     ),
+     a_update(id = paste0("markerCircumference", i),
+              component = "class",
+              attributes = paste0("marker-circumference", i)
+     ),
+     a_update(id = paste0("markerCircumference", i),
+              component = "color",
+              attributes = "#ffffff"
+     ),
+     a_update(id = paste0("markerCircumference", i),
+              component = "position",
+              attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
+     ),
+     a_update(id = paste0("markerCircumference", i),
+              component = "radius-outer",
+              attributes = 0.05
+     ),
+     a_update(id = paste0("markerCircumference", i),
+              component = "radius-inner",
+              attributes = 0.04
+     )
     )
     animals$send_messages(update_entities)
   }
