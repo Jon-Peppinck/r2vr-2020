@@ -506,6 +506,16 @@ points <- function(numberOfPoints = 3){
     )
     animals$send_messages(add_entities)
     
+    # list_of_children_entities[[length(list_of_children_entities) + 1]]  <- a_entity(
+    #   .tag = "circle",
+    #   id = "reset",
+    #   .children = list(reset_page_label),
+    #   position = c(-0.9, -1.5, -2),
+    #   color = "red",
+    #   radius = 0.1,
+    #   opacity = 1
+    # )
+    
     # Update entities with attributes
    update_entities <- list(
      # marker_container <- a_entity(
@@ -581,6 +591,28 @@ rme <- function(){
   )
   
   animals$send_messages(rm_entities)
+}
+
+rmec <- function(){
+  
+  rm_entities_class <- list(
+    a_remove_entity_class("classm")
+  )
+  
+  animals$send_messages(rm_entities_class)
+}
+
+addec <- function() {
+  
+  add_entities_c <- list(
+    a_add_entity("ring", "m1"),
+    a_add_entity("ring", "m2", "classm"),
+    a_add_entity("ring", "m3", "classm"),
+    a_add_entity("ring", "m3", "classn")
+    #a_add_entity("ring", "m3", "classm", "canvas2d")
+  )
+  
+  animals$send_messages(add_entities_c)
 }
   
 
