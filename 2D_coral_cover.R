@@ -490,15 +490,12 @@ points <- function(numberOfPoints = 3){
     # Create entities (TODO: consider setting attributes without the need for a_update)
     add_entities <- list(
       a_add_entity("ring", paste0("markerContainer", i)),
-      a_add_entity("ring", paste0("markerCircumference", i), paste0("marker-circumference", i), paste0("markerContainer", i))
-      # ,
-      # a_add_entity("circle", paste0("marker", i), "marker", paste0("markerContainer", i))
-      #,
-    #   a_add_entity("ring", paste0("menuCoral", i), "menu-item", paste0("markerContainer", i)),
-    #   a_add_entity("text", "", "", paste0("menuCoral", i)),
-    #   
-    #   a_add_entity("ring", paste0("menuNotCoral", i), "menu-item", paste0("markerContainer", i)),
-    #   a_add_entity("text", "", "", paste0("menuNotCoral", i))
+      a_add_entity("ring", paste0("markerCircumference", i), paste0("marker-circumference", i), paste0("markerContainer", i)),
+      a_add_entity("circle", paste0("marker", i), "marker", paste0("markerContainer", i)),
+      a_add_entity("ring", paste0("menuCoral", i), "menu-item", paste0("markerContainer", i)),
+      a_add_entity("text", paste0("menuCoralLabel", i), "", paste0("menuCoral", i)),
+      a_add_entity("ring", paste0("menuNotCoral", i), "menu-item", paste0("markerContainer", i)),
+      a_add_entity("text", paste0("menuNotCoralLabel", i), "", paste0("menuNotCoral", i))
     )
     animals$send_messages(add_entities)
     
@@ -526,12 +523,10 @@ points <- function(numberOfPoints = 3){
                attributes = epsilon
       )
       ,
-      # a_update(id = paste0("markerContainer", i),
-      #          component = "opacity",
-      #          attributes = 0
-      # ),
-   #    ###
-
+      a_update(id = paste0("markerContainer", i),
+               component = "opacity",
+               attributes = 0
+      ),
      a_update(id = paste0("markerCircumference", i),
               component = "class",
               attributes = paste0("marker-circumference", i)
@@ -551,6 +546,119 @@ points <- function(numberOfPoints = 3){
      a_update(id = paste0("markerCircumference", i),
               component = "radius-inner",
               attributes = 0.08
+     ),
+     ###
+     a_update(id = paste0("marker", i),
+              component = "radius",
+              attributes = 0.10
+     ),
+     a_update(id = paste0("marker", i),
+              component = "position",
+              attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
+     ),
+     a_update(id = paste0("marker", i),
+              component = "opacity",
+              attributes = 0
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "visible",
+              attributes = FALSE
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "position",
+              attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -0.999)
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "color",
+              attributes = "#FF95BC"
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "radius-outer",
+              attributes = 0.24
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "radius-inner",
+              attributes = 0.10
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "theta-length",
+              attributes = 90
+     ),
+     a_update(id = paste0("menuCoral", i),
+              component = "theta-start",
+              attributes = 90
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "height",
+              attributes = 0.5
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "width",
+              attributes = 2
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "value",
+              attributes = "C"
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "font",
+              attributes = "mozillavr"
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "position",
+              attributes = list(x = -0.12, y = 0.18, z = 0)
+     ),
+     a_update(id = paste0("menuCoralLabel", i),
+              component = "color",
+              attributes = "#000000"
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "visible",
+              attributes = FALSE
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "position",
+              attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -0.999)
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "color",
+              attributes = "#969696"
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "radius-outer",
+              attributes = 0.24
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "radius-inner",
+              attributes = 0.10
+     ),
+     a_update(id = paste0("menuNotCoral", i),
+              component = "theta-length",
+              attributes = 90
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "height",
+              attributes = 0.5
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "width",
+              attributes = 2
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "value",
+              attributes = "N"
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "font",
+              attributes = "mozillavr"
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "position",
+              attributes = list(x = 0.08, y = 0.18, z = 0)
+     ),
+     a_update(id = paste0("menuNotCoralLabel", i),
+              component = "color",
+              attributes = "#000000"
      )
      )
    animals$send_messages(update_entities)
