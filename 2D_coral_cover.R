@@ -418,15 +418,15 @@ pop2 <- function(visible = TRUE){
 #####
 
 # # Start the server
-# start <- function(){
-#   # get_db()
-#   classify$serve(host = LOCAL_IP)
-# }
-# 
-# # End the server
-# end <- function(){
-#   a_kill_all_scenes()
-# }
+start <- function(){
+  # get_db()
+  animals$serve(host = IPv4_ADDRESS)
+}
+
+# End the server
+end <- function(){
+  a_kill_all_scenes()
+}
 
 # # Restart the server with file changes
 # restart <- function(){
