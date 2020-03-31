@@ -11,6 +11,10 @@ IPv4_ADDRESS <- find_IP()
 ## Set observer here
 user <- "Jon"
 
+# Set initial number of points to 0
+# TODO: is needed?
+numberOfPoints <- 0
+
 ## Set total number of points here
 ## NOTE: Do not exceed 20
 MAX_NUMBER_OF_POINTS <- 20
@@ -60,7 +64,11 @@ camera_z = 0
 ## Create a canvas for the image to be attached to
 canvas_2d <- a_entity(
   .tag = "plane",
-  .js_sources = list("./inst/js/new_2D_coral_cover.js"), # TODO: change to CDN
+  # TODO: change to CDN
+  .js_sources = list(
+    "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master/inst/js/button_controls.js",
+    "./inst/js/new_2D_coral_cover.js"
+    ),
   .assets = list(image2, image3, image4),
   id = "canvas2d",
   src = image1,
@@ -120,6 +128,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   )
   # Label for coral (C)
   coral_label <- a_label(
+    id = paste0("coralText", i),
     position = c(-0.15, 0.2, 0),
     text = "C",
     color = "#000000",
@@ -143,6 +152,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   )
   # Label for not coral
   not_coral_label <- a_label(
+    id = paste0("notCoralText", i),
     text = "N",
     position = c(0.15, 0.2, 0),
     height = 0.5,
@@ -163,9 +173,37 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     color = "#969696",
     visible = FALSE
   )
+  # Menu container arc
+  menu_container_arc <- a_entity(
+    .tag = "ring",
+    # id= paste0("menuContainer", i), # TODO: check if needed
+    # class = "menu-items-container",
+    position = c(0, 0, marker_z + delta),
+    radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
+    radius_inner = outer_radius + 0.24,
+    theta_length = 180,
+    color = "#00FFFF",
+    opacity = 0.7
+    # visible = FALSE
+  )
+  
+  # TODO
+  menu_container_line <- a_entity(
+    .tag = "ring",
+    position = c(0, 0, marker_z + delta),
+    radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
+    radius_inner = outer_radius + 0.24,
+    theta_length = 180,
+    theta_start = 180,
+    color = "#00FFFF",
+    opacity = 0.7
+    # visible = FALSE
+  )
+  
   # Marker circumference depicts location of the marker to user
   marker_circumference <- a_entity(
     .tag = "ring",
+    id = paste0("markerCircumference", i),
     class = paste0("marker-circumference", i),
     position = c(0, 0, marker_z),
     radius_outer = outer_radius,
@@ -176,7 +214,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   ## Marker container: Encapsulate a marker and its menu options inside a parent container
   marker_container <- a_entity(
     .tag = "ring",
-    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral),
+    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral, menu_container_arc, menu_container_line),
     id = paste0("markerContainer", i),
     class = paste0("marker-container", i),
     position = c(0, 0, marker_z),
@@ -199,51 +237,58 @@ animals <- a_scene(
   .children = list_of_children_entities,
   .websocket = TRUE,
   .websocket_host = IPv4_ADDRESS,
-  .template = "empty"
+  .template = "empty",
+  button_controls = "debug: true;",
+  coral_cover_2d_buttons = "",
+  intersection = "" 
   # ,debug = "" # https://aframe.io/docs/master/components/debug.html#sidebar
 )
 
 ##### FUNCTIONS #####
 
-# # Start the server
+## Start the server
 start <- function(){
-  # get_db()
   animals$serve(host = IPv4_ADDRESS)
 }
 
-# End the server
+## End the server
 end <- function(){
   a_kill_all_scenes()
 }
 
-# Restart the server with file changes
+## Restart the server with file changes
 restart <- function(){
   a_kill_all_scenes()
   source('C:/r2vr2020/r2vr/new_2D_coral_cover.R', echo=TRUE)
   animals$serve(host = IPv4_ADDRESS)
 }
 
-# change_message <- function(messages, is_visible){
-#   ## Helper function for pop()
-#   for(jj in 1:length(messages)){
-#     if(messages[[jj]]$component == "visible")
-#       messages[[jj]]$attributes <- is_visible
-#   }
-#   return(messages)
-# }
 
-# pop2 <- function(visible = TRUE){
-#   for (i in 1:number_of_points) {
-#     show_messages <- list(
-#       a_update(id = paste0("markerContainer", i),
-#                component = "visible",
-#                attributes = TRUE)
-#     )
-#     
-#     visible_message <- change_message(show_messages, visible)
-#     animals$send_messages(visible_message)
-#   }
-# }
+## Helper function for pop2
+change_message <- function(messages, is_visible){
+  ## Helper function for pop()
+  for(jj in 1:length(messages)){
+    if(messages[[jj]]$component == "visible")
+      messages[[jj]]$attributes <- is_visible
+  }
+  return(messages)
+}
+
+# Toggle the visibility of the markers
+pop2 <- function(visible = TRUE){
+  if (numberOfPoints)
+  ## TODO: Refactor numberOfPoints?
+  for (i in 1:numberOfPoints) {
+    show_messages <- list(
+      a_update(id = paste0("markerContainer", i),
+               component = "visible",
+               attributes = TRUE)
+    )
+
+    visible_message <- change_message(show_messages, visible)
+    animals$send_messages(visible_message)
+  }
+}
 
 # 
 # # Connect and retrieve infomation from database
@@ -267,7 +312,10 @@ points <- function(numberOfPoints = 5){
     numberOfPoints <- MAX_NUMBER_OF_POINTS
     warning(paste('The maximum of', MAX_NUMBER_OF_POINTS, 'points has been set.'))
   }
-  ## TODO: check 0
+  
+  # TODO: Refactor global variable?
+  numberOfPoints <<- numberOfPoints
+  
   ## Assign a new position and display the visibility for the number of points
   for (i in 1:numberOfPoints) {
     # TODO: Fixed points: by image id?
@@ -337,66 +385,66 @@ points <- function(numberOfPoints = 5){
 #   animals$send_messages(add_entities_c)
 # }
 
-# go2 <- function(image_paths = img_paths, index = NA){
-#   
-#   white <- "#ffffff"
-#   
-#   # Current image number
-#   if(is.na(index)) { CONTEXT_INDEX <- 1 }
-#   if(!is.na(index)){ CONTEXT_INDEX <- index }
-#   
-#   animal_contexts <- paste("img", seq(1,length(image_paths),1), sep="")
-#   
-#   # TODO: Refactor as an argument?
-#   context_rotations <- list(list(x = 0, y = 0, z = 0),
-#                             list(x = 0, y = 0, z = 0),
-#                             list(x = 0, y = 0, z = 0),
-#                             list(x = 0, y = 0, z = 0))
-#   
-#   if(is.na(index)) {
-#     CONTEXT_INDEX <<- ifelse(CONTEXT_INDEX > length(animal_contexts) - 1,
-#                              yes = 1,
-#                              no = CONTEXT_INDEX + 1)
-#   }
-#   
-#   next_image <- animal_contexts[[CONTEXT_INDEX]]
-#   print(next_image)
-#   
-#   
-#   setup_scene <- list(
-#     a_update(id = "canvas2d",
-#              component = "material",
-#              attributes = list(src = paste0("#",next_image))),
-#     a_update(id = "canvas2d",
-#              component = "src",
-#              attributes = paste0("#",next_image)),
-#     a_update(id = "canvas2d",
-#              component = "rotation",
-#              attributes = context_rotations[[CONTEXT_INDEX]]),
-#     a_update(id = "canvas2d",
-#              component = "class",
-#              attributes = img_paths[CONTEXT_INDEX])
-#   )
-#   
-#   for(jj in 1:length(setup_scene)){
-#     if(setup_scene[[jj]]$id == "canvas2d"){
-#       if(setup_scene[[jj]]$component == "material"){
-#         setup_scene[[jj]]$attributes <- list(src = paste0("#",next_image))
-#       }
-#       if(setup_scene[[jj]]$component == "src"){
-#         setup_scene[[jj]]$attributes <- paste0("#",next_image)
-#       }
-#       if(setup_scene[[jj]]$component == "rotation"){
-#         setup_scene[[jj]]$attributes <- context_rotations[[CONTEXT_INDEX]]
-#       }
-#       if(setup_scene[[jj]]$component == "class"){
-#         setup_scene[[jj]]$attributes <- image_paths[CONTEXT_INDEX]
-#       }
-#     }
-#   }
-#   
-#   animals$send_messages(setup_scene)
-# } 
+go2 <- function(image_paths = img_paths, index = NA){
+
+  white <- "#ffffff"
+
+  # Current image number
+  if(is.na(index)) { CONTEXT_INDEX <- 1 }
+  if(!is.na(index)){ CONTEXT_INDEX <- index }
+
+  animal_contexts <- paste0("img", seq(1,length(image_paths),1))
+
+  # TODO: Refactor as an argument?
+  context_rotations <- list(list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0),
+                            list(x = 0, y = 0, z = 0))
+
+  if(is.na(index)) {
+    CONTEXT_INDEX <<- ifelse(CONTEXT_INDEX > length(animal_contexts) - 1,
+                             yes = 1,
+                             no = CONTEXT_INDEX + 1)
+  }
+
+  next_image <- animal_contexts[[CONTEXT_INDEX]]
+  print(next_image)
+
+
+  setup_scene <- list(
+    a_update(id = "canvas2d",
+             component = "material",
+             attributes = list(src = paste0("#",next_image))),
+    a_update(id = "canvas2d",
+             component = "src",
+             attributes = paste0("#",next_image)),
+    a_update(id = "canvas2d",
+             component = "rotation",
+             attributes = context_rotations[[CONTEXT_INDEX]]),
+    a_update(id = "canvas2d",
+             component = "class",
+             attributes = img_paths[CONTEXT_INDEX])
+  )
+
+  for(jj in 1:length(setup_scene)){
+    if(setup_scene[[jj]]$id == "canvas2d"){
+      if(setup_scene[[jj]]$component == "material"){
+        setup_scene[[jj]]$attributes <- list(src = paste0("#",next_image))
+      }
+      if(setup_scene[[jj]]$component == "src"){
+        setup_scene[[jj]]$attributes <- paste0("#",next_image)
+      }
+      if(setup_scene[[jj]]$component == "rotation"){
+        setup_scene[[jj]]$attributes <- context_rotations[[CONTEXT_INDEX]]
+      }
+      if(setup_scene[[jj]]$component == "class"){
+        setup_scene[[jj]]$attributes <- image_paths[CONTEXT_INDEX]
+      }
+    }
+  }
+
+  animals$send_messages(setup_scene)
+}
 
 ### COMMANDS ###
 
