@@ -176,7 +176,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   # Menu container arc
   menu_container_arc <- a_entity(
     .tag = "ring",
-    # id= paste0("menuContainer", i), # TODO: check if needed
+    id= paste0("menuContainerArc", i), # TODO: check if needed
     # class = "menu-items-container",
     position = c(0, 0, marker_z + delta),
     radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
@@ -190,6 +190,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   # TODO
   menu_container_line <- a_entity(
     .tag = "ring",
+    id= paste0("menuContainerLine", i),
     position = c(0, 0, marker_z + delta),
     radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
     radius_inner = outer_radius + 0.24,
