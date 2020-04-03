@@ -400,15 +400,6 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
   }
 }
 
-# rme <- function(){
-#   
-#   rm_entities <- list(
-#     a_remove_entity("markerContainer1")
-#   )
-#   
-#   animals$send_messages(rm_entities)
-# }
-
 rmBox <- function(){
 
   rm_entities_class <- list(
@@ -523,9 +514,9 @@ go2 <- function(image_paths = img_paths, index = NA){
 # go2(image_paths = img_paths, index = 2)
 # go2(image_paths = img_paths, index = 3)
 # go2(image_paths = img_paths, index = 4)
+# points()
 # pop2(FALSE)
 # pop2()
-# points()
 # points(1)
 # points(fixed=TRUE)
 # addBox()
