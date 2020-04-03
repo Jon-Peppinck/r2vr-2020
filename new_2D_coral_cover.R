@@ -298,61 +298,105 @@ pop2 <- function(visible = TRUE){
 
 ######
 
-points <- function(numberOfPoints = 5){
-  # Check non-integer arguments are not passed
-  if (numberOfPoints != round(numberOfPoints) || numberOfPoints < 0) {
-    stop('Please enter a non-negative integer for the number of points you wish to create.')
-  }
-  # Check that no numeric vectors or other types that don't evaluate to an integer have been passed
-  if (length(numberOfPoints) != 1) {
-    stop('Please enter a single integer for the number of points you wish to create.')
-  }
-  ## Note: Re-assign the number of points to 20 if argument exceeds this limit
-  if (numberOfPoints > MAX_NUMBER_OF_POINTS) {
-    numberOfPoints <- MAX_NUMBER_OF_POINTS
-    warning(paste('The maximum of', MAX_NUMBER_OF_POINTS, 'points has been set.'))
-  }
-  
-  # TODO: Refactor global variable?
-  numberOfPoints <<- numberOfPoints
-  
-  ## Assign a new position and display the visibility for the number of points
-  for (i in 1:numberOfPoints) {
-    # TODO: Fixed points: by image id?
-    # Generation of points - distribution => Uniform (random)
-    # Note: Canvas: -1 < x < 1, -1 < y < 1
-    random_coordinate_x <- runif(1, -1 + outer_radius, 1 - outer_radius)
-    random_coordinate_y <- runif(1, -1 + outer_radius, 1 - outer_radius)
-    # Update the position for the number of points specified
-    update_entities <- list(
-      a_update(
-               id = paste0("markerContainer", i),
-               component = "position",
-               attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
-      ),
-      # Update the specified number of points to be visible
-      a_update(
-               id = paste0("markerContainer", i),
-               component = "visible",
-               attributes = TRUE
+points <- function(numberOfPoints = 5, fixed = FALSE){
+  if (!fixed) {
+    # Check non-integer arguments are not passed
+    if (numberOfPoints != round(numberOfPoints) || numberOfPoints < 0) {
+      stop('Please enter a non-negative integer for the number of points you wish to create.')
+    }
+    # Check that no numeric vectors or other types that don't evaluate to an integer have been passed
+    if (length(numberOfPoints) != 1) {
+      stop('Please enter a single integer for the number of points you wish to create.')
+    }
+    ## Note: Re-assign the number of points to 20 if argument exceeds this limit
+    if (numberOfPoints > MAX_NUMBER_OF_POINTS) {
+      numberOfPoints <- MAX_NUMBER_OF_POINTS
+      warning(paste('The maximum of', MAX_NUMBER_OF_POINTS, 'points has been set.'))
+    }
+    
+    # TODO: Refactor global variable?
+    numberOfPoints <<- numberOfPoints
+    
+    ## Assign a new position and display the visibility for the number of points
+    for (i in 1:numberOfPoints) {
+      # TODO: Fixed points: by image id?
+      # Generation of points - distribution => Uniform (random)
+      # Note: Canvas: -1 < x < 1, -1 < y < 1
+      random_coordinate_x <- runif(1, -1 + outer_radius, 1 - outer_radius)
+      random_coordinate_y <- runif(1, -1 + outer_radius, 1 - outer_radius)
+      # Update the position for the number of points specified
+      update_entities <- list(
+        a_update(
+                 id = paste0("markerContainer", i),
+                 component = "position",
+                 attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
+        ),
+        # Update the specified number of points to be visible
+        a_update(
+                 id = paste0("markerContainer", i),
+                 component = "visible",
+                 attributes = TRUE
+        )
       )
-    )
-    animals$send_messages(update_entities)
-  }
-  
-  startNumberOfRemainingPoints <- numberOfPoints + 1
-  
-  ## Update the remaining points to not be visible
-  for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
-    ## Update the position
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", i),
-        component = "visible",
-        attributes = FALSE
+      animals$send_messages(update_entities)
+    }
+    
+    startNumberOfRemainingPoints <- numberOfPoints + 1
+    
+    ## Update the remaining points to not be visible
+    for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
+      ## Update the position
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "visible",
+          attributes = FALSE
+        )
       )
-    )
-    animals$send_messages(update_entities)
+      animals$send_messages(update_entities)
+    }
+  } else {
+    fixedNumberOfPoints <- 3
+    print('fixed data')
+    init.x <- -1
+    init.y <- 0
+    ## Assign a new position and display the visibility for the number of points
+    for (i in 1:fixedNumberOfPoints ) {
+      # Generation of points
+      # Note: Canvas: -1 < x < 1, -1 < y < 1
+      random_coordinate_x <- init.x + (0.5 * i)
+      random_coordinate_y <- init.y <- 0
+      # Update the position for the number of points specified
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "position",
+          attributes = list(x = random_coordinate_x, y = random_coordinate_y, z = -1)
+        ),
+        # Update the specified number of points to be visible
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "visible",
+          attributes = TRUE
+        )
+      )
+      animals$send_messages(update_entities)
+    }
+    
+    startNumberOfRemainingPoints <- fixedNumberOfPoints  + 1
+    
+    ## Update the remaining points to not be visible
+    for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
+      ## Update the position
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "visible",
+          attributes = FALSE
+        )
+      )
+      animals$send_messages(update_entities)
+    }
   }
 }
 
@@ -365,25 +409,52 @@ points <- function(numberOfPoints = 5){
 #   animals$send_messages(rm_entities)
 # }
 
-# rmec <- function(){
-#   
-#   rm_entities_class <- list(
-#     a_remove_entity_class("classm")
-#   )
-#   
-#   animals$send_messages(rm_entities_class)
-# }
+rmBox <- function(){
 
-# addec <- function() {
-#   
-#   add_entities_c <- list(
-#     a_add_entity("ring", "m1"),
-#     a_add_entity("ring", "m4", "classn"),
-#     a_add_entity("ring", "m5", "classm", "canvas2d")
-#   )
-#   
-#   animals$send_messages(add_entities_c)
-# }
+  rm_entities_class <- list(
+    a_remove_entity_class("boxclass")
+  )
+
+  animals$send_messages(rm_entities_class)
+}
+
+addBox <- function() {
+
+  add_entities_c <- list(
+    # a_add_entity("ring", "m1"),
+    # a_add_entity("ring", "m4", "classn"),
+    a_add_entity("box", "boxid1", "boxclass"),
+    a_add_entity("box", "boxid2", "boxclass")
+  )
+
+  animals$send_messages(add_entities_c)
+
+  update_entities_c <- list(
+    a_update(
+             id = "boxid1",
+             component = "position",
+             attributes = list(x = 1, y = 1, z = -3)
+             ),
+    a_update(
+             id = "boxid1",
+             component = "color",
+             attributes = "#FF0000"
+             ),
+    a_update(
+      id = "boxid2",
+      component = "position",
+      attributes = list(x = 1, y = 0, z = -3)
+    ),
+    a_update(
+      id = "boxid2",
+      component = "color",
+      attributes = "#00FF00"
+    )
+  )
+
+  animals$send_messages(update_entities_c)
+
+}
 
 go2 <- function(image_paths = img_paths, index = NA){
 
@@ -454,3 +525,8 @@ go2 <- function(image_paths = img_paths, index = NA){
 # go2(image_paths = img_paths, index = 4)
 # pop2(FALSE)
 # pop2()
+# points()
+# points(1)
+# points(fixed=TRUE)
+# addBox()
+# rmBox()
