@@ -58,7 +58,7 @@ AFRAME.registerComponent('intersection', {
   }
 });
 
-// TODO:
+// TODO: implement
 // initMarkers = () => {
 //   // Select all markers (invisible circle within container)
 //   const markers = document.querySelectorAll('.marker');
