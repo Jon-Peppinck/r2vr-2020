@@ -173,32 +173,33 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     color = "#969696",
     visible = FALSE
   )
-  # Menu container arc
-  menu_container_arc <- a_entity(
-    .tag = "ring",
-    id= paste0("menuContainerArc", i), # TODO: check if needed
-    # class = "menu-items-container",
-    position = c(0, 0, marker_z + delta),
-    radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
-    radius_inner = outer_radius + 0.24,
-    theta_length = 180,
-    color = "#00FFFF",
-    opacity = 0.7
-    # visible = FALSE
-  )
+  # # Menu container arc
+  # menu_container_arc <- a_entity(
+  #   .tag = "ring",
+  #   id= paste0("menuContainerArc", i), # TODO: check if needed
+  #   # class = "menu-items-container",
+  #   position = c(0, 0, marker_z + delta),
+  #   radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
+  #   radius_inner = outer_radius + 0.24,
+  #   theta_length = 180,
+  #   color = "#00FFFF",
+  #   opacity = 0.7
+  #   # visible = FALSE
+  # )
+  # 
   
-  # TODO
-  menu_container_line <- a_entity(
+  # Note: The upper boundary is covered by the menu options
+  # Used for intersection detection to help close menu if option not closed and a marker is no longer selected
+  menu_circumference_lower_boundary <- a_entity(
     .tag = "ring",
-    id= paste0("menuContainerLine", i),
+    id= paste0("menuCircumferenceBoundary", i),
     position = c(0, 0, marker_z + delta),
-    radius_outer = outer_radius + 0.30, # TODO: consider a-text w/ delta primitive box dimensions
-    radius_inner = outer_radius + 0.24,
+    radius_outer = outer_radius + 0.01, # TODO: check dimensions
+    radius_inner = outer_radius + 0.005,
     theta_length = 180,
     theta_start = 180,
     color = "#00FFFF",
-    opacity = 0.7
-    # visible = FALSE
+    opacity = 0.5
   )
   
   # Marker circumference depicts location of the marker to user
@@ -215,7 +216,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
   ## Marker container: Encapsulate a marker and its menu options inside a parent container
   marker_container <- a_entity(
     .tag = "ring",
-    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral, menu_container_arc, menu_container_line),
+    .children = list(marker_circumference, marker_inside, menu_coral, menu_not_coral, menu_circumference_lower_boundary),
     id = paste0("markerContainer", i),
     class = paste0("marker-container", i),
     position = c(0, 0, marker_z),
@@ -299,6 +300,7 @@ pop2 <- function(visible = TRUE){
 
 ######
 
+# TODO: consider breaking into helper functions
 points <- function(numberOfPoints = 5, fixed = FALSE){
   if (!fixed) {
     # Check non-integer arguments are not passed
@@ -317,6 +319,10 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
     
     # TODO: Refactor global variable?
     numberOfPoints <<- numberOfPoints
+    
+    # Reset the color of the annnotation points
+    # Note: only need to reset up to what the user sees => more efficient
+    resetMarkersUI(numberOfPoints)
     
     ## Assign a new position and display the visibility for the number of points
     for (i in 1:numberOfPoints) {
@@ -340,6 +346,7 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
         )
       )
       animals$send_messages(update_entities)
+      
     }
     
     startNumberOfRemainingPoints <- numberOfPoints + 1
@@ -400,6 +407,25 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
     }
   }
 }
+
+## Helper function for points() to reset annotation marker colors
+resetMarkersUI <- function(numberOfPointsToReset){
+  
+  # TODO: check numberOfPointsToReset !> 20
+  
+  for (i in 1:numberOfPointsToReset) {
+    # Reset marker colors
+    reset_marker_colors <- list(
+      a_update(
+        id = paste0("markerCircumference", i),
+        component = "color",
+        attributes = "#FFFFFF"
+      )
+    )
+    animals$send_messages(reset_marker_colors)
+  }
+  
+} 
 
 rmBox <- function(){
 

@@ -19,7 +19,7 @@ let selectedMarkerId;
 
 // WebVR button handler: 2D coral cover
 AFRAME.registerComponent('coral-cover-2d-buttons', {
-  init: function() {
+  init: function () {
     // Select DOM element with button controls i.e. the scene
     let controlsEl = document.querySelector('[button-controls]');
 
@@ -34,18 +34,19 @@ AFRAME.registerComponent('coral-cover-2d-buttons', {
         els = [];
       }
     });
-  }
+  },
 });
 
 // Handles an intersected annotation point
 AFRAME.registerComponent('intersection', {
-  init: function() {
+  init: function () {
     // Listen for an intersection between the ray-caster and entities
-    this.el.addEventListener('raycaster-intersection', e => {
+    this.el.addEventListener('raycaster-intersection', (e) => {
       if (e) {
         // In the event an intersection occurs => set the array of intersection elements
         els = e.detail.els;
 
+        // TODO: Check comment
         // Expecting: `#markerCircumference${x}` and/or `#marker${x}`
         // TODO: Check for points near each other => make points unable to overlap
         if (els.length > 2) {
@@ -55,7 +56,7 @@ AFRAME.registerComponent('intersection', {
         handleMarkerIntersection();
       }
     });
-  }
+  },
 });
 
 // TODO: implement
@@ -85,11 +86,22 @@ AFRAME.registerComponent('intersection', {
 
 // Determines if the marker is hovered
 handleMarkerIntersection = () => {
+  // Get the marker ID number for the intersected marker
   let markerId = getMarkerId();
+
+  console.log('els[0].id', els[0].id);
+
+  els[0].id.replace(els[0].id, markerId);
+
+  //
+  // var ret = "data-123".replace('data-','');
+  // console.log(ret);   //prints: 123
+
+  console.log(77, 'els: ', els); // rm
   // // Check if intersected element is the marker itself or a menu option
   if (
     els.some(
-      el =>
+      (el) =>
         el.id === `marker${markerId}` ||
         el.id === `markerCircumference${markerId}` ||
         el.id === `menuCoral${markerId}` ||
@@ -125,7 +137,8 @@ isCoralIntersected = () => {
   // If an intersected entity is the coral menu
   if (
     els.some(
-      el => el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
+      (el) =>
+        el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
     )
   ) {
     // TODO: implement HTTP request
@@ -150,7 +163,7 @@ isNotCoralIntersected = () => {
   // If an intersected entity is the not coral menu
   if (
     els.some(
-      el =>
+      (el) =>
         el.id === `menuNotCoral${markerId}` ||
         el.id === `notCoralText${markerId}`
     )
@@ -191,17 +204,16 @@ setImageId = () => {
 
   // The image file is found through its class
   // Note: the class will be updated when the next image is called
-  let image_file = canvas_2d
-    .getAttribute('class')
-    .split('/')
-    .pop();
+  let image_file = canvas_2d.getAttribute('class').split('/').pop();
+
+  // TODO: set image_file and image_id globally
 
   // The image ID can be found by removing the file extension
   let image_id = image_file.split('.')[0];
 };
 
 getMarkerId = () => {
-  // Extract the ID number of the element selected iff coral menu option is intersected
+  // Extract the ID number of the element selected iff menu option is intersected
 
   // els[0].id exists since all entities that relate to being a marker also have a corresponding ID  associated with it
 
