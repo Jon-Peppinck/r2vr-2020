@@ -17,6 +17,21 @@ const NOT_CORAL_COLOR = '#969696';
 // Assign a global variable for the id for the selected marker so it is in scope for the AFRAME registered component
 let selectedMarkerId;
 
+// Assign a global variable for the user
+let user;
+
+// Assign a global variable for the initial image
+let initialImage;
+
+// TODO: consider declaring multiple variables
+let lastObservationNumber;
+
+// Get the user name entered in R once DOM loaded
+document.addEventListener('DOMContentLoaded', () => {
+  user = document.getElementById('user').className;
+  initialImage = getImageFilenameAndId();
+});
+
 // WebVR button handler: 2D coral cover
 AFRAME.registerComponent('coral-cover-2d-buttons', {
   init: function () {
@@ -89,15 +104,10 @@ handleMarkerIntersection = () => {
   // Get the marker ID number for the intersected marker
   let markerId = getMarkerId();
 
-  console.log('els[0].id', els[0].id);
+  console.log('Last intersected element ID', els[0].id); // rm
 
   els[0].id.replace(els[0].id, markerId);
 
-  //
-  // var ret = "data-123".replace('data-','');
-  // console.log(ret);   //prints: 123
-
-  console.log(77, 'els: ', els); // rm
   // // Check if intersected element is the marker itself or a menu option
   if (
     els.some(
@@ -142,6 +152,26 @@ isCoralIntersected = () => {
     )
   ) {
     // TODO: implement HTTP request
+
+    //
+
+    // Save annotation to database: isCoral = 1 (coral)
+    saveData(markerId, 1);
+
+    // get data needed to POST or PUT
+
+    // fetch: GET latest record observation number
+
+    // get markerX and markerY for the point
+    // let markerX = marker.getAttribute('position').x;
+    // let markerY = marker.getAttribute('position').y;
+
+    // image ID
+    // image file
+    // observer
+
+    // is_coral
+
     // Update UI color to indicate coral is selected
     document
       .getElementById(`markerCircumference${markerId}`)
@@ -149,9 +179,6 @@ isCoralIntersected = () => {
 
     // Hide menu options
     displayMenuOptions(markerId);
-
-    // Set the image ID
-    setImageId();
   }
 };
 
@@ -176,9 +203,6 @@ isNotCoralIntersected = () => {
 
     // Hide menu options
     displayMenuOptions(markerId);
-
-    // Set the image ID
-    setImageId();
   }
 };
 
@@ -197,19 +221,25 @@ displayMenuOptions = (id, bool = false) => {
   }
 };
 
-// Set the image ID for the image being annotated
-setImageId = () => {
+// Set the image filename for the image being annotated
+getImageFilenameAndId = () => {
   // Get the canvas that images will be rendered on
-  const canvas_2d = document.getElementById('canvas2d');
+  const canvas2D = document.getElementById('canvas2d');
 
-  // The image file is found through its class
+  // The image filename is found through its class
   // Note: the class will be updated when the next image is called
-  let image_file = canvas_2d.getAttribute('class').split('/').pop();
+  let imageFilename = canvas2D.getAttribute('class').split('/').pop();
 
   // TODO: set image_file and image_id globally
 
   // The image ID can be found by removing the file extension
-  let image_id = image_file.split('.')[0];
+  let imageId = imageFilename.split('.')[0];
+
+  // return both the imageFilename and the image ID
+  return {
+    imageFilename,
+    imageId,
+  };
 };
 
 getMarkerId = () => {
@@ -222,4 +252,137 @@ getMarkerId = () => {
 
   // Parse the string to a number so the corresponding ID can be used
   return +matches[0];
+};
+
+// // //
+// let markerX = marker.getAttribute('position').x;
+// let markerY = marker.getAttribute('position').y;
+//
+saveData = (markerId, coralBinary) => {
+  console.log('saving coral annotation...');
+  console.log('isCoral: ', coralBinary);
+  console.log('markerId: ', markerId);
+
+  let marker = document.getElementById(`markerContainer${markerId}`);
+
+  let markerX = marker.getAttribute('position').x;
+  let markerY = marker.getAttribute('position').y;
+
+  console.log(`X: ${markerX}, Y: ${markerY}`);
+
+  console.log('user: ', user);
+
+  console.log('initimg: ', initialImage);
+
+  // Set the image ID
+  let img = getImageFilenameAndId();
+  let imgFilename = img.imageFilename;
+  let imgId = img.imageId;
+  console.log(imgFilename, imgId);
+
+  setLastObservtionNumber();
+
+  // let previousImg;
+  // let currentImg;
+  // let nextImg;
+
+  // if (initialImage.imageId === imgId) {
+  //   console.log('image same as init');
+  // } else if (previousImg) {
+  //   console.log('image not same as init');
+  //   previousImg
+  // } else {
+  //   console.log('previous image was the initial image');
+  //   previousImg = initialImage.imageId
+  // }
+
+  // let data = {
+  //   image_id: image_id,
+  //   image_file: image_file,
+  //   site: +markerId,
+  //   x: markerX,
+  //   y: markerY,
+  //   observation_number: last_observation_number + 1,
+  //   observer: user,
+  //   is_coral: coralBinary
+  // };
+  // // PUT data: If marker already annotated and coral selected
+  // let dataForMarkerId = {
+  //   image_id: image_id,
+  //   observation_number: last_observation_number + 1,
+  //   site: +markerId
+  // };
+  // // POST data: If not annotated then coral selected
+  // // PUT if marker already annotated else POST
+  // if (isPosted && (coralSelected || notCoralSelected)) {
+  //   console.log('PUT');
+  //   // If annotation exists, get its ID
+  //   fetch('http://localhost:3000/get-marker-id', {
+  //     method: 'POST',
+  //     body: JSON.stringify(dataForMarkerId),
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(res => {
+  //       res.json().then(res => {
+  //         let updateMarker = {
+  //           is_coral: coralBinary,
+  //           id: res[0].id
+  //         };
+  //         // Update annotation with ID so marker is coral
+  //         fetch('http://localhost:3000/update-annotation', {
+  //           method: 'PUT',
+  //           body: JSON.stringify(updateMarker),
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           }
+  //         })
+  //           .then(res => {
+  //             console.log('Updated annotation', res);
+  //           })
+  //           .catch(err => {
+  //             console.log(err);
+  //           });
+  //       });
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // } else {
+  //   isPosted = true;
+  //   console.log('POST');
+  //   fetch('http://localhost:3000/gs', {
+  //     method: 'POST',
+  //     body: JSON.stringify(data),
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(res => {
+  //       console.log('Request complete! response:', res);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // }
+};
+
+setLastObservtionNumber = () => {
+  // GET latest record observation number
+  fetch('http://localhost:8080/annotated-image/last-observation-number', {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  })
+    .then((res) => {
+      res.json().then((res) => {
+        lastObservationNumber = res.observation_number;
+        console.log('last ob number: ', lastObservationNumber);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };

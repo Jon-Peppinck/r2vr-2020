@@ -199,7 +199,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     theta_length = 180,
     theta_start = 180,
     color = "#00FFFF",
-    opacity = 0.5
+    opacity = 0
   )
   
   # Marker circumference depicts location of the marker to user
@@ -224,7 +224,8 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     radius_outer = epsilon,
     color = "#000000",
     opacity = 0,
-    visible = FALSE
+    visible = FALSE,
+    debug = "" # needed for x and y position after an update via web sockets
   )
 
   # Add markers to the list of entities to be rendered
@@ -242,8 +243,8 @@ animals <- a_scene(
   .template = "empty",
   button_controls = "debug: true;",
   coral_cover_2d_buttons = "",
-  intersection = "" 
-  # ,debug = "" # https://aframe.io/docs/master/components/debug.html#sidebar
+  intersection = "" #,
+  # debug = "" # https://aframe.io/docs/master/components/debug.html#sidebar
 )
 
 ##### FUNCTIONS #####
@@ -475,6 +476,8 @@ addBox <- function() {
 }
 
 go2 <- function(image_paths = img_paths, index = NA){
+  # Hide all points when next image called
+  points(0)
 
   white <- "#ffffff"
 
