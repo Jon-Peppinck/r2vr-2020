@@ -210,7 +210,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     position = c(0, 0, marker_z),
     radius_outer = outer_radius,
     radius_inner = inner_radius,
-    color = "#ffffff"
+    marked = FALSE # TODO: check if allowed
   )
 
   ## Marker container: Encapsulate a marker and its menu options inside a parent container

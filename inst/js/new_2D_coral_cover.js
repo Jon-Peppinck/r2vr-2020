@@ -26,10 +26,23 @@ let initialImage;
 // TODO: consider declaring multiple variables
 let lastObservationNumber;
 
+// TODO: comment
+let allImages;
+
+// TODO comment
+let hasLastObservationNumberBeenRetrieved = false;
+
 // Get the user name entered in R once DOM loaded
 document.addEventListener('DOMContentLoaded', () => {
   user = document.getElementById('user').className;
   initialImage = getImageFilenameAndId();
+  // TODO: comment
+  allImages = [
+    {
+      imgId: initialImage.imageId,
+      isAnnotated: false,
+    },
+  ];
 });
 
 // WebVR button handler: 2D coral cover
@@ -182,6 +195,7 @@ isCoralIntersected = () => {
   }
 };
 
+// TODO: potentially not set color until after HTTP request completes
 isNotCoralIntersected = () => {
   // Get the marker id number for the selected marker
 
@@ -255,57 +269,94 @@ getMarkerId = () => {
 };
 
 // // //
-// let markerX = marker.getAttribute('position').x;
-// let markerY = marker.getAttribute('position').y;
-//
-saveData = (markerId, coralBinary) => {
-  console.log('saving coral annotation...');
-  console.log('isCoral: ', coralBinary);
-  console.log('markerId: ', markerId);
 
-  let marker = document.getElementById(`markerContainer${markerId}`);
+// increment observation number if new image
 
-  let markerX = marker.getAttribute('position').x;
-  let markerY = marker.getAttribute('position').y;
-
-  console.log(`X: ${markerX}, Y: ${markerY}`);
-
-  console.log('user: ', user);
-
-  console.log('initimg: ', initialImage);
+// TODO: consider breaking into set data and save data
+saveData = async (markerId, coralBinary) => {
+  if (!hasLastObservationNumberBeenRetrieved) {
+    lastObservationNumber = await setLastObservtionNumber();
+    hasLastObservationNumberBeenRetrieved = true;
+  }
 
   // Set the image ID
   let img = getImageFilenameAndId();
   let imgFilename = img.imageFilename;
   let imgId = img.imageId;
-  console.log(imgFilename, imgId);
 
-  setLastObservtionNumber();
+  let lastAnnotatedImage = allImages[allImages.length - 1];
+  console.log('last annotated image: ', lastAnnotatedImage); // rm
+  let lastImage = lastAnnotatedImage.imgId;
+  let isLastImageAnnotated = lastAnnotatedImage.isAnnotated;
 
-  // let previousImg;
-  // let currentImg;
-  // let nextImg;
+  if (lastImage !== imgId) {
+    // the last image has thus been annotated
+    allImages[allImages.length - 1].isAnnotated = true;
 
-  // if (initialImage.imageId === imgId) {
-  //   console.log('image same as init');
-  // } else if (previousImg) {
-  //   console.log('image not same as init');
-  //   previousImg
-  // } else {
-  //   console.log('previous image was the initial image');
-  //   previousImg = initialImage.imageId
-  // }
+    // increment the last observation number
+    lastObservationNumber++;
 
-  // let data = {
-  //   image_id: image_id,
-  //   image_file: image_file,
-  //   site: +markerId,
-  //   x: markerX,
-  //   y: markerY,
-  //   observation_number: last_observation_number + 1,
-  //   observer: user,
-  //   is_coral: coralBinary
-  // };
+    // if the annotated image is not the same as new image
+    // add it to the array => this image is not yet annotated
+    allImages.push({
+      imgId: imgId,
+      isAnnotated: false,
+    });
+    console.log('allImages: ', allImages);
+  }
+
+  let marker = document.getElementById(`markerCircumference${markerId}`);
+
+  let markerX = marker.getAttribute('position').x;
+  let markerY = marker.getAttribute('position').y;
+
+  console.log(
+    marker.getAttribute('marked'),
+    typeof marker.getAttribute('marked')
+  );
+
+  let data;
+
+  if (marker.getAttribute('marked') === 'false') {
+    // TODO: POST
+    console.log('not marked');
+    marker.setAttribute('marked', true);
+    // set data
+    data = {
+      image_id: imgId,
+      image_file: imgFilename,
+      site: +markerId,
+      x: markerX,
+      y: markerY,
+      observation_number: lastObservationNumber + 1, // TODO CHECK
+      observer: user,
+      is_coral: coralBinary,
+    };
+    console.log('data: ', data);
+  } else {
+    // TODO PUT
+    console.log('is marked');
+    // set data
+    dataForMarkerId = {
+      image_id: imgId,
+      observation_number: lastObservationNumber + 1,
+      site: +markerId,
+    };
+    console.log('data: ', data);
+  }
+
+  // DATA
+  // console.log('saving coral annotation...');
+  // console.log('isCoral: ', coralBinary);
+  // console.log('markerId: ', markerId);
+  // let marker = document.getElementById(`markerContainer${markerId}`);
+  // let markerX = marker.getAttribute('position').x;
+  // let markerY = marker.getAttribute('position').y;
+  // console.log(`X: ${markerX}, Y: ${markerY}`);
+  // console.log('user: ', user);
+  // console.log('initimg: ', initialImage);
+  // END DATA
+
   // // PUT data: If marker already annotated and coral selected
   // let dataForMarkerId = {
   //   image_id: image_id,
