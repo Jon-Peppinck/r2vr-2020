@@ -273,17 +273,14 @@ saveData = (markerId, coralBinary) => {
 
   let data;
 
-  // TODO: implement HTTP request
-
   if (marker.getAttribute('marked') === 'false') {
     let markerX = marker.getAttribute('position').x;
     let markerY = marker.getAttribute('position').y;
     console.log(markerX, markerY);
 
-    // TODO: POST
     console.log('not marked');
     marker.setAttribute('marked', true);
-    // If annotation not marked, POST data
+
     // set data
     data = {
       image_id: imgId,
@@ -296,77 +293,24 @@ saveData = (markerId, coralBinary) => {
       is_coral: coralBinary,
     };
     console.log('data: ', data);
+
+    postAnnotation(data);
   } else {
-    // TODO PUT
     console.log('is marked');
     // If annotation exists (is-marked) new url and data for PUT end point
     // set data
-    // TODO: only call points() if new image call
-    // TODO: if color === white, do something...
+
     data = {
       image_id: imgId,
       observation_number: lastObservationNumber + 1,
       site: +markerId,
     };
     console.log('data: ', data);
+    updateAnnotation(data, coralBinary); // TODO: look into incl. in data
   }
-
-  // // POST data: If not annotated then coral selected
-  // // PUT if marker already annotated else POST
-  // if (isPosted && (coralSelected || notCoralSelected)) {
-  //   console.log('PUT');
-  //   // If annotation exists, get its ID
-  //   fetch('http://localhost:3000/get-marker-id', {
-  //     method: 'POST',
-  //     body: JSON.stringify(dataForMarkerId),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(res => {
-  //       res.json().then(res => {
-  //         let updateMarker = {
-  //           is_coral: coralBinary,
-  //           id: res[0].id
-  //         };
-  //         // Update annotation with ID so marker is coral
-  //         fetch('http://localhost:3000/update-annotation', {
-  //           method: 'PUT',
-  //           body: JSON.stringify(updateMarker),
-  //           headers: {
-  //             'Content-Type': 'application/json'
-  //           }
-  //         })
-  //           .then(res => {
-  //             console.log('Updated annotation', res);
-  //           })
-  //           .catch(err => {
-  //             console.log(err);
-  //           });
-  //       });
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // } else {
-  //   isPosted = true;
-  //   console.log('POST');
-  //   fetch('http://localhost:3000/gs', {
-  //     method: 'POST',
-  //     body: JSON.stringify(data),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(res => {
-  //       console.log('Request complete! response:', res);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // }
 };
 
+// TODO: consider refactoring to async await
 setLastObservationNumber = () => {
   // GET latest record observation number
   fetch('http://localhost:8080/annotated-image/last-observation-number', {
@@ -378,14 +322,84 @@ setLastObservationNumber = () => {
     .then((res) => {
       res.json().then((res) => {
         lastObservationNumber = res.observation_number;
-        console.log(
-          'last ob number: ',
-          lastObservationNumber,
-          typeof lastObservationNumber
-        );
       });
     })
     .catch((err) => {
       console.log(err);
     });
+};
+
+postAnnotation = async (data) => {
+  try {
+    const response = await fetch(
+      'http://localhost:8080/annotated-image/post-response',
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log('Request complete! response:', response);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+updateAnnotation = async (data, coralBinary) => {
+  let annotatedMarker = document.getElementById(
+    `markerCircumference${data.site}`
+  );
+
+  if (
+    annotatedMarker.getAttribute('color') === CORAL_COLOR &&
+    coralBinary === 1
+  ) {
+    console.log('Coral is already selected!');
+    return;
+  }
+  if (
+    annotatedMarker.getAttribute('color') === NOT_CORAL_COLOR &&
+    coralBinary === 0
+  ) {
+    console.log('Not coral is already selected!');
+    return;
+  }
+
+  // TODO: prevent resubmitting if already selected
+  // i.e. if coral selected and hover coral again, don't allow HTTP req
+  try {
+    let markerId = await fetch(
+      'http://localhost:8080/annotated-image/find-marker-id',
+      {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    markerId = await markerId.json();
+    markerId = markerId.id;
+
+    data = {
+      is_coral: coralBinary,
+      id: markerId,
+    };
+
+    let updatedResponse = await fetch(
+      'http://localhost:8080/annotated-image/update-response',
+      {
+        method: 'PUT',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log('updatedResponse:', updatedResponse);
+  } catch (err) {
+    console.log(err);
+  }
 };
