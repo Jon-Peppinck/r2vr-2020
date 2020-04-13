@@ -344,6 +344,11 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
                  id = paste0("markerContainer", i),
                  component = "visible",
                  attributes = TRUE
+        ),
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "marked",
+          attributes = FALSE
         )
       )
       animals$send_messages(update_entities)
