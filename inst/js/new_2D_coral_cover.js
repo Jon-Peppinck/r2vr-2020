@@ -147,8 +147,6 @@ isCoralIntersected = () => {
         el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
     )
   ) {
-    // TODO: implement HTTP request
-
     // Save annotation to database: isCoral = 1 (coral)
     saveData(markerId, 1);
 
@@ -176,8 +174,6 @@ isNotCoralIntersected = () => {
         el.id === `notCoralText${markerId}`
     )
   ) {
-    // TODO: implement HTTP request
-
     // Save annotation to database: isNotCoral = 0 (not coral)
     saveData(markerId, 0);
 
@@ -276,6 +272,8 @@ saveData = (markerId, coralBinary) => {
   let marker = document.getElementById(`markerContainer${markerId}`);
 
   let data;
+
+  // TODO: implement HTTP request
 
   if (marker.getAttribute('marked') === 'false') {
     let markerX = marker.getAttribute('position').x;
