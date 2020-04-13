@@ -34,6 +34,9 @@ let hasLastObservationNumberBeenRetrieved = false;
 
 // Get the user name entered in R once DOM loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Retrieve the last recorded observation number
+  setLastObservationNumber();
+
   user = document.getElementById('user').className;
   initialImage = getImageFilenameAndId();
   // TODO: comment
@@ -87,33 +90,13 @@ AFRAME.registerComponent('intersection', {
   },
 });
 
-// TODO: implement
-// initMarkers = () => {
-//   // Select all markers (invisible circle within container)
-//   const markers = document.querySelectorAll('.marker');
-
-//   // Init every marker with its own event listeners
-//   markers.forEach(marker => {
-//     // Check if posted i.e. marker already annotated
-//     let isPosted = false;
-
-//     // TODO:
-//     let markerX = marker.getAttribute('position').x;
-//     let markerY = marker.getAttribute('position').y;
-
-//     // Get ID number of marker i.e. marker1 => 1 (removes 'marker')
-//     const markerId = marker.id.replace('marker', '');
-
-//     // Select menu options based on the marker ID (to toggle visibility)
-//     const markerMenuCoral = document.querySelector(`#menuCoral${markerId}`);
-//     const markerMenuNotCoral = document.querySelector(
-//       `#menuNotCoral${markerId}`
-//     );
-//   });
-// };
-
 // Determines if the marker is hovered
 handleMarkerIntersection = () => {
+  // Prevents annotation points being marked if missing data
+  if (!lastObservationNumber) {
+    return;
+  }
+
   // Get the marker ID number for the intersected marker
   let markerId = getMarkerId();
 
@@ -166,24 +149,8 @@ isCoralIntersected = () => {
   ) {
     // TODO: implement HTTP request
 
-    //
-
     // Save annotation to database: isCoral = 1 (coral)
     saveData(markerId, 1);
-
-    // get data needed to POST or PUT
-
-    // fetch: GET latest record observation number
-
-    // get markerX and markerY for the point
-    // let markerX = marker.getAttribute('position').x;
-    // let markerY = marker.getAttribute('position').y;
-
-    // image ID
-    // image file
-    // observer
-
-    // is_coral
 
     // Update UI color to indicate coral is selected
     document
@@ -210,6 +177,10 @@ isNotCoralIntersected = () => {
     )
   ) {
     // TODO: implement HTTP request
+
+    // Save annotation to database: isNotCoral = 0 (not coral)
+    saveData(markerId, 0);
+
     // Update UI color to indicate not coral is selected
     document
       .getElementById(`markerCircumference${markerId}`)
@@ -244,12 +215,13 @@ getImageFilenameAndId = () => {
   // Note: the class will be updated when the next image is called
   let imageFilename = canvas2D.getAttribute('class').split('/').pop();
 
-  // TODO: set image_file and image_id globally
+  // TODO?: set image_file and image_id globally
 
   // The image ID can be found by removing the file extension
   let imageId = imageFilename.split('.')[0];
 
   // return both the imageFilename and the image ID
+  // Note: same as { imageFilename: imageFilename, ... }
   return {
     imageFilename,
     imageId,
@@ -273,12 +245,7 @@ getMarkerId = () => {
 // increment observation number if new image
 
 // TODO: consider breaking into set data and save data
-saveData = async (markerId, coralBinary) => {
-  if (!hasLastObservationNumberBeenRetrieved) {
-    lastObservationNumber = await setLastObservtionNumber();
-    hasLastObservationNumberBeenRetrieved = true;
-  }
-
+saveData = (markerId, coralBinary) => {
   // Set the image ID
   let img = getImageFilenameAndId();
   let imgFilename = img.imageFilename;
@@ -287,7 +254,8 @@ saveData = async (markerId, coralBinary) => {
   let lastAnnotatedImage = allImages[allImages.length - 1];
   console.log('last annotated image: ', lastAnnotatedImage); // rm
   let lastImage = lastAnnotatedImage.imgId;
-  let isLastImageAnnotated = lastAnnotatedImage.isAnnotated;
+
+  // let isLastImageAnnotated = lastAnnotatedImage.isAnnotated; // TODO
 
   if (lastImage !== imgId) {
     // the last image has thus been annotated
@@ -305,22 +273,19 @@ saveData = async (markerId, coralBinary) => {
     console.log('allImages: ', allImages);
   }
 
-  let marker = document.getElementById(`markerCircumference${markerId}`);
-
-  let markerX = marker.getAttribute('position').x;
-  let markerY = marker.getAttribute('position').y;
-
-  console.log(
-    marker.getAttribute('marked'),
-    typeof marker.getAttribute('marked')
-  );
+  let marker = document.getElementById(`markerContainer${markerId}`);
 
   let data;
 
   if (marker.getAttribute('marked') === 'false') {
+    let markerX = marker.getAttribute('position').x;
+    let markerY = marker.getAttribute('position').y;
+    console.log(markerX, markerY);
+
     // TODO: POST
     console.log('not marked');
     marker.setAttribute('marked', true);
+    // If annotation not marked, POST data
     // set data
     data = {
       image_id: imgId,
@@ -336,8 +301,11 @@ saveData = async (markerId, coralBinary) => {
   } else {
     // TODO PUT
     console.log('is marked');
+    // If annotation exists (is-marked) new url and data for PUT end point
     // set data
-    dataForMarkerId = {
+    // TODO: only call points() if new image call
+    // TODO: if color === white, do something...
+    data = {
       image_id: imgId,
       observation_number: lastObservationNumber + 1,
       site: +markerId,
@@ -345,24 +313,6 @@ saveData = async (markerId, coralBinary) => {
     console.log('data: ', data);
   }
 
-  // DATA
-  // console.log('saving coral annotation...');
-  // console.log('isCoral: ', coralBinary);
-  // console.log('markerId: ', markerId);
-  // let marker = document.getElementById(`markerContainer${markerId}`);
-  // let markerX = marker.getAttribute('position').x;
-  // let markerY = marker.getAttribute('position').y;
-  // console.log(`X: ${markerX}, Y: ${markerY}`);
-  // console.log('user: ', user);
-  // console.log('initimg: ', initialImage);
-  // END DATA
-
-  // // PUT data: If marker already annotated and coral selected
-  // let dataForMarkerId = {
-  //   image_id: image_id,
-  //   observation_number: last_observation_number + 1,
-  //   site: +markerId
-  // };
   // // POST data: If not annotated then coral selected
   // // PUT if marker already annotated else POST
   // if (isPosted && (coralSelected || notCoralSelected)) {
@@ -419,7 +369,7 @@ saveData = async (markerId, coralBinary) => {
   // }
 };
 
-setLastObservtionNumber = () => {
+setLastObservationNumber = () => {
   // GET latest record observation number
   fetch('http://localhost:8080/annotated-image/last-observation-number', {
     method: 'GET',
@@ -430,7 +380,11 @@ setLastObservtionNumber = () => {
     .then((res) => {
       res.json().then((res) => {
         lastObservationNumber = res.observation_number;
-        console.log('last ob number: ', lastObservationNumber);
+        console.log(
+          'last ob number: ',
+          lastObservationNumber,
+          typeof lastObservationNumber
+        );
       });
     })
     .catch((err) => {

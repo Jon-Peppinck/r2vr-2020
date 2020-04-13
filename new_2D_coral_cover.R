@@ -209,8 +209,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     class = paste0("marker-circumference", i),
     position = c(0, 0, marker_z),
     radius_outer = outer_radius,
-    radius_inner = inner_radius,
-    marked = FALSE # TODO: check if allowed
+    radius_inner = inner_radius
   )
 
   ## Marker container: Encapsulate a marker and its menu options inside a parent container
@@ -225,6 +224,7 @@ for (i in 1:MAX_NUMBER_OF_POINTS) {
     color = "#000000",
     opacity = 0,
     visible = FALSE,
+    marked = FALSE, # TODO: check if allowed
     debug = "" # needed for x and y position after an update via web sockets
   )
 
