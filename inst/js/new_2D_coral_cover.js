@@ -151,9 +151,9 @@ isCoralIntersected = () => {
     saveData(markerId, 1);
 
     // Update UI color to indicate coral is selected
-    document
-      .getElementById(`markerCircumference${markerId}`)
-      .setAttribute('color', CORAL_COLOR);
+    // document
+    //   .getElementById(`markerCircumference${markerId}`)
+    //   .setAttribute('color', CORAL_COLOR);
 
     // Hide menu options
     displayMenuOptions(markerId);
@@ -178,9 +178,9 @@ isNotCoralIntersected = () => {
     saveData(markerId, 0);
 
     // Update UI color to indicate not coral is selected
-    document
-      .getElementById(`markerCircumference${markerId}`)
-      .setAttribute('color', NOT_CORAL_COLOR);
+    // document
+    //   .getElementById(`markerCircumference${markerId}`)
+    //   .setAttribute('color', NOT_CORAL_COLOR);
 
     // Hide menu options
     displayMenuOptions(markerId);
@@ -347,6 +347,9 @@ postAnnotation = async (data) => {
     if (![200, 201].includes(response.status)) {
       throw new Error('Unable to post annotation!');
     }
+
+    setMarkerColor(data.site, data.is_coral);
+
     console.log('Request complete! response:', response, response.status);
   } catch (err) {
     throw new Error(`${err} - Unable to post annotation!`);
@@ -392,7 +395,7 @@ updateAnnotation = async (data, coralBinary) => {
     markerId = await markerId.json();
     markerId = markerId.id;
 
-    data = {
+    updateData = {
       is_coral: coralBinary,
       id: markerId,
     };
@@ -401,7 +404,7 @@ updateAnnotation = async (data, coralBinary) => {
       'http://localhost:8080/annotated-image/update-response',
       {
         method: 'PUT',
-        body: JSON.stringify(data),
+        body: JSON.stringify(updateData),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -410,8 +413,20 @@ updateAnnotation = async (data, coralBinary) => {
     if (![200].includes(updatedResponse.status)) {
       throw new Error('Unable to update annotation!');
     }
+    setMarkerColor(data.site, updateData.is_coral);
     console.log('updatedResponse:', updatedResponse);
   } catch (err) {
     throw new Error(`${err} - Unable to update annotation`);
   }
+};
+
+setMarkerColor = (marker, coralBinary) => {
+  // Select corresponding Marker Circumference from DOM
+  let markerCircumference = document.getElementById(
+    `markerCircumference${marker}`
+  );
+  // Set appropriate color
+  coralBinary === 1
+    ? markerCircumference.setAttribute('color', CORAL_COLOR)
+    : markerCircumference.setAttribute('color', NOT_CORAL_COLOR);
 };
