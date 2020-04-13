@@ -320,12 +320,15 @@ setLastObservationNumber = () => {
     },
   })
     .then((res) => {
+      if (res.status !== 200) {
+        throw new Error('Unable to retrieve last observation number!');
+      }
       res.json().then((res) => {
         lastObservationNumber = res.observation_number;
       });
     })
     .catch((err) => {
-      console.log(err);
+      throw new Error(`${err} - Unable to retrieve last observation number!`);
     });
 };
 
@@ -341,9 +344,12 @@ postAnnotation = async (data) => {
         },
       }
     );
-    console.log('Request complete! response:', response);
+    if (![200, 201].includes(response.status)) {
+      throw new Error('Unable to post annotation!');
+    }
+    console.log('Request complete! response:', response, response.status);
   } catch (err) {
-    console.log(err);
+    throw new Error(`${err} - Unable to post annotation!`);
   }
 };
 
@@ -367,8 +373,6 @@ updateAnnotation = async (data, coralBinary) => {
     return;
   }
 
-  // TODO: prevent resubmitting if already selected
-  // i.e. if coral selected and hover coral again, don't allow HTTP req
   try {
     let markerId = await fetch(
       'http://localhost:8080/annotated-image/find-marker-id',
@@ -380,6 +384,11 @@ updateAnnotation = async (data, coralBinary) => {
         },
       }
     );
+    // Note: 201 not included as no resource created from this POST
+    if (![200].includes(markerId.status)) {
+      throw new Error('Unable to find the ID of the corresponding marker!');
+    }
+
     markerId = await markerId.json();
     markerId = markerId.id;
 
@@ -398,8 +407,11 @@ updateAnnotation = async (data, coralBinary) => {
         },
       }
     );
+    if (![200].includes(updatedResponse.status)) {
+      throw new Error('Unable to update annotation!');
+    }
     console.log('updatedResponse:', updatedResponse);
   } catch (err) {
-    console.log(err);
+    throw new Error(`${err} - Unable to update annotation`);
   }
 };
