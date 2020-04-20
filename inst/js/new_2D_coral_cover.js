@@ -313,7 +313,7 @@ saveData = (markerId, coralBinary) => {
 // TODO: consider refactoring to async await
 setLastObservationNumber = () => {
   // GET latest record observation number
-  fetch('http://localhost:8080/annotated-image/last-observation-number', {
+  fetch('https://r2vr.herokuapp.com/annotated-image/last-observation-number', {
     method: 'GET',
     headers: {
       Accept: 'application/json',
@@ -335,7 +335,7 @@ setLastObservationNumber = () => {
 postAnnotation = async (data) => {
   try {
     const response = await fetch(
-      'http://localhost:8080/annotated-image/post-response',
+      'https://r2vr.herokuapp.com/annotated-image/post-response',
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -378,7 +378,7 @@ updateAnnotation = async (data, coralBinary) => {
 
   try {
     let markerId = await fetch(
-      'http://localhost:8080/annotated-image/find-marker-id',
+      'https://r2vr.herokuapp.com/annotated-image/find-marker-id',
       {
         method: 'POST',
         body: JSON.stringify(data),
@@ -401,7 +401,7 @@ updateAnnotation = async (data, coralBinary) => {
     };
 
     let updatedResponse = await fetch(
-      'http://localhost:8080/annotated-image/update-response',
+      'https://r2vr.herokuapp.com/annotated-image/update-response',
       {
         method: 'PUT',
         body: JSON.stringify(updateData),
