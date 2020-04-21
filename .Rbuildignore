@@ -3,7 +3,12 @@
 ^\.travis\.yml$
 ^LICENSE\.md$
 ^appveyor\.yml$
+^package\.json$
+^package\.lock\.json$
+^tsconfig\.json$
+^webpack\.config\.js$
+^node_modules/.* 
 ^gallery/.*
-^ts/.*
+^typescript/.*
 ^doc$
 ^Meta$
