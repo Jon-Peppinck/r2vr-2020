@@ -1,71 +1,38 @@
-import { string as str } from './test';
+import { Entity, Scene } from 'aframe';
 
-import { Entity } from 'aframe';
+import { CoralBinary, Data } from './declarations/data';
+import { Image, InitialImage } from './declarations/image';
 
-console.log('index.ts', str);
-
-export interface Image {
-  imgId: string | undefined;
-  isAnnotated: boolean;
-}
-
-export interface InitialImage {
-  imgFilename: string | null | undefined;
-  imageId: string | undefined;
-}
-
-// export interface UpdateData {
-//   image_id: string | undefined;
-//   observation_number: number;
-//   site: number;
-// }
-
-export interface Data {
-  image_id: string | undefined;
-  image_file?: string | null | undefined; // same as InitialImage
-  site: number;
-  x?: number;
-  y?: number;
-  observation_number: number;
-  observer?: string;
-  is_coral?: number; // TODO make binary type
-}
-
-// Determines the hover state of the marker of interest
-let isMarkerHovered = false;
-
-// els: array of intersected entities => initialize to an empty array
-let els: any = []; // TODO: find type
+// Assign global variables for the user and initial image
+let user: string | undefined;
+let initialImage: InitialImage;
 
 // Choose colors of menu options
 const CORAL_COLOR = '#FF95BC';
 const NOT_CORAL_COLOR = '#969696';
 
-// Assign a global variable for the id for the selected marker so it is in scope for the AFRAME registered component
-let selectedMarkerId: number;
+// els: array of intersected entities => initialize to an empty array
+let els: Entity[] = []; // TODO: find type
 
-// Assign a global variable for the user
-let user: string | undefined;
-
-// Assign a global variable for the initial image
-
-let initialImage: InitialImage;
-
-// TODO: consider declaring multiple variables
-let lastObservationNumber: number;
-
-// TODO: comment
+// Stores the state of the image/s and there annotation status
 let allImages: Image[];
 
-// Get the user name entered in R once DOM loaded
+// The last observation number will be retrieved async from the database
+let lastObservationNumber: number;
+
+// Determines the hover state and its ID of the marker of interest
+let isMarkerHovered = false;
+let selectedMarkerId: number;
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Retrieve the last recorded observation number
   setLastObservationNumber();
 
+  // Get the user name entered in R once DOM loaded
   user = document.getElementById('user')?.className;
 
   initialImage = getImageFilenameAndId();
-  // TODO: comment
+
+  // Initial status is the initial image has not yet been annotated
   allImages = [
     {
       imgId: initialImage.imageId,
@@ -78,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
 AFRAME.registerComponent('coral-cover-2d-buttons', {
   init: function () {
     // Select DOM element with button controls i.e. the scene
-    let controlsEl = <HTMLElement>document.querySelector('[button-controls]');
+    let controlsEl = <Scene>document.querySelector('[button-controls]');
 
-    // Add event listener to the scene to detect buttons clicked in WebVR
+    // Detect buttons selected in WebVR
     controlsEl.addEventListener('buttondown', () => {
-      // If button clicked and marker hovered => display menu options
+      // If button selected and marker hovered => display menu options
       if (isMarkerHovered) {
         // Marker is hovered thus must have a corresponding ID
         displayMenuOptions(selectedMarkerId, true);
@@ -117,23 +84,19 @@ AFRAME.registerComponent('intersection', {
 });
 
 // Determines if the marker is hovered
-const handleMarkerIntersection = () => {
+const handleMarkerIntersection = (): void => {
   // Prevents annotation points being marked if missing data
   if (!lastObservationNumber) {
     return;
   }
 
   // Get the marker ID number for the intersected marker
-  let markerId = getMarkerId();
-
-  // console.log('Last intersected element ID', els[0].id); // rm
-  let firstEl: any = els[0];
-  firstEl.id.replace(firstEl.id, markerId);
+  const markerId = getMarkerId();
 
   // // Check if intersected element is the marker itself or a menu option
   if (
     els.some(
-      (el: any) =>
+      (el: Entity) =>
         el.id === `marker${markerId}` ||
         el.id === `markerCircumference${markerId}` ||
         el.id === `menuCoral${markerId}` ||
@@ -145,10 +108,8 @@ const handleMarkerIntersection = () => {
     // Note: Menu options made visible in 'coral-cover-2d-buttons' custom AFRAME component => requires a button to be pressed to show options
     isMarkerHovered = true;
 
-    // Determine if the the coral option is selected
+    // Check if a menu option is intersected
     isCoralIntersected();
-
-    // Determine if the not coral option is selected
     isNotCoralIntersected();
   } else {
     // Marker no longer hovered
@@ -159,9 +120,10 @@ const handleMarkerIntersection = () => {
   }
 };
 
-const isCoralIntersected = () => {
+// TODO: Refactor isCoralIntersected and isNotCoralIntersected into isMenuOptionIntersected
+const isCoralIntersected = (): void => {
   // Get the marker id number for the selected marker
-  let markerId = getMarkerId();
+  const markerId = getMarkerId();
 
   // Set the global selected marker ID
   selectedMarkerId = markerId;
@@ -169,44 +131,36 @@ const isCoralIntersected = () => {
   // If an intersected entity is the coral menu
   if (
     els.some(
-      (el: any) =>
+      (el: Entity) =>
         el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
     )
   ) {
     // Save annotation to database: isCoral = 1 (coral)
     saveData(markerId, 1);
 
-    // Update UI color to indicate coral is selected
-    // document
-    //   .getElementById(`markerCircumference${markerId}`)
-    //   .setAttribute('color', CORAL_COLOR);
-
     // Hide menu options
     displayMenuOptions(markerId);
   }
 };
 
-// TODO: potentially not set color until after HTTP request completes
-const isNotCoralIntersected = () => {
+const isNotCoralIntersected = (): void => {
   // Get the marker id number for the selected marker
 
-  let markerId = getMarkerId();
+  const markerId = getMarkerId();
+
+  // Set the global selected marker ID
+  selectedMarkerId = markerId;
 
   // If an intersected entity is the not coral menu
   if (
     els.some(
-      (el: any) =>
+      (el: Entity) =>
         el.id === `menuNotCoral${markerId}` ||
         el.id === `notCoralText${markerId}`
     )
   ) {
     // Save annotation to database: isNotCoral = 0 (not coral)
     saveData(markerId, 0);
-
-    // Update UI color to indicate not coral is selected
-    // document
-    //   .getElementById(`markerCircumference${markerId}`)
-    //   .setAttribute('color', NOT_CORAL_COLOR);
 
     // Hide menu options
     displayMenuOptions(markerId);
@@ -234,23 +188,19 @@ const displayMenuOptions = (id: number, bool = false) => {
 };
 
 // Set the image filename for the image being annotated
-const getImageFilenameAndId = () => {
+const getImageFilenameAndId = (): InitialImage => {
   // Get the canvas that images will be rendered on
-  const canvas2D = <HTMLElement>document.getElementById('canvas2d');
+  const canvas2D = <Entity>document.getElementById('canvas2d');
 
   // The image filename is found through its class
-  // Note: the class will be updated when the next image is called
-  let imgFilename = undefined;
-  if (canvas2D.getAttribute('class')) {
-    imgFilename = canvas2D.getAttribute('class')?.split('/').pop();
-  }
+  // Note: the class will be updated when the next image is called via the R console through a websocket connection between R2VR and the browser
 
-  // TODO?: set image_file and image_id globally
+  const imgFilename = canvas2D.getAttribute('class')?.split('/').pop();
 
   // The image ID can be found by removing the file extension
-  let imageId = imgFilename?.split('.')[0];
+  const imageId = imgFilename?.split('.')[0];
 
-  let initImg: InitialImage = {
+  const initImg: InitialImage = {
     imgFilename,
     imageId,
   };
@@ -258,7 +208,7 @@ const getImageFilenameAndId = () => {
   return initImg;
 };
 
-const getMarkerId = () => {
+const getMarkerId = (): number | never => {
   // Extract the ID number of the element selected iff menu option is intersected
 
   // els[0].id exists since all entities that relate to being a marker also have a corresponding ID  associated with it
@@ -267,84 +217,79 @@ const getMarkerId = () => {
   let matches = els[0].id.match(/(\d+)/);
 
   // Parse the string to a number so the corresponding ID can be used
-  return +matches[0];
+  // return +matches[0];
+  if (matches) {
+    return <number>+matches[0];
+  }
+  throw new Error(
+    'It should never occur that a marker is intersected and it does not contain a corresponding ID'
+  );
 };
 
-// // //
-
-// increment observation number if new image
-
 // TODO: consider breaking into set data and save data
-const saveData = (markerId: number, coralBinary: number) => {
+const saveData = (markerId: number, coralBinary: CoralBinary) => {
   // Set the image ID
-  let img = getImageFilenameAndId();
-  let imgFilename = img.imgFilename;
-  let imgId = img.imageId;
+  const img = getImageFilenameAndId();
+  const imgFilename = img.imgFilename;
+  const imgId = img.imageId;
 
-  let lastAnnotatedImage = allImages[allImages.length - 1];
-  console.log('last annotated image: ', lastAnnotatedImage); // rm
-  let lastImage = lastAnnotatedImage.imgId;
+  // Determine the last annotated image
+  const lastAnnotatedImage = allImages[allImages.length - 1];
+  const lastImage = lastAnnotatedImage.imgId;
 
-  // let isLastImageAnnotated = lastAnnotatedImage.isAnnotated; // TODO
-
+  // If the current image is not the same as the yet to be annotated image
   if (lastImage !== imgId) {
-    // the last image has thus been annotated
+    // The last image has thus been annotated
     allImages[allImages.length - 1].isAnnotated = true;
 
-    // increment the last observation number
+    // Increment the last observation number
     lastObservationNumber++;
 
-    // if the annotated image is not the same as new image
-    // add it to the array => this image is not yet annotated
+    // If the annotated image is not the same as new image,
+    // Add it to the array => this image is not yet annotated
     allImages.push({
       imgId: imgId,
       isAnnotated: false,
     });
-    console.log('allImages: ', allImages);
   }
 
-  let marker = <Entity>document.getElementById(`markerContainer${markerId}`);
+  const marker = <Entity>document.getElementById(`markerContainer${markerId}`);
 
   let data: Data;
 
   if (marker?.getAttribute('marked') === 'false') {
-    let markerX = marker.getAttribute('position').x;
-    let markerY = marker.getAttribute('position').y;
-    console.log(markerX, markerY);
+    const markerX = marker.getAttribute('position').x;
+    const markerY = marker.getAttribute('position').y;
 
-    console.log('not marked');
+    // If marker has not yet been annotated set 'marked' to true
+    // This will be used to identify if it is a POST or PUT request
     marker.setAttribute('marked', 'true');
 
-    // set data
+    // Set POST data
     data = {
       image_id: imgId,
       image_file: imgFilename,
       site: +markerId,
       x: markerX,
       y: markerY,
-      observation_number: lastObservationNumber + 1, // TODO CHECK
+      observation_number: lastObservationNumber + 1,
       observer: user,
       is_coral: coralBinary,
     };
-    console.log('data: ', data);
 
     postAnnotation(data);
   } else {
-    console.log('is marked');
-    // If annotation exists (is-marked) new url and data for PUT end point
-    // set data
-
+    // If annotation exists 'marked' => Set PUT data
     data = {
       image_id: imgId,
       observation_number: lastObservationNumber + 1,
       site: +markerId,
     };
-    console.log('data: ', data);
-    updateAnnotation(data, coralBinary); // TODO: look into incl. in data
+
+    updateAnnotation(data, coralBinary);
   }
 };
 
-// TODO: consider refactoring to async await
 const setLastObservationNumber = () => {
   // GET latest record observation number
   fetch('https://r2vr.herokuapp.com/annotated-image/last-observation-number', {
@@ -382,7 +327,7 @@ const postAnnotation = async (data: Data) => {
       throw new Error('Unable to post annotation!');
     }
 
-    setMarkerColor(data.site, <number>data.is_coral);
+    setMarkerColor(data.site, <CoralBinary>data.is_coral);
 
     console.log('Request complete! response:', response, response.status);
   } catch (err) {
@@ -390,7 +335,7 @@ const postAnnotation = async (data: Data) => {
   }
 };
 
-const updateAnnotation = async (data: Data, coralBinary: number) => {
+const updateAnnotation = async (data: Data, coralBinary: CoralBinary) => {
   let annotatedMarker = document.getElementById(
     `markerCircumference${data.site}`
   );
@@ -455,7 +400,7 @@ const updateAnnotation = async (data: Data, coralBinary: number) => {
   }
 };
 
-const setMarkerColor = (marker: number, coralBinary: number) => {
+const setMarkerColor = (marker: number, coralBinary: CoralBinary) => {
   // Select corresponding Marker Circumference from DOM
   let markerCircumference = document.getElementById(
     `markerCircumference${marker}`
