@@ -4,5 +4,6 @@
 ^LICENSE\.md$
 ^appveyor\.yml$
 ^gallery/.*
+^ts/.*
 ^doc$
 ^Meta$
