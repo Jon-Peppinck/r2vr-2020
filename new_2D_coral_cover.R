@@ -67,7 +67,8 @@ canvas_2d <- a_entity(
   # TODO: change to CDN
   .js_sources = list(
     "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master/inst/js/button_controls.js",
-    "./inst/js/new_2D_coral_cover.js"
+    # "./inst/js/new_2D_coral_cover.js",
+    "./inst/js/bundle.js"
     ),
   .assets = list(image2, image3, image4),
   id = "canvas2d",
