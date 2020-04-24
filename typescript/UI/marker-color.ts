@@ -14,5 +14,3 @@ export const setMarkerColor = (marker: number, coralBinary: CoralBinary) => {
     ? markerCircumference?.setAttribute('color', CORAL_COLOR)
     : markerCircumference?.setAttribute('color', NOT_CORAL_COLOR);
 };
-
-console.log(123123123, 'marker-color.ts');

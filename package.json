@@ -27,9 +27,10 @@
   "homepage": "https://github.com/Jon-Peppinck/r2vr-2020#readme",
   "devDependencies": {
     "@types/aframe": "^0.8.4",
+    "rxjs": "^6.5.5",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3",
-    "webpack": "^4.42.1",
+    "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }
 }

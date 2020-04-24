@@ -9,6 +9,12 @@ import {
 import { CoralBinary, Data } from './declarations/data';
 import { Image, InitialImage } from './declarations/image';
 
+// import { interval } from '../node_modules/rxjs/_esm5/index.js';
+
+import { of } from 'rxjs';
+
+of('test').subscribe((x: any) => console.log(x));
+
 // Assign global variables for the user and initial image
 let user: string | undefined;
 let initialImage: InitialImage;

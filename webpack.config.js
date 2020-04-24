@@ -12,7 +12,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/, // expression for all files ending in .ts
-        exclude: /node_modules/,
+        exclude: /node_modules(?!\/rxjs)/,
         use: {
           loader: 'ts-loader',
         },
@@ -20,6 +20,6 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.ts'],
+    extensions: ['.ts', '.js'],
   },
 };
