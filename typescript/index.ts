@@ -1,5 +1,11 @@
 import { Entity, Scene } from 'aframe';
 
+import {
+  setMarkerColor,
+  CORAL_COLOR,
+  NOT_CORAL_COLOR,
+} from './UI/marker-color';
+
 import { CoralBinary, Data } from './declarations/data';
 import { Image, InitialImage } from './declarations/image';
 
@@ -7,12 +13,8 @@ import { Image, InitialImage } from './declarations/image';
 let user: string | undefined;
 let initialImage: InitialImage;
 
-// Choose colors of menu options
-const CORAL_COLOR = '#FF95BC';
-const NOT_CORAL_COLOR = '#969696';
-
 // els: array of intersected entities => initialize to an empty array
-let els: Entity[] = []; // TODO: find type
+let els: Entity[] = [];
 
 // Stores the state of the image/s and there annotation status
 let allImages: Image[];
@@ -398,15 +400,4 @@ const updateAnnotation = async (data: Data, coralBinary: CoralBinary) => {
   } catch (err) {
     throw new Error(`${err} - Unable to update annotation`);
   }
-};
-
-const setMarkerColor = (marker: number, coralBinary: CoralBinary) => {
-  // Select corresponding Marker Circumference from DOM
-  let markerCircumference = document.getElementById(
-    `markerCircumference${marker}`
-  );
-  // Set appropriate color
-  coralBinary === 1
-    ? markerCircumference?.setAttribute('color', CORAL_COLOR)
-    : markerCircumference?.setAttribute('color', NOT_CORAL_COLOR);
 };
