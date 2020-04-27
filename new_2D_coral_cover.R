@@ -302,6 +302,123 @@ pop2 <- function(visible = TRUE){
 
 ######
 
+# Create a Point constructor
+Point <- R6::R6Class("Point", public = list(
+  x = NA,
+  y = NA,
+  r = NA,
+  n = NA,
+  initialize = function(x, y, n, r = outer_radius) {
+    stopifnot(is.numeric(x), abs(x) <= 1)
+    stopifnot(is.numeric(y), abs(y) <= 1)
+    stopifnot(is.numeric(n))
+    stopifnot(is.numeric(r), r < 0.5)
+
+    
+    self$x <- x
+    self$y <- y
+    self$r <- r
+    self$n <- n
+  })
+)
+
+euclideanDistance2d <- function(p1, p2) {
+  return(sqrt((p2$x - p1$x)^2 + (p2$y - p1$y)^2)) 
+}
+
+points.list <- list()
+
+createPoints <- function(num) {
+  # Reset the color of the annnotation points
+  # Note: only need to reset up to what the user sees => more efficient
+  resetMarkersUI(num)
+  
+  # reset list of points back to initial value
+  points.list <<- list()
+  
+  # Set a guard to prevent a possible infinite loop if n is large
+  guard = 0
+  
+  # If max number of points reached, there will be no extra points to hide
+  if (num != MAX_NUMBER_OF_POINTS) {
+    startNumberOfRemainingPoints <- numberOfPoints + 1
+    
+    ## Update the remaining points to not be visible
+    for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
+      ## Update the position
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", i),
+          component = "visible",
+          attributes = FALSE
+        )
+      )
+      animals$send_messages(update_entities)
+    }
+  }
+  
+  
+  # note, in first case length will be 0, thus 0 to (n - 1) <=> 1 to n
+  # For every circle we wish to create...
+  while (length(points.list) < num) {
+    overlapping = FALSE
+    
+    x <- runif(1, -1 + outer_radius, 1 - outer_radius)
+    y <- runif(1, -1 + outer_radius, 1 - outer_radius)
+    n <- length(points.list) + 1
+    
+    # ...Create a new point object...
+    p <- Point$new(x, y, n)
+    
+    if (length(points.list) > 0) {
+      # ...Determine if the new point intersects with any of the other points in list... 
+      for (j in 1:length(points.list)) {
+        circleInList = points.list[[j]]
+        # Find the distance between the new point and the point in the list
+        distance = euclideanDistance2d(p, circleInList)
+        
+        # If the new point overlaps with any current point set overlapping to true
+        if (distance < 2 * outer_radius) {
+          overlapping = TRUE
+          break
+          
+        }
+      }
+    }
+    # If there is no overlap then new point can be added to the list
+    if (!overlapping) {
+      points.list[[n]] <<- p
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "position",
+          attributes = list(x = p$x, y = p$y, z = -1)
+        ),
+        # Update the specified number of points to be visible
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "visible",
+          attributes = TRUE
+        ),
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "marked",
+          attributes = FALSE
+        )
+      )
+      animals$send_messages(update_entities)
+    }
+    
+    # Increment the guard for each while loop iteration
+    guard = guard + 1
+    if (guard > 1000) break
+  }
+  
+  # return(points.list)
+  
+}
+
+
 # TODO: consider breaking into helper functions
 points <- function(numberOfPoints = 5, fixed = FALSE){
   if (!fixed) {
