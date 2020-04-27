@@ -1,4 +1,4 @@
-import { CoralBinary } from '../declarations/data';
+import { CoralBinary } from '../declarations/data.d';
 
 // Choose colors of menu options
 export const CORAL_COLOR = '#FF95BC';
@@ -6,11 +6,13 @@ export const NOT_CORAL_COLOR = '#969696';
 
 export const setMarkerColor = (marker: number, coralBinary: CoralBinary) => {
   // Select corresponding Marker Circumference from DOM
-  let markerCircumference = document.getElementById(
+  const markerCircumference = document.getElementById(
     `markerCircumference${marker}`
   );
   // Set appropriate color
-  coralBinary === 1
-    ? markerCircumference?.setAttribute('color', CORAL_COLOR)
-    : markerCircumference?.setAttribute('color', NOT_CORAL_COLOR);
+  if (coralBinary === 1) {
+    markerCircumference?.setAttribute('color', CORAL_COLOR);
+  } else {
+    markerCircumference?.setAttribute('color', NOT_CORAL_COLOR);
+  }
 };

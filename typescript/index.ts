@@ -1,19 +1,17 @@
 import { Entity, Scene } from 'aframe';
 
+import { of } from 'rxjs';
+
 import {
   setMarkerColor,
   CORAL_COLOR,
   NOT_CORAL_COLOR,
 } from './UI/marker-color';
 
-import { CoralBinary, Data } from './declarations/data';
-import { Image, InitialImage } from './declarations/image';
+import { CoralBinary, Data } from './declarations/data.d';
+import { Image, InitialImage } from './declarations/image.d';
 
-// import { interval } from '../node_modules/rxjs/_esm5/index.js';
-
-import { of } from 'rxjs';
-
-of('test').subscribe((x: any) => console.log(x));
+of('test!!').subscribe((x: any) => console.log(x));
 
 // Assign global variables for the user and initial image
 let user: string | undefined;
@@ -33,11 +31,13 @@ let isMarkerHovered = false;
 let selectedMarkerId: number;
 
 document.addEventListener('DOMContentLoaded', () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   setLastObservationNumber();
 
   // Get the user name entered in R once DOM loaded
   user = document.getElementById('user')?.className;
 
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   initialImage = getImageFilenameAndId();
 
   // Initial status is the initial image has not yet been annotated
@@ -51,15 +51,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // WebVR button handler: 2D coral cover
 AFRAME.registerComponent('coral-cover-2d-buttons', {
+  /* eslint-disable-next-line func-names, object-shorthand */
   init: function () {
     // Select DOM element with button controls i.e. the scene
-    let controlsEl = <Scene>document.querySelector('[button-controls]');
+    const controlsEl = <Scene>document.querySelector('[button-controls]');
 
     // Detect buttons selected in WebVR
     controlsEl.addEventListener('buttondown', () => {
       // If button selected and marker hovered => display menu options
       if (isMarkerHovered) {
         // Marker is hovered thus must have a corresponding ID
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         displayMenuOptions(selectedMarkerId, true);
       } else {
         // If button clicked but not hovering a marker => intersected elements not a marker thus not of interest hence and empty array is set
@@ -71,8 +73,10 @@ AFRAME.registerComponent('coral-cover-2d-buttons', {
 
 // Handles an intersected annotation point
 AFRAME.registerComponent('intersection', {
+  /* eslint-disable-next-line func-names, object-shorthand */
   init: function () {
     // Listen for an intersection between the ray-caster and entities
+    // eslint-disable-next-line consistent-return
     this.el.addEventListener('raycaster-intersection', (e: any) => {
       if (e) {
         // In the event an intersection occurs => set the array of intersection elements
@@ -82,9 +86,11 @@ AFRAME.registerComponent('intersection', {
         // Expecting: `#markerCircumference${x}` and/or `#marker${x}`
         // TODO: Check for points near each other => make points unable to overlap
         if (els.length > 2) {
-          return (els = []);
+          els = [];
+          return els;
         }
         // Determine if the marker is intersected iff expected result occurred
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
         handleMarkerIntersection();
       }
     });
@@ -99,6 +105,7 @@ const handleMarkerIntersection = (): void => {
   }
 
   // Get the marker ID number for the intersected marker
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const markerId = getMarkerId();
 
   // // Check if intersected element is the marker itself or a menu option
@@ -117,13 +124,16 @@ const handleMarkerIntersection = (): void => {
     isMarkerHovered = true;
 
     // Check if a menu option is intersected
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     isCoralIntersected();
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     isNotCoralIntersected();
   } else {
     // Marker no longer hovered
     isMarkerHovered = false;
 
     // Menu options no longer need to be visible
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     displayMenuOptions(markerId);
   }
 };
@@ -131,6 +141,7 @@ const handleMarkerIntersection = (): void => {
 // TODO: Refactor isCoralIntersected and isNotCoralIntersected into isMenuOptionIntersected
 const isCoralIntersected = (): void => {
   // Get the marker id number for the selected marker
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const markerId = getMarkerId();
 
   // Set the global selected marker ID
@@ -144,9 +155,11 @@ const isCoralIntersected = (): void => {
     )
   ) {
     // Save annotation to database: isCoral = 1 (coral)
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveData(markerId, 1);
 
     // Hide menu options
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     displayMenuOptions(markerId);
   }
 };
@@ -154,6 +167,7 @@ const isCoralIntersected = (): void => {
 const isNotCoralIntersected = (): void => {
   // Get the marker id number for the selected marker
 
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
   const markerId = getMarkerId();
 
   // Set the global selected marker ID
@@ -168,9 +182,11 @@ const isNotCoralIntersected = (): void => {
     )
   ) {
     // Save annotation to database: isNotCoral = 0 (not coral)
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     saveData(markerId, 0);
 
     // Hide menu options
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     displayMenuOptions(markerId);
   }
 };
@@ -222,7 +238,7 @@ const getMarkerId = (): number | never => {
   // els[0].id exists since all entities that relate to being a marker also have a corresponding ID  associated with it
 
   // Regular Expression captures the digits associated with the ID
-  let matches = els[0].id.match(/(\d+)/);
+  const matches = els[0].id.match(/(\d+)/);
 
   // Parse the string to a number so the corresponding ID can be used
   // return +matches[0];
@@ -238,7 +254,7 @@ const getMarkerId = (): number | never => {
 const saveData = (markerId: number, coralBinary: CoralBinary) => {
   // Set the image ID
   const img = getImageFilenameAndId();
-  const imgFilename = img.imgFilename;
+  const { imgFilename } = img;
   const imgId = img.imageId;
 
   // Determine the last annotated image
@@ -251,12 +267,13 @@ const saveData = (markerId: number, coralBinary: CoralBinary) => {
     allImages[allImages.length - 1].isAnnotated = true;
 
     // Increment the last observation number
+    // eslint-disable-next-line no-plusplus
     lastObservationNumber++;
 
     // If the annotated image is not the same as new image,
     // Add it to the array => this image is not yet annotated
     allImages.push({
-      imgId: imgId,
+      imgId,
       isAnnotated: false,
     });
   }
@@ -284,7 +301,7 @@ const saveData = (markerId: number, coralBinary: CoralBinary) => {
       observer: user,
       is_coral: coralBinary,
     };
-
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     postAnnotation(data);
   } else {
     // If annotation exists 'marked' => Set PUT data
@@ -293,7 +310,7 @@ const saveData = (markerId: number, coralBinary: CoralBinary) => {
       observation_number: lastObservationNumber + 1,
       site: +markerId,
     };
-
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     updateAnnotation(data, coralBinary);
   }
 };
@@ -310,8 +327,8 @@ const setLastObservationNumber = () => {
       if (res.status !== 200) {
         throw new Error('Unable to retrieve last observation number!');
       }
-      res.json().then((res) => {
-        lastObservationNumber = res.observation_number;
+      res.json().then((resJson) => {
+        lastObservationNumber = resJson.observation_number;
       });
     })
     .catch((err) => {
@@ -344,7 +361,7 @@ const postAnnotation = async (data: Data) => {
 };
 
 const updateAnnotation = async (data: Data, coralBinary: CoralBinary) => {
-  let annotatedMarker = document.getElementById(
+  const annotatedMarker = document.getElementById(
     `markerCircumference${data.site}`
   );
 
@@ -364,7 +381,7 @@ const updateAnnotation = async (data: Data, coralBinary: CoralBinary) => {
   }
 
   try {
-    let markerIdPromise = await fetch(
+    const markerIdPromise = await fetch(
       'https://r2vr.herokuapp.com/annotated-image/find-marker-id',
       {
         method: 'POST',
@@ -379,16 +396,16 @@ const updateAnnotation = async (data: Data, coralBinary: CoralBinary) => {
       throw new Error('Unable to find the ID of the corresponding marker!');
     }
 
-    let markerIdJSONPromise = await markerIdPromise.json();
+    const markerIdJSONPromise = await markerIdPromise.json();
 
-    let markerId = markerIdJSONPromise.id;
+    const markerId = markerIdJSONPromise.id;
 
-    let updateData = {
+    const updateData = {
       is_coral: coralBinary,
       id: markerId,
     };
 
-    let updatedResponse = await fetch(
+    const updatedResponse = await fetch(
       'https://r2vr.herokuapp.com/annotated-image/update-response',
       {
         method: 'PUT',
