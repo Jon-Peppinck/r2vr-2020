@@ -355,20 +355,22 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
       animals$send_messages(update_entities)
       
     }
-    
-    startNumberOfRemainingPoints <- numberOfPoints + 1
-    
-    ## Update the remaining points to not be visible
-    for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
-      ## Update the position
-      update_entities <- list(
-        a_update(
-          id = paste0("markerContainer", i),
-          component = "visible",
-          attributes = FALSE
+    # If max number of points reached, there will be no extra points to hide
+    if (numberOfPoints != MAX_NUMBER_OF_POINTS) {
+      startNumberOfRemainingPoints <- numberOfPoints + 1
+      
+      ## Update the remaining points to not be visible
+      for (i in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
+        ## Update the position
+        update_entities <- list(
+          a_update(
+            id = paste0("markerContainer", i),
+            component = "visible",
+            attributes = FALSE
+          )
         )
-      )
-      animals$send_messages(update_entities)
+        animals$send_messages(update_entities)
+      }
     }
   } else {
     fixedNumberOfPoints <- 3
