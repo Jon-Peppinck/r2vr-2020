@@ -328,7 +328,7 @@ euclideanDistance2d <- function(p1, p2) {
 
 points.list <- list()
 
-createPoints <- function(num) {
+createPoints <- function(num = 5) {
   # Reset the color of the annnotation points
   # Note: only need to reset up to what the user sees => more efficient
   resetMarkersUI(num)
