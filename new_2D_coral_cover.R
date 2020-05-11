@@ -490,16 +490,52 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
       }
     }
   } else {
-    fixedNumberOfPoints <- 3
+    fixedNumberOfPoints <- 8
     print('fixed data')
     init.x <- -1
     init.y <- 0
+    
+    max.px <- 1330
+    
     ## Assign a new position and display the visibility for the number of points
     for (i in 1:fixedNumberOfPoints ) {
       # Generation of points
       # Note: Canvas: -1 < x < 1, -1 < y < 1
-      random_coordinate_x <- init.x + (0.5 * i)
-      random_coordinate_y <- init.y <- 0
+      # TODO: temp only, remove
+      if (i == 1) {
+        # DSUB: Algae
+        random_coordinate_x <- (401/(max.px/2)) - 1
+        random_coordinate_y <- (98/(max.px/2)) - 1
+      } else if (i == 2) {
+        # DSUB: Algae
+        random_coordinate_x <- (1009/(max.px/2)) - 1
+        random_coordinate_y <- (332/(max.px/2)) - 1
+      } else if (i == 3) {
+        # ACR-PE: Hard Coral
+        random_coordinate_x <- (631/(max.px/2)) - 1
+        random_coordinate_y <- (525/(max.px/2)) - 1
+      } else if (i == 4) {
+        # DSUB: Algae
+        random_coordinate_x <- (1207/(max.px/2)) - 1
+        random_coordinate_y <- (1150/(max.px/2)) - 1
+      } else if (i == 5) {
+        # FAV-MUS: Hard Coral
+        random_coordinate_x <- (137/(max.px/2)) - 1
+        random_coordinate_y <- (1219/(max.px/2)) - 1
+      } else if (i == 6) {
+        # FAV-MUS: Hard Coral
+        random_coordinate_x <- (909/(max.px/2)) - 1
+        random_coordinate_y <- (856/(max.px/2)) - 1
+      } else if (i == 7) {
+        # FAV-MUS: Hard Coral
+        random_coordinate_x <- (780/(max.px/2)) - 1
+        random_coordinate_y <- (1110/(max.px/2)) - 1
+      } else if (i == 8) {
+        # FAV-MUS: Hard Coral
+        random_coordinate_x <- (486/(max.px/2)) - 1
+        random_coordinate_y <- (425/(max.px/2)) - 1
+      }
+
       # Update the position for the number of points specified
       update_entities <- list(
         a_update(
