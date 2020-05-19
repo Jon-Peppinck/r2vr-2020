@@ -3,6 +3,8 @@ import { store } from './store/rootStore';
 import { boundFetchLastObservationNumber } from './store/async/AsyncAction';
 import boundIntersection from './store/intersection/IntersectionAction';
 
+import handleMarkerIntersection from './intersections/marker';
+
 const render = () => {
   const state = store.getState();
   const observationNumber = state.asyncReducer.observation_number;
@@ -10,15 +12,16 @@ const render = () => {
 };
 
 boundFetchLastObservationNumber().then(() => console.log(123));
+
 render();
+
 store.subscribe(render);
-console.log(123333);
 
 // GLOBAL STATE
 
+// [done] els
 // isMarkerHovered
 // selectedMarkerId
-// els
 // image
 
 // Handles an intersected annotation point
@@ -29,31 +32,10 @@ AFRAME.registerComponent('intersection', {
     // eslint-disable-next-line consistent-return
     this.el.addEventListener('raycaster-intersection', (e: any) => {
       if (e) {
-        // const intersectedEntities: Entity[] = e.details.els;
         if (e.detail.els.length < 3) {
-          console.log(21, e.detail.els);
           boundIntersection(e.detail.els);
         }
-
-        // console.log(31, e.details.els);
-
-        // ACTION
-        // reduxAction(e.details.els)
-
-        // In the event an intersection occurs => set the array of intersection elements
-        // els = e.detail.els;
-
-        // // TODO: Check comment
-        // // Expecting: `#markerCircumference${x}` and/or `#marker${x}`
-        // // TODO: Check for points near each other => make points unable to overlap
-        // if (els.length > 2) {
-        //   els = [];
-        //   return els;
-        // }
-        // Determine if the marker is intersected iff expected result occurred
-        // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        // TODO add
-        // handleMarkerIntersection();
+        handleMarkerIntersection();
       }
     });
   },

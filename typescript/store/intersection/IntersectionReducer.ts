@@ -2,8 +2,6 @@ import { Entity } from 'aframe';
 
 import { IntersectionActionTypes } from './models/actions';
 
-// import { ObservationNumber } from './models/ObservationNumber';
-
 const defaultState: Entity[] = [];
 
 // eslint-disable-next-line import/prefer-default-export
