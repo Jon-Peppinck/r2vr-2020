@@ -7,7 +7,7 @@ const defaultState: ObservationNumber = { observation_number: 0 };
 export const asyncReducer = (
   state = defaultState,
   action: AsyncActionTypes
-) => {
+): ObservationNumber => {
   switch (action.type) {
     case 'FETCH_LAST_OBSERVATION_NUMBER_PENDING':
       return { ...state };

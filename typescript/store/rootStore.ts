@@ -5,12 +5,12 @@ import { logger } from 'redux-logger';
 
 // // import { operationReducer } from './operation/OperationReducer';
 import { asyncReducer } from './async/AsyncReducer';
+import { intersectionReducer } from './intersection/IntersectionReducer';
 import { AppActions } from './models/actions';
 
 const rootReducer = combineReducers({
-  // operationReducer: operationReducer,
   asyncReducer,
-  // asyncReducer: asyncReducer,
+  intersectionReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

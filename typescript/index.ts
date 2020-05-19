@@ -1,6 +1,7 @@
 import { store } from './store/rootStore';
 
 import { boundFetchLastObservationNumber } from './store/async/AsyncAction';
+import boundIntersection from './store/intersection/IntersectionAction';
 
 const render = () => {
   const state = store.getState();
@@ -8,51 +9,55 @@ const render = () => {
   console.log(1, observationNumber);
 };
 
-boundFetchLastObservationNumber();
+boundFetchLastObservationNumber().then(() => console.log(123));
 render();
 store.subscribe(render);
+console.log(123333);
 
-// ASYNC ACTIONS
-// document.getElementById('getUser')!.addEventListener('click', () => {
-//   boundFetchUser().then(() => {
-//     const state = store.getState();
-//     userEl.innerHTML = `ID: ${state.asyncReducer.id}, title: ${state.asyncReducer.title}`;
-//   });
-// });
+// GLOBAL STATE
 
-const setLastObservationNumber = () => {
-  // GET latest record observation number
-  fetch('https://r2vr.herokuapp.com/annotated-image/last-observation-number', {
-    method: 'GET',
-    headers: {
-      Accept: 'application/json',
-    },
-  })
-    .then((res) => {
-      if (res.status !== 200) {
-        throw new Error('Unable to retrieve last observation number!');
+// isMarkerHovered
+// selectedMarkerId
+// els
+// image
+
+// Handles an intersected annotation point
+AFRAME.registerComponent('intersection', {
+  /* eslint-disable-next-line func-names, object-shorthand */
+  init: function () {
+    // Listen for an intersection between the ray-caster and entities
+    // eslint-disable-next-line consistent-return
+    this.el.addEventListener('raycaster-intersection', (e: any) => {
+      if (e) {
+        // const intersectedEntities: Entity[] = e.details.els;
+        if (e.detail.els.length < 3) {
+          console.log(21, e.detail.els);
+          boundIntersection(e.detail.els);
+        }
+
+        // console.log(31, e.details.els);
+
+        // ACTION
+        // reduxAction(e.details.els)
+
+        // In the event an intersection occurs => set the array of intersection elements
+        // els = e.detail.els;
+
+        // // TODO: Check comment
+        // // Expecting: `#markerCircumference${x}` and/or `#marker${x}`
+        // // TODO: Check for points near each other => make points unable to overlap
+        // if (els.length > 2) {
+        //   els = [];
+        //   return els;
+        // }
+        // Determine if the marker is intersected iff expected result occurred
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        // TODO add
+        // handleMarkerIntersection();
       }
-      res.json().then((resJson) => {
-        // lastObservationNumber = resJson.observation_number;
-        console.log(resJson.observation_number);
-      });
-    })
-    .catch((err) => {
-      throw new Error(`${err} - Unable to retrieve last observation number!`);
     });
-};
-
-setLastObservationNumber();
-
-// // asynchronous
-// // savedata, editdata, getmarkerid (to edit), getlastobservationnumber
-// //
-
-// // // // // // // //
-
-// import { Entity, Scene } from 'aframe';
-
-// import { of } from 'rxjs';
+  },
+});
 
 // import {
 //   setMarkerColor,
@@ -62,8 +67,6 @@ setLastObservationNumber();
 
 // import { CoralBinary, Data } from './declarations/data.d';
 // import { Image, InitialImage } from './declarations/image.d';
-
-// of('test!!!').subscribe((x: any) => console.log(x));
 
 // // Assign global variables for the user and initial image
 // let user: string | undefined;
@@ -101,168 +104,6 @@ setLastObservationNumber();
 //   ];
 // });
 
-// // WebVR button handler: 2D coral cover
-// AFRAME.registerComponent('coral-cover-2d-buttons', {
-//   /* eslint-disable-next-line func-names, object-shorthand */
-//   init: function () {
-//     // Select DOM element with button controls i.e. the scene
-//     const controlsEl = <Scene>document.querySelector('[button-controls]');
-
-//     // Detect buttons selected in WebVR
-//     controlsEl.addEventListener('buttondown', () => {
-//       // If button selected and marker hovered => display menu options
-//       if (isMarkerHovered) {
-//         // Marker is hovered thus must have a corresponding ID
-//         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//         displayMenuOptions(selectedMarkerId, true);
-//       } else {
-//         // If button clicked but not hovering a marker => intersected elements not a marker thus not of interest hence and empty array is set
-//         els = [];
-//       }
-//     });
-//   },
-// });
-
-// // Handles an intersected annotation point
-// AFRAME.registerComponent('intersection', {
-//   /* eslint-disable-next-line func-names, object-shorthand */
-//   init: function () {
-//     // Listen for an intersection between the ray-caster and entities
-//     // eslint-disable-next-line consistent-return
-//     this.el.addEventListener('raycaster-intersection', (e: any) => {
-//       if (e) {
-//         // In the event an intersection occurs => set the array of intersection elements
-//         els = e.detail.els;
-
-//         // TODO: Check comment
-//         // Expecting: `#markerCircumference${x}` and/or `#marker${x}`
-//         // TODO: Check for points near each other => make points unable to overlap
-//         if (els.length > 2) {
-//           els = [];
-//           return els;
-//         }
-//         // Determine if the marker is intersected iff expected result occurred
-//         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//         handleMarkerIntersection();
-//       }
-//     });
-//   },
-// });
-
-// // Determines if the marker is hovered
-// const handleMarkerIntersection = (): void => {
-//   // Prevents annotation points being marked if missing data
-//   if (!lastObservationNumber) {
-//     return;
-//   }
-
-//   // Get the marker ID number for the intersected marker
-//   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//   const markerId = getMarkerId();
-
-//   // // Check if intersected element is the marker itself or a menu option
-//   if (
-//     els.some(
-//       (el: Entity) =>
-//         el.id === `marker${markerId}` ||
-//         el.id === `markerCircumference${markerId}` ||
-//         el.id === `menuCoral${markerId}` ||
-//         el.id === `menuNotCoral${markerId}` ||
-//         el.id === `coralText${markerId}` ||
-//         el.id === `notCoralText${markerId}`
-//     )
-//   ) {
-//     // Note: Menu options made visible in 'coral-cover-2d-buttons' custom AFRAME component => requires a button to be pressed to show options
-//     isMarkerHovered = true;
-
-//     // Check if a menu option is intersected
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     isCoralIntersected();
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     isNotCoralIntersected();
-//   } else {
-//     // Marker no longer hovered
-//     isMarkerHovered = false;
-
-//     // Menu options no longer need to be visible
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     displayMenuOptions(markerId);
-//   }
-// };
-
-// // TODO: Refactor isCoralIntersected and isNotCoralIntersected into isMenuOptionIntersected
-// const isCoralIntersected = (): void => {
-//   // Get the marker id number for the selected marker
-//   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//   const markerId = getMarkerId();
-
-//   // Set the global selected marker ID
-//   selectedMarkerId = markerId;
-
-//   // If an intersected entity is the coral menu
-//   if (
-//     els.some(
-//       (el: Entity) =>
-//         el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
-//     )
-//   ) {
-//     // Save annotation to database: isCoral = 1 (coral)
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     saveData(markerId, 1);
-
-//     // Hide menu options
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     displayMenuOptions(markerId);
-//   }
-// };
-
-// const isNotCoralIntersected = (): void => {
-//   // Get the marker id number for the selected marker
-
-//   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//   const markerId = getMarkerId();
-
-//   // Set the global selected marker ID
-//   selectedMarkerId = markerId;
-
-//   // If an intersected entity is the not coral menu
-//   if (
-//     els.some(
-//       (el: Entity) =>
-//         el.id === `menuNotCoral${markerId}` ||
-//         el.id === `notCoralText${markerId}`
-//     )
-//   ) {
-//     // Save annotation to database: isNotCoral = 0 (not coral)
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     saveData(markerId, 0);
-
-//     // Hide menu options
-//     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-//     displayMenuOptions(markerId);
-//   }
-// };
-
-// const displayMenuOptions = (id: number, bool = false) => {
-//   if (bool) {
-//     // Menu options are now visible
-//     document.getElementById(`menuCoral${id}`)?.setAttribute('visible', 'true');
-//     document
-//       .getElementById(`menuNotCoral${id}`)
-//       ?.setAttribute('visible', 'true');
-//   } else {
-//     // Marker no longer hovered
-//     isMarkerHovered = false;
-
-//     // Menu options no longer need to be visible
-
-//     document.getElementById(`menuCoral${id}`)?.setAttribute('visible', 'false');
-//     document
-//       .getElementById(`menuNotCoral${id}`)
-//       ?.setAttribute('visible', 'false');
-//   }
-// };
-
 // // Set the image filename for the image being annotated
 // const getImageFilenameAndId = (): InitialImage => {
 //   // Get the canvas that images will be rendered on
@@ -282,24 +123,6 @@ setLastObservationNumber();
 //   };
 
 //   return initImg;
-// };
-
-// const getMarkerId = (): number | never => {
-//   // Extract the ID number of the element selected iff menu option is intersected
-
-//   // els[0].id exists since all entities that relate to being a marker also have a corresponding ID  associated with it
-
-//   // Regular Expression captures the digits associated with the ID
-//   const matches = els[0].id.match(/(\d+)/);
-
-//   // Parse the string to a number so the corresponding ID can be used
-//   // return +matches[0];
-//   if (matches) {
-//     return <number>+matches[0];
-//   }
-//   throw new Error(
-//     'It should never occur that a marker is intersected and it does not contain a corresponding ID'
-//   );
 // };
 
 // // TODO: consider breaking into set data and save data

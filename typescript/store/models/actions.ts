@@ -1,4 +1,4 @@
-// import { OperationActionTypes } from '../operation/models/actions';
+import { IntersectionActionTypes } from '../intersection/models/actions';
 import { AsyncActionTypes } from '../async/models/actions';
 
-export type AppActions = AsyncActionTypes; // OperationActionTypes |
+export type AppActions = AsyncActionTypes | IntersectionActionTypes;
