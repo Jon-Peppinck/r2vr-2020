@@ -37,8 +37,8 @@ outer_radius = inner_radius + 0.02
 
 ## Relative image path
 img_paths <- c(
-  "./2dimages/10003003901.jpg", 
-  #"./2dimages/latest/14017099802.jpeg", 
+  #"./2dimages/10003003901.jpg", 
+  "./2dimages/latest/14017099802.jpeg", 
   "./2dimages/12026189701.jpg", 
   "./2dimages/13003028701.jpg",
   "./2dimages/130005009301.jpg"

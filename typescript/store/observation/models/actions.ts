@@ -6,6 +6,7 @@ export const FETCH_LAST_OBSERVATION_NUMBER_FULFILLED =
   'FETCH_LAST_OBSERVATION_NUMBER_FULFILLED';
 export const FETCH_LAST_OBSERVATION_NUMBER_REJECTED =
   'FETCH_LAST_OBSERVATION_NUMBER_REJECTED';
+export const INCREMENT_OBSERVATION_NUMBER = 'INCREMENT_OBSERVATION_NUMBER';
 
 interface PendingAction {
   type: typeof FETCH_LAST_OBSERVATION_NUMBER_PENDING;
@@ -22,4 +23,12 @@ interface RejectedAction {
   observation_number: ObservationNumber;
 }
 
-export type AsyncActionTypes = PendingAction | FulfilledAction | RejectedAction;
+interface IncrementAction {
+  type: typeof INCREMENT_OBSERVATION_NUMBER;
+}
+
+export type ObservationActionTypes =
+  | PendingAction
+  | FulfilledAction
+  | RejectedAction
+  | IncrementAction;

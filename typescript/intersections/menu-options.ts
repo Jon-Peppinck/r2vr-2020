@@ -1,56 +1,43 @@
 import { Entity } from 'aframe';
 
-import { displayMenuOptions } from '../user-interface/menu-options';
+import { store } from '../store/rootStore';
 
-// TODO: Refactor isCoralIntersected and isNotCoralIntersected into isMenuOptionIntersected
-export const isCoralIntersected = (): void => {
-  // Get the marker id number for the selected marker
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const markerId = getMarkerId();
+import boundMarkerIntersection from '../store/marker/MarkerAction';
 
-  // Set the global selected marker ID
-  selectedMarkerId = markerId;
+import displayMenuOptions from '../user-interface/menu-options';
 
-  // If an intersected entity is the coral menu
+import save from '../helpers/save';
+
+const selectMenuOption = (): void => {
+  const state = store.getState();
+  const { id } = state.markerReducer;
+  const els = Object.values(state.intersectionReducer);
+
   if (
     els.some(
-      (el: Entity) =>
-        el.id === `menuCoral${markerId}` || el.id === `coralText${markerId}`
+      (el: Entity) => el.id === `menuCoral${id}` || el.id === `coralText${id}`
     )
   ) {
-    // Save annotation to database: isCoral = 1 (coral)
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    saveData(markerId, 1);
-
-    // Hide menu options
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    displayMenuOptions(markerId);
+    save(id, 1);
+    displayMenuOptions(id);
+    boundMarkerIntersection({ id, isHovered: false });
+  } else if (
+    els.some(
+      (el: Entity) =>
+        el.id === `menuNotCoral${id}` || el.id === `notCoralText${id}`
+    )
+  ) {
+    save(id, 0);
+    displayMenuOptions(id);
+    boundMarkerIntersection({ id, isHovered: false });
+  } else if (
+    !els.some(
+      (el: Entity) =>
+        el.id === `marker${id}` || el.id === `markerCircumference${id}`
+    )
+  ) {
+    displayMenuOptions(id);
   }
 };
 
-export const isNotCoralIntersected = (): void => {
-  // Get the marker id number for the selected marker
-
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const markerId = getMarkerId();
-
-  // Set the global selected marker ID
-  selectedMarkerId = markerId;
-
-  // If an intersected entity is the not coral menu
-  if (
-    els.some(
-      (el: Entity) =>
-        el.id === `menuNotCoral${markerId}` ||
-        el.id === `notCoralText${markerId}`
-    )
-  ) {
-    // Save annotation to database: isNotCoral = 0 (not coral)
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    saveData(markerId, 0);
-
-    // Hide menu options
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    displayMenuOptions(markerId);
-  }
-};
+export default selectMenuOption;

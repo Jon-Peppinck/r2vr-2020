@@ -3,14 +3,20 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { logger } from 'redux-logger';
 
-// // import { operationReducer } from './operation/OperationReducer';
-import { asyncReducer } from './async/AsyncReducer';
+import { imageReducer } from './image/ImageReducer';
 import { intersectionReducer } from './intersection/IntersectionReducer';
+import { markerReducer } from './marker/MarkerReducer';
+import { observationReducer } from './observation/ObservationReducer';
+import { userReducer } from './user/UserReducer';
+
 import { AppActions } from './models/actions';
 
 const rootReducer = combineReducers({
-  asyncReducer,
+  imageReducer,
   intersectionReducer,
+  markerReducer,
+  observationReducer,
+  userReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

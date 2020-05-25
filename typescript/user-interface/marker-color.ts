@@ -1,4 +1,4 @@
-import { CoralBinary } from '../declarations/data.d';
+import { CoralBinary } from '../models/CoralBinary';
 
 // Choose colors of menu options
 export const CORAL_COLOR = '#FF95BC';
