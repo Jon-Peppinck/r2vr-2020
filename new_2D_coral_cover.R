@@ -422,6 +422,87 @@ createPoints <- function(num = 5) {
   
 }
 
+# Image: 49001074001
+
+# Points (X and Y Flipped)
+
+# 1. x = 313, y = 2237 => Hard Corals
+# 2. x = 3453, y = 1114 => Algae
+# 3. x = 2141, y = 2163 => Sand
+# 4. x = 1780, y = 265 => Hard Corals
+# 5. x = 579, y = 589 => Hard Corals
+# 6. x = 3116, y = 403 => Hard Corals
+img1Points = list(
+  list(x = 313, y = 2237),
+  list(x = 3453, y = 1114),
+  list(x = 2141, y = 2163),
+  list(x = 1780, y = 265),
+  list(x = 579, y = 589),
+  list(x = 3116, y = 403)
+)
+
+# random_coordinate_x <- ((2 * 313 )/((3/4) * x.max.px)) - 4/3
+# random_coordinate_y <- ((2 * 2237 )/y.max.px) - 1
+
+# Generates a function to transform the coordinate from the first quadrant of the cartesian plane into a normalised plane symmetric about the centroid
+coordinateTransformation <- function(ratioNumerator = 4000, ratioDenominator = 3000) {
+  transformation = function(val) {
+    if (val < 0) {
+      stop('Please enter a non-negative value')
+    }
+    if (val > ratioNumerator) {
+      stop(paste('Please enter a value less than or equal to', ratioNumerator))
+    }
+    ((2 * val)/ratioDenominator) - ratioNumerator/ratioDenominator
+  }
+  return(transformation)
+}
+
+
+# TODO: delete temp fn
+fixedPointsTemp <- function(points) {
+  ## Generate the transformation functions
+  xTransformation <- coordinateTransformation()
+  yTransformation <- coordinateTransformation(ratioNumerator = 3000, ratioDenominator = 3000)
+  
+  for(point in 1:length(points)) {
+    ## Find the transformed x and y values
+    fixedCoordinateX <- xTransformation(img1Points[[point]]$x)
+    fixedCoordinateY <- yTransformation(img1Points[[point]]$y)
+    
+    ## Update the position for the number of points specified
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "position",
+        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = -1)
+      ),
+      ## Update the specified number of points to be visible
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = TRUE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+  
+  startNumberOfRemainingPoints <- length(points)  + 1 # TODO: check !> 20
+  
+  ## Update the remaining points to not be visible
+  for (point in startNumberOfRemainingPoints:MAX_NUMBER_OF_POINTS) {
+    ## Update the position
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(update_entities)
+  }  
+}
+
 
 # TODO: consider breaking into helper functions
 points <- function(numberOfPoints = 5, fixed = FALSE){
