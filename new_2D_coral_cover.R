@@ -38,10 +38,12 @@ outer_radius = inner_radius + 0.02
 ## Relative image path
 img_paths <- c(
   #"./2dimages/10003003901.jpg", 
-  "./2dimages/latest/14017099802.jpeg", 
-  "./2dimages/12026189701.jpg", 
-  "./2dimages/13003028701.jpg",
-  "./2dimages/130005009301.jpg"
+  # "./2dimages/latest/14017099802.jpeg", 
+  # "./2dimages/12026189701.jpg", 
+  # "./2dimages/13003028701.jpg",
+  # "./2dimages/130005009301.jpg"
+  "./2dimages/latest/49001074001.jpeg",
+  "./2dimages/latest/51010026001.jpeg"
 )
 
 ## Create variables for image assets
@@ -76,7 +78,7 @@ canvas_2d <- a_entity(
   src = image1,
   class = img_paths[1],
   height = 3,
-  width = 3,
+  width = 4,
   position = c(0, 0, canvas_z)
 )
 
@@ -310,7 +312,7 @@ Point <- R6::R6Class("Point", public = list(
   r = NA,
   n = NA,
   initialize = function(x, y, n, r = outer_radius) {
-    stopifnot(is.numeric(x), abs(x) <= 1)
+    stopifnot(is.numeric(x), abs(x) <= 1.34) # note: image 4000x3000 => x = 4y/3 = 1.33
     stopifnot(is.numeric(y), abs(y) <= 1)
     stopifnot(is.numeric(n))
     stopifnot(is.numeric(r), r < 0.5)
@@ -364,7 +366,8 @@ createPoints <- function(num = 5) {
   while (length(points.list) < num) {
     overlapping = FALSE
     
-    x <- runif(1, -1 + outer_radius, 1 - outer_radius)
+    # note: image 4000x3000 => x = 4y/3 = 1.33
+    x <- runif(1, -4/3 + outer_radius, 4/3 - outer_radius) 
     y <- runif(1, -1 + outer_radius, 1 - outer_radius)
     n <- length(points.list) + 1
     
@@ -491,51 +494,60 @@ points <- function(numberOfPoints = 5, fixed = FALSE){
       }
     }
   } else {
-    fixedNumberOfPoints <- 8
+    fixedNumberOfPoints <- 10
     print('fixed data')
     init.x <- -1
     init.y <- 0
     
-    max.px <- 1330
+    x.max.px <- 4000
+    y.max.px <- 3000
+    
+    
+    # Image: 49001074001
+    
+    
+    # Points (X and Y Flipped)
+    
+    # 1. x = 313, y = 2237 => Hard Corals
+    # 2. x = 3453, y = 1114 => Algae
+    # 3. x = 2141, y = 2163 => Sand
+    # 4. x = 1780, y = 265 => Hard Corals
+    # 5. x = 579, y = 589 => Hard Corals
+    # 6. x = 3116, y = 403 => Hard Corals
+    
     
     ## Assign a new position and display the visibility for the number of points
+    
     for (i in 1:fixedNumberOfPoints ) {
       # Generation of points
-      # Note: Canvas: -1 < x < 1, -1 < y < 1
+      # Note: Canvas: -4/3 < x < 4/3, -1 < y < 1
       # TODO: temp only, remove
       if (i == 1) {
-        # DSUB: Algae
-        random_coordinate_x <- (401/(max.px/2)) - 1
-        random_coordinate_y <- (98/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 313 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 2237 )/y.max.px) - 1
+   
       } else if (i == 2) {
-        # DSUB: Algae
-        random_coordinate_x <- (1009/(max.px/2)) - 1
-        random_coordinate_y <- (332/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 3453 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 1114 )/y.max.px) - 1
       } else if (i == 3) {
-        # ACR-PE: Hard Coral
-        random_coordinate_x <- (631/(max.px/2)) - 1
-        random_coordinate_y <- (525/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 2141 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 2163 )/y.max.px) - 1
       } else if (i == 4) {
-        # DSUB: Algae
-        random_coordinate_x <- (1207/(max.px/2)) - 1
-        random_coordinate_y <- (1150/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 1780 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 265 )/y.max.px) - 1
       } else if (i == 5) {
-        # FAV-MUS: Hard Coral
-        random_coordinate_x <- (137/(max.px/2)) - 1
-        random_coordinate_y <- (1219/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 579 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 589 )/y.max.px) - 1
       } else if (i == 6) {
-        # FAV-MUS: Hard Coral
-        random_coordinate_x <- (909/(max.px/2)) - 1
-        random_coordinate_y <- (856/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 3116 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 403 )/y.max.px) - 1
       } else if (i == 7) {
-        # FAV-MUS: Hard Coral
-        random_coordinate_x <- (780/(max.px/2)) - 1
-        random_coordinate_y <- (1110/(max.px/2)) - 1
+        random_coordinate_x <- ((2 * 0 )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * 0 )/y.max.px) - 1
       } else if (i == 8) {
-        # FAV-MUS: Hard Coral
-        random_coordinate_x <- (486/(max.px/2)) - 1
-        random_coordinate_y <- (425/(max.px/2)) - 1
-      }
+        random_coordinate_x <- ((2 * x.max.px )/((3/4) * x.max.px)) - 4/3
+        random_coordinate_y <- ((2 * y.max.px )/y.max.px) - 1
+      } 
 
       # Update the position for the number of points specified
       update_entities <- list(
