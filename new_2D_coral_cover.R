@@ -24,7 +24,7 @@ MAX_NUMBER_OF_POINTS <- 20
 # 
 # ## Set marker radius
 inner_radius = 0.05 # 0.08
-outer_radius = inner_radius + 0.02
+outer_radius = inner_radius + 0.01
 
 ## TODO: Refactor when images on master 
 
@@ -43,7 +43,9 @@ img_paths <- c(
   # "./2dimages/13003028701.jpg",
   # "./2dimages/130005009301.jpg"
   "./2dimages/latest/49001074001.jpeg",
-  "./2dimages/latest/51010026001.jpeg"
+  "./2dimages/latest/51010026001.jpeg",
+  "./2dimages/latest/49004035001.jpeg",
+  "./2dimages/latest/50003181001.jpeg"
 )
 
 ## Create variables for image assets
@@ -438,22 +440,33 @@ img1Points = list(
   list(x = 2141, y = 2163),
   list(x = 1780, y = 265),
   list(x = 579, y = 589),
-  list(x = 3116, y = 403)
+  list(x = 3116, y = 403),
+  # list(x = 2237, y = 313),
+  # list(x = 1114, y = 3453),
+  # list(x = 2163, y = 2141),
+  # list(x = 265, y = 1780),
+  # list(x = 589, y = 579),
+  # list(x = 589, y = 3116),
+  list(x = 0, y = 0),
+  list(x = 4000, y = 3000)
+  # list(x = 2000, y = 1500),
+  # list(x = 1000, y = 1500),
+  # list(x = 3000, y = 1500)
 )
 
 # random_coordinate_x <- ((2 * 313 )/((3/4) * x.max.px)) - 4/3
 # random_coordinate_y <- ((2 * 2237 )/y.max.px) - 1
 
 # Generates a function to transform the coordinate from the first quadrant of the cartesian plane into a normalised plane symmetric about the centroid
-coordinateTransformation <- function(ratioNumerator = 4000, ratioDenominator = 3000) {
+coordinateTransformation <- function(maximumAxisValue, multiplier = 1) {
   transformation = function(val) {
     if (val < 0) {
       stop('Please enter a non-negative value')
     }
-    if (val > ratioNumerator) {
-      stop(paste('Please enter a value less than or equal to', ratioNumerator))
+    if (val > maximumAxisValue) {
+      stop(paste('Please enter a value less than or equal to', maximumAxisValue))
     }
-    ((2 * val)/ratioDenominator) - ratioNumerator/ratioDenominator
+    multiplier * ((( 2 * val)/maximumAxisValue) - 1)
   }
   return(transformation)
 }
@@ -462,8 +475,8 @@ coordinateTransformation <- function(ratioNumerator = 4000, ratioDenominator = 3
 # TODO: delete temp fn
 fixedPointsTemp <- function(points) {
   ## Generate the transformation functions
-  xTransformation <- coordinateTransformation()
-  yTransformation <- coordinateTransformation(ratioNumerator = 3000, ratioDenominator = 3000)
+  xTransformation <- coordinateTransformation(maximumAxisValue = 4000, multiplier = 4/3)
+  yTransformation <- coordinateTransformation(maximumAxisValue = 3000)
   
   for(point in 1:length(points)) {
     ## Find the transformed x and y values
@@ -806,3 +819,4 @@ go2 <- function(image_paths = img_paths, index = NA){
 # points(fixed=TRUE)
 # addBox()
 # rmBox()
+# fixedPointsTemp(img1Points)
