@@ -426,62 +426,53 @@ createPoints <- function(num = 5) {
 
 # Image: 49001074001
 
-# Points (X and Y Flipped)
+# Points (X and Y Flipped from Poor_accuracy_class.csv)
+	
 
-# 1. x = 313, y = 2237 => Hard Corals
-# 2. x = 3453, y = 1114 => Algae
-# 3. x = 2141, y = 2163 => Sand
-# 4. x = 1780, y = 265 => Hard Corals
-# 5. x = 579, y = 589 => Hard Corals
-# 6. x = 3116, y = 403 => Hard Corals
 img1Points = list(
-  list(x = 313, y = 2237),
-  list(x = 3453, y = 1114),
-  list(x = 2141, y = 2163),
-  list(x = 1780, y = 265),
-  list(x = 579, y = 589),
-  list(x = 3116, y = 403),
-  # list(x = 2237, y = 313),
-  # list(x = 1114, y = 3453),
-  # list(x = 2163, y = 2141),
-  # list(x = 265, y = 1780),
-  # list(x = 589, y = 579),
-  # list(x = 589, y = 3116),
-  list(x = 0, y = 0),
-  list(x = 4000, y = 3000)
+  list(x = 3203, y = 173), # sand
+  list(x = 1726, y = 356), # sand
+  list(x = 2291, y = 1086), # sand
+  list(x = 2141, y = 2163), # sand
+  list(x = 2824, y = 2643), # sand
+  list(x = 2335, y = 2755) # sand
+  
+
+  # list(x = 0, y = 0),
+  # list(x = 4000, y = 3000),
   # list(x = 2000, y = 1500),
   # list(x = 1000, y = 1500),
-  # list(x = 3000, y = 1500)
+  # list(x = 3000, y = 1500),
+  # list(x = 1000, y = 750),
+  # list(x = 3000, y = 2250)
 )
 
-# random_coordinate_x <- ((2 * 313 )/((3/4) * x.max.px)) - 4/3
-# random_coordinate_y <- ((2 * 2237 )/y.max.px) - 1
-
-# Generates a function to transform the coordinate from the first quadrant of the cartesian plane into a normalised plane symmetric about the centroid
-coordinateTransformation <- function(maximumAxisValue, multiplier = 1) {
-  transformation = function(val) {
-    if (val < 0) {
+rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
+  translation = function(oldValue) {
+    if (oldValue < 0) {
       stop('Please enter a non-negative value')
     }
-    if (val > maximumAxisValue) {
-      stop(paste('Please enter a value less than or equal to', maximumAxisValue))
+    if (oldValue > oldMax || oldValue < oldMin) {
+      stop(paste('Please enter a value between', oldMin, 'and', oldMax))
     }
-    multiplier * ((( 2 * val)/maximumAxisValue) - 1)
+    ## To translate a point A on a scale with range (Omin, Omax) to a point B in a range (Nmin,        Nmax) then:
+    ## B = [( A - O_min)/(O_max - O_min)](N_max - N_min) + N_min
+    ((oldValue - oldMin)/(oldMax - oldMin)) * (newMax - newMin) + newMin
   }
-  return(transformation)
+  return(translation)
 }
 
 
 # TODO: delete temp fn
 fixedPointsTemp <- function(points) {
   ## Generate the transformation functions
-  xTransformation <- coordinateTransformation(maximumAxisValue = 4000, multiplier = 4/3)
-  yTransformation <- coordinateTransformation(maximumAxisValue = 3000)
+  xTranslation <- rangeTranslation(4000, 0, 4/3, -4/3)
+  yTranslation <- rangeTranslation(3000)
   
   for(point in 1:length(points)) {
     ## Find the transformed x and y values
-    fixedCoordinateX <- xTransformation(img1Points[[point]]$x)
-    fixedCoordinateY <- yTransformation(img1Points[[point]]$y)
+    fixedCoordinateX <- xTranslation(img1Points[[point]]$x)
+    fixedCoordinateY <- yTranslation(img1Points[[point]]$y)
     
     ## Update the position for the number of points specified
     update_entities <- list(
