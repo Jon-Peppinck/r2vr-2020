@@ -42,7 +42,9 @@ img_paths <- c(
   # "./2dimages/12026189701.jpg", 
   # "./2dimages/13003028701.jpg",
   # "./2dimages/130005009301.jpg"
-  "./2dimages/latest/49001074001.jpeg",
+  "./2dimages/latest/49001074001.jpeg", # img 1
+  "./2dimages/latest/58033379501.jpeg", # img 2
+  "./2dimages/latest/14017099802.jpeg", # img 3
   "./2dimages/latest/51010026001.jpeg",
   "./2dimages/latest/49004035001.jpeg",
   "./2dimages/latest/50003181001.jpeg"
@@ -80,7 +82,7 @@ canvas_2d <- a_entity(
   src = image1,
   class = img_paths[1],
   height = 3,
-  width = 4,
+  width = 4, # 3
   position = c(0, 0, canvas_z)
 )
 
@@ -424,7 +426,7 @@ createPoints <- function(num = 5) {
   
 }
 
-# Image: 49001074001
+# Image: 49001074001 4000x3000
 
 # Points (X and Y Flipped from Poor_accuracy_class.csv)
 	
@@ -436,7 +438,7 @@ img1Points = list(
   list(x = 2141, y = 2163), # sand
   list(x = 2824, y = 2643), # sand
   list(x = 2335, y = 2755) # sand
-  
+
 
   # list(x = 0, y = 0),
   # list(x = 4000, y = 3000),
@@ -447,13 +449,33 @@ img1Points = list(
   # list(x = 3000, y = 2250)
 )
 
+# Image: 58033379501 1600x1200
+
+# img2Points = list(
+#   list(x = 1393, y = 121), # Hard corals
+#   list(x = 118, y = 535), # Algae
+#   list(x = 0, y = 0),
+#   list(x = 1600, y = 1200)
+# )
+
+# Image: 14017099802 1031x1031
+
+# img3Points = list(
+#   list(x = 524, y = 481), # Algae
+#   list(x = 524, y = 541), 
+#   list(x = 833, y = 636), # Hard Coral
+#   list(x = 833, y = 696), # 
+#   list(x = 0, y = 0),
+#   list(x = 1031, y = 1031)
+# )
+
 rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   translation = function(oldValue) {
     if (oldValue < 0) {
       stop('Please enter a non-negative value')
     }
     if (oldValue > oldMax || oldValue < oldMin) {
-      stop(paste('Please enter a value between', oldMin, 'and', oldMax))
+      stop(paste('Please enter a value between', oldMin, 'and', oldMax, '. You entered:', oldValue))
     }
     ## To translate a point A on a scale with range (Omin, Omax) to a point B in a range (Nmin,        Nmax) then:
     ## B = [( A - O_min)/(O_max - O_min)](N_max - N_min) + N_min
@@ -472,7 +494,7 @@ fixedPointsTemp <- function(points) {
   for(point in 1:length(points)) {
     ## Find the transformed x and y values
     fixedCoordinateX <- xTranslation(img1Points[[point]]$x)
-    fixedCoordinateY <- yTranslation(img1Points[[point]]$y)
+    fixedCoordinateY <- -yTranslation(img1Points[[point]]$y)
     
     ## Update the position for the number of points specified
     update_entities <- list(
