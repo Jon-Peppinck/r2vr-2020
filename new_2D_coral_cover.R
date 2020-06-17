@@ -2,8 +2,8 @@ library(r2vr)
 
 # library(RMySQL)
 # library(dbConnect)
-# library(httr)
-# library(jsonlite)
+library(httr)
+library(jsonlite)
 
 ## Connect IP
 IPv4_ADDRESS <- find_IP() 
@@ -36,18 +36,21 @@ outer_radius = inner_radius + 0.01
 #                      "/ext/images/reef/130050093.jpg"))
 
 ## Relative image path
+
+# C:\r2vr2020\r2vr\inst\ext\images\reef
 img_paths <- c(
   #"./2dimages/10003003901.jpg", 
   # "./2dimages/latest/14017099802.jpeg", 
   # "./2dimages/12026189701.jpg", 
   # "./2dimages/13003028701.jpg",
   # "./2dimages/130005009301.jpg"
+  
   "./2dimages/latest/49001074001.jpeg", # img 1
-  "./2dimages/latest/58033379501.jpeg", # img 2
+  "./2dimages/latest/49002256001.jpeg", # img 2
   "./2dimages/latest/14017099802.jpeg", # img 3
-  "./2dimages/latest/51010026001.jpeg",
-  "./2dimages/latest/49004035001.jpeg",
-  "./2dimages/latest/50003181001.jpeg"
+  "./2dimages/latest/51010026001.jpeg"
+  # "./2dimages/latest/49004035001.jpeg",
+  # "./2dimages/latest/50003181001.jpeg"
 )
 
 ## Create variables for image assets
@@ -449,13 +452,12 @@ img1Points = list(
   # list(x = 3000, y = 2250)
 )
 
-# Image: 58033379501 1600x1200
+# Image: 49002256001 4000x3000
+
 
 # img2Points = list(
-#   list(x = 1393, y = 121), # Hard corals
-#   list(x = 118, y = 535), # Algae
-#   list(x = 0, y = 0),
-#   list(x = 1600, y = 1200)
+#    list(x = 3673, y = 2605), # Hard corals
+#    list(x = 3723, y = 1884) # Algae
 # )
 
 # Image: 14017099802 1031x1031
@@ -756,7 +758,7 @@ addBox <- function() {
 
 }
 
-go2 <- function(image_paths = img_paths, index = NA){
+go2 <- function(image_paths = img_paths, index = NA) {
   # Hide all points when next image called
   points(0)
 
@@ -819,13 +821,28 @@ go2 <- function(image_paths = img_paths, index = NA){
   animals$send_messages(setup_scene)
 }
 
+
+read <- function(url) {
+  # Deserialize the payload so data can be read and converted from JSON to data frame
+  data.df <<- jsonlite::fromJSON(httr::content(httr::GET(url), "text"), flatten = TRUE)
+
+  return(data.df)
+}
+
+
+# data.df <- read("https://r2vr.herokuapp.com/annotated-image")
+
 ### COMMANDS ###
+
+# fixedPointsTemp(img1Points)
+# go2(image_paths = img_paths, index = 2)
+# createPoints()
 
 # go2(image_paths = img_paths, index = 1)
 # go2(image_paths = img_paths, index = 2)
 # go2(image_paths = img_paths, index = 3)
 # go2(image_paths = img_paths, index = 4)
-# points()
+# createPoints()
 # pop2(FALSE)
 # pop2()
 # points(1)
