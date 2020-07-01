@@ -112,8 +112,214 @@ user <- a_entity(
   radius = 0
 )
 
+# Evauluation Question Variables
+the_question <- "Indicate your difficulty using the system to annotate 2D images?"
+message_height <- 1.5
+answer_1 <- "Unable to use"
+answer_2 <- "Major difficulty"
+answer_3 <- "Minor difficulty"
+answer_4 <- "No difficulty"
+
+# Colours
+dark_red <- "#8c0000"
+bright_red <- "#ff0000"
+white <- "#ffffff"
+black <- "#000000"
+
+question_label <- a_label(
+  text = the_question,
+  id = "questionPlaneText",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0.02, 0)
+)
+
+question_plane <- a_entity(
+  .tag = "plane",
+  .children = list(question_label),
+  id = "questionPlane",
+  visible = FALSE,
+  position = c(0, message_height, -2),
+  color = white,
+  height = 0.3,
+  width = 1.1,
+)
+
+post_label <- a_label(
+  text = "Submit Answer",
+  id = "postText",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0, 0)
+)
+
+post_plane <- a_entity(
+  .tag = "plane",
+  .children = list(post_label),
+  id = "postPlane",
+  visible = FALSE,
+  position = c(0.8, message_height, -2),
+  color = white,
+  height = 0.3,
+  width = 0.3,
+  annotated = FALSE # TODO: check if allowed
+)
+
+# Outer boundary for intersection detection
+post_plane_boundary <- a_entity(
+  .tag = "ring",
+  id = "postPlaneBoundary",
+  visible = FALSE,
+  position = c(0.8, message_height, -2),
+  color = dark_red,
+  radius_inner = 0.24,
+  radius_outer = 0.25,
+  segments_theta = 4,
+  theta_start = 45
+)
+
+option_1_label <- a_label(
+  text = answer_1,
+  id = "option1Text",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0, 0)
+)
+
+option_1_plane <- a_entity(
+  .tag = "plane",
+  .children = list(option_1_label),
+  id = "option1Plane",
+  visible = FALSE,
+  position = c(-0.35, message_height-0.45, -2),
+  color = white,
+  height = 0.4,
+  width = 0.4
+)
+
+# Outer boundary for intersection detection
+option_1_plane_boundary <- a_entity(
+  .tag = "ring",
+  id = "option1Boundary",
+  position = c(-0.35, message_height-0.45, -2),
+  visible = FALSE,
+  color = dark_red,
+  radius_inner = 0.34,
+  radius_outer = 0.35,
+  segments_theta = 4,
+  theta_start = 45
+)
+
+option_2_label <- a_label(
+  text = answer_2,
+  id = "option2Text",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0, 0)
+)
+
+option_2_plane <- a_entity(
+  .tag = "plane",
+  .children = list(option_2_label),
+  id = "option2Plane",
+  visible = FALSE,
+  position = c(-0.35, message_height-1, -2),
+  color = white,
+  height = 0.4,
+  width = 0.4
+)
+
+# Outer boundary for intersection detection
+option_2_plane_boundary <- a_entity(
+  .tag = "ring",
+  id = "option2Boundary",
+  position = c(-0.35, message_height-1, -2),
+  visible = FALSE,
+  color = dark_red,
+  radius_inner = 0.34,
+  radius_outer = 0.35,
+  segments_theta = 4,
+  theta_start = 45
+)
+
+option_3_label <- a_label(
+  text = answer_3,
+  id = "option3Text",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0, 0)
+)
+
+option_3_plane <- a_entity(
+  .tag = "plane",
+  .children = list(option_3_label),
+  id = "option3Plane",
+  visible = FALSE,
+  position = c(0.35, message_height-0.45, -2),
+  color = white,
+  height = 0.4,
+  width = 0.4,
+)
+
+# Outer boundary for intersection detection
+option_3_plane_boundary <- a_entity(
+  .tag = "ring",
+  id = "option3Boundary",
+  visible = FALSE,
+  position = c(0.35, message_height-0.45, -2),
+  color = dark_red,
+  radius_inner = 0.34,
+  radius_outer = 0.35,
+  segments_theta = 4,
+  theta_start = 45
+)
+
+option_4_label <- a_label(
+  text = answer_4,
+  id = "option4Text",
+  color = black,
+  font = "mozillavr",
+  height = 1,
+  width = 1,
+  position = c(0, 0, 0)
+)
+
+option_4_plane <- a_entity(
+  .tag = "plane",
+  .children = list(option_4_label),
+  id = "option4Plane",
+  visible = FALSE,
+  position = c(0.35, message_height-1, -2),
+  color = white,
+  height = 0.4,
+  width = 0.4,
+)
+
+# Outer boundary for intersection detection
+option_4_plane_boundary <- a_entity(
+  .tag = "ring",
+  id = "option4Boundary",
+  visible = FALSE,
+  position = c(0.35, message_height-1, -2),
+  color = dark_red,
+  radius_inner = 0.34,
+  radius_outer = 0.35,
+  segments_theta = 4,
+  theta_start = 45
+)
+
 ## Initial entities
-list_of_children_entities <- list(canvas_2d, camera, user)
+list_of_children_entities <- list(canvas_2d, camera, user, option_1_plane_boundary, option_2_plane_boundary, option_3_plane_boundary, option_4_plane_boundary, question_plane, option_1_plane, option_2_plane, option_3_plane, option_4_plane, post_plane, post_plane_boundary)
 # Initital list length needed to append annotation entities via for loop
 initial_list_length <- length(list_of_children_entities)
 
@@ -829,8 +1035,49 @@ read <- function(url) {
   return(data.df)
 }
 
+pop2 <- function(visible = TRUE) {
+  show_messages <- list(
+    a_update(id = "questionPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option1Plane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option3Plane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option4Plane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option2Plane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "postPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "postPlaneBoundary",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option1Boundary",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option3Boundary",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option4Boundary",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "option2Boundary",
+             component = "visible",
+             attributes = TRUE)
+  )
+  visible_message <- change_message(show_messages, visible)
+  animals$send_messages(visible_message)
+}
+
 
 # data.df <- read("https://r2vr.herokuapp.com/annotated-image")
+# data.df <- read("https://r2vr.herokuapp.com/evaluation")
 
 ### COMMANDS ###
 
