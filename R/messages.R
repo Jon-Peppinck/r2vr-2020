@@ -138,7 +138,7 @@ a_add_entity <- function(tag, id, className = "", parentEntityId = ""){
 a_check <- function(imageId, goldStandard){
   check <- list(class = "check",
               imageId = imageId,
-              goldStandard = goldStandard
+              goldStandard = goldStandard)
   class(check) <- c("list", "r2vr_message")
   check
 }
