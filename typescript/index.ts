@@ -11,7 +11,7 @@ import boundGetImage from './store/image/ImageAction';
 import boundGetUser from './store/user/UserAction';
 import boundIntersection from './store/intersection/IntersectionAction';
 
-import { Annotation } from './store/annotation/models/Annotation';
+import { Annotation, Marker } from './store/annotation/models/Annotation';
 import { Image } from './store/image/models/Image';
 import { User } from './store/user/models/User';
 
@@ -304,7 +304,46 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.replaces_component
           );
         } else if (r2vr_message.class == 'check') {
-          console.log(333, r2vr_message.imageId, r2vr_message.goldStandard);
+          const state = store.getState();
+          const userAnnotations = state.annotationReducer[0].markers;
+          console.log(
+            333,
+            r2vr_message.imageId,
+            r2vr_message.goldStandard,
+            userAnnotations
+          );
+          // TODO: refactor to UI
+          // returns array of markers (Marker[])
+          // if wrong or unannotated
+          const incorrectResults = r2vr_message.goldStandard.filter(
+            ({ id: id1, isCoral: isCoral1 }: Marker) =>
+              !userAnnotations.some(
+                ({ id: id2, isCoral: isCoral2 }: Marker) =>
+                  id2 === id1 && isCoral1 === isCoral2
+              )
+          );
+
+          const correctResults = r2vr_message.goldStandard.filter(
+            ({ id: id1, isCoral: isCoral1 }: Marker) =>
+              userAnnotations.some(
+                ({ id: id2, isCoral: isCoral2 }: Marker) =>
+                  id2 === id1 && isCoral1 === isCoral2
+              )
+          );
+
+          incorrectResults.forEach((incorrectMarker: Marker) => {
+            document
+              .getElementById(`markerCircumference${incorrectMarker.id}`)!
+              .setAttribute('color', '#FF0000');
+          });
+
+          correctResults.forEach((correctMarker: Marker) => {
+            document
+              .getElementById(`markerCircumference${correctMarker.id}`)!
+              .setAttribute('color', '#00FF00');
+          });
+
+          // TODO: refactor above
         } else if (r2vr_message.class == 'remove_component') {
           target.removeAttribute(r2vr_message.component);
         } else if (r2vr_message.class == 'remove_entity') {

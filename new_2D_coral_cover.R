@@ -964,6 +964,10 @@ addBox <- function() {
 
 }
 
+# TODO: Refactor retrieval of image ID
+
+current_image <- img_paths[1]
+
 go2 <- function(image_paths = img_paths, index = NA) {
   # Hide all points when next image called
   points(0)
@@ -989,6 +993,7 @@ go2 <- function(image_paths = img_paths, index = NA) {
   }
 
   next_image <- animal_contexts[[CONTEXT_INDEX]]
+  current_image <<- img_paths[CONTEXT_INDEX] # TODO: refactor if more elegant way
   print(next_image)
 
 
@@ -1075,12 +1080,21 @@ pop2 <- function(visible = TRUE) {
   animals$send_messages(visible_message)
 }
 
+img1PointsIsCoral = list(
+  list(id = 1, isCoral = 0), # sand
+  list(id = 2, isCoral = 0), # sand
+  list(id = 3, isCoral = 0), # sand
+  list(id = 4, isCoral = 0), # sand
+  list(id = 5, isCoral = 0), # sand
+  list(id = 6, isCoral = 0) # sand
+)
+
 check <- function() {
  
   check_entities <- list(
     a_check(
-      imageId = "TodoImageId",
-      goldStandard = img1Points
+      imageId = current_image,
+      goldStandard = img1PointsIsCoral
     )
   )
   
