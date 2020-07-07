@@ -4,9 +4,14 @@ import { store } from '../store/rootStore';
 
 import postAnnotation from '../async/annotation/post';
 import updateAnnotation from '../async/annotation/update';
+import {
+  boundPostAnnotation,
+  boundUpdateAnnotation,
+} from '../store/annotation/AnnotationAction';
 
 import { AnnotationData } from '../models/AnnotationData';
 import { CoralBinary } from '../models/CoralBinary';
+import { Marker } from '../store/annotation/models/Annotation';
 
 const save = (markerId: number, coralBinary: CoralBinary) => {
   const state = store.getState();
@@ -41,6 +46,11 @@ const save = (markerId: number, coralBinary: CoralBinary) => {
     };
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     postAnnotation(data);
+    const annotatedMarker: Marker = {
+      id: data.site,
+      isCoral: coralBinary,
+    };
+    boundPostAnnotation(annotatedMarker);
   } else {
     // If annotation exists 'marked' => Set PUT data
     data = {
@@ -51,6 +61,11 @@ const save = (markerId: number, coralBinary: CoralBinary) => {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     updateAnnotation(data, coralBinary);
   }
+  const annotatedMarker: Marker = {
+    id: data.site,
+    isCoral: coralBinary,
+  };
+  boundUpdateAnnotation(annotatedMarker);
 };
 
 export default save;

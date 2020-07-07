@@ -6,10 +6,12 @@ import {
   boundFetchLastObservationNumber,
   boundIncrementObservationNumber,
 } from './store/observation/ObservationAction';
+import { boundPushNewImage } from './store/annotation/AnnotationAction';
 import boundGetImage from './store/image/ImageAction';
 import boundGetUser from './store/user/UserAction';
 import boundIntersection from './store/intersection/IntersectionAction';
 
+import { Annotation } from './store/annotation/models/Annotation';
 import { Image } from './store/image/models/Image';
 import { User } from './store/user/models/User';
 
@@ -17,10 +19,13 @@ import getImage from './helpers/image';
 
 import displayMenuOptions from './user-interface/menu-options';
 import handleMarkerIntersection from './intersections/marker';
+
 // import handleEvaluationIntersection from './intersections/evaluation';
 
 // Observe canvas for image changes
 document.addEventListener('DOMContentLoaded', () => {
+  // TODO: consider refactoring to image reducer
+  const imageIds: Pick<Annotation, 'imageId'>[] = [];
   const name = document.getElementById('user')!.className;
   const user = {
     name,
@@ -28,11 +33,34 @@ document.addEventListener('DOMContentLoaded', () => {
   boundGetUser(user);
   const initialImage: Image = getImage();
   boundGetImage(initialImage);
+  // TODO: push initial image to array in Annotation
+  const initialImageId = (initialImage.stringId as unknown) as Pick<
+    Annotation,
+    'imageId'
+  >;
+  imageIds.push(initialImageId);
+  console.log(66, imageIds);
+
+  boundPushNewImage(initialImageId);
 
   const mutationObserver = new MutationObserver(() => {
     const newImage: Image = getImage();
     boundGetImage(newImage);
-    boundIncrementObservationNumber();
+    // TODO: set previous observation to annotated
+    const imageId = (newImage.stringId as unknown) as Pick<
+      Annotation,
+      'imageId'
+    >;
+    // console.log(789, `${imageId} in ${imageIds}:`, imageIds.includes(imageId));
+    if (!imageIds.includes(imageId)) {
+      imageIds.push(imageId);
+      console.log(66, imageIds);
+
+      boundPushNewImage(imageId);
+      // TODO: push unique images to array in Annotation
+      boundIncrementObservationNumber();
+    }
+    // TODO: else, for the first time, set last (3rd) image isAnnotated: true
   });
 
   mutationObserver.observe(document.getElementById('canvas2d')!, {
@@ -233,3 +261,131 @@ const postEvaluation = async (data: any) => {
 //     throw new Error(`${err} - Unable to update annotation`);
 //   }
 // };
+
+/* WebSocket */
+
+AFRAME.registerComponent('r2vr-message-router', {
+  schema: {
+    host: { type: 'string', default: 'localhost' },
+    port: { type: 'number', default: 8080 },
+  },
+
+  init: function () {
+    var ws = new WebSocket('ws://' + this.data.host + ':' + this.data.port);
+
+    ws.onopen = function () {
+      console.log(
+        'r2vr-message-router: Established connection with server session.'
+      );
+    };
+
+    ws.onmessage = function (msg: any) {
+      console.log(msg);
+      var payload = JSON.parse(msg.data);
+      // Assume payload is a list of events
+      payload.map((r2vr_message: any) => {
+        var target = <any>'';
+        if (r2vr_message.id) {
+          target = <any>document.querySelector('#' + r2vr_message.id);
+        }
+        if (r2vr_message.class == 'event') {
+          target.emit(
+            r2vr_message.message.eventName,
+            r2vr_message.message.eventDetail,
+            r2vr_message.message.bubbles
+          );
+        } else if (r2vr_message.class == 'update') {
+          // TODO: move to else if (r2vr_message.class == 'check') {
+          // const state = store.getState();
+          // console.log(22, state.markerReducer.id);
+          target.setAttribute(
+            r2vr_message.component,
+            r2vr_message.attributes,
+            r2vr_message.replaces_component
+          );
+        } else if (r2vr_message.class == 'remove_component') {
+          target.removeAttribute(r2vr_message.component);
+        } else if (r2vr_message.class == 'remove_entity') {
+          target.removeFromParent();
+          target.parentNode.removeChild(target);
+        } else if (r2vr_message.class == 'remove_entity_class') {
+          var els = <any>(
+            document.getElementsByClassName(`${r2vr_message.className}`)
+          );
+          if (els.length === 0) {
+            throw new Error(
+              `${r2vr_message.className} does not pertain to the class of any DOM elements.`
+            );
+          }
+          while (els[0]) {
+            els[0].parentNode.removeChild(els[0]);
+          }
+        } else if (r2vr_message.class == 'add_entity') {
+          console.log(r2vr_message.tag);
+          const validEntities = [
+            'box',
+            'camera',
+            'circle',
+            'cone',
+            'cursor',
+            'curvedimage',
+            'cylinder',
+            'dodecahedron',
+            'gltf-model',
+            'icosahedron',
+            'image',
+            'light',
+            'link',
+            'obj-model',
+            'octahedron',
+            'plane',
+            'ring',
+            'sky',
+            'sound',
+            'sphere',
+            'tetrahedron',
+            'text',
+            'torus-knot',
+            'torus',
+            'triangle',
+            'video',
+            'videosphere',
+          ];
+          const isValidEntity = validEntities.includes(r2vr_message.tag);
+          if (!isValidEntity) {
+            throw new Error(
+              `${r2vr_message.tag} is not a primitive A-Frame entity.`
+            );
+          }
+          var parentEl = <any>document.querySelector('a-scene');
+          if (r2vr_message.parentEntityId) {
+            parentEl = document.querySelector(
+              `#${r2vr_message.parentEntityId}`
+            );
+          }
+          if (!parentEl) {
+            throw new Error(
+              `${r2vr_message.parentEntityId} does not pertain to the ID of a DOM element.`
+            );
+          }
+          var entityEl = document.createElement(`a-${r2vr_message.tag}`);
+          console.log(entityEl);
+          entityEl.id = r2vr_message.id;
+          if (r2vr_message.className) {
+            entityEl.classList.add(`${r2vr_message.className}`);
+          }
+          parentEl.appendChild(entityEl);
+        } else {
+          throw new Error(
+            'r2vr-message-router received a message of unknown class.'
+          );
+        }
+      });
+    };
+    function handle_r_server_message(event: any) {
+      ws.send(event.detail);
+    }
+
+    this.el.addEventListener('r_server_message', handle_r_server_message);
+  },
+});

@@ -1,3 +1,4 @@
+import { AnnotationActionTypes } from '../annotation/models/actions';
 import { ImageActionTypes } from '../image/models/actions';
 import { IntersectionActionTypes } from '../intersection/models/actions';
 import { MarkerActionTypes } from '../marker/models/actions';
@@ -9,4 +10,5 @@ export type AppActions =
   | IntersectionActionTypes
   | MarkerActionTypes
   | ObservationActionTypes
-  | UserActionTypes;
+  | UserActionTypes
+  | AnnotationActionTypes;
