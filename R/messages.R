@@ -124,6 +124,25 @@ a_add_entity <- function(tag, id, className = "", parentEntityId = ""){
   add
 }
 
+## TODO: Done by hand to test - look into R way (roxygen etc.)
+
+##' Check if annotations are correct or incorrect
+##'
+##' Display the annotated marker ring entities as green if correct or red if incorrect
+##'
+##' @title a_check
+##' @param imageId the image ID i.e. filename without extension
+##' @param goldStandard a list of annotated markers for the corresponding image
+##' @return An object that represents an A-Frame Event.
+##' @export
+a_check <- function(imageId, goldStandard){
+  check <- list(class = "check",
+              imageId = imageId,
+              goldStandard = goldStandard
+  class(check) <- c("list", "r2vr_message")
+  check
+}
+
 ## Unexported helpers
 is_r2vr_message <- function(x) inherits(x, "r2vr_message")
 

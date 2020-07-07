@@ -1075,6 +1075,19 @@ pop2 <- function(visible = TRUE) {
   animals$send_messages(visible_message)
 }
 
+check <- function() {
+ 
+  check_entities <- list(
+    a_check(
+      imageId = "TodoImageId",
+      goldStandard = img1Points
+    )
+  )
+  
+  animals$send_messages(check_entities)
+  
+}
+
 
 # data.df <- read("https://r2vr.herokuapp.com/annotated-image")
 # data.df <- read("https://r2vr.herokuapp.com/evaluation")

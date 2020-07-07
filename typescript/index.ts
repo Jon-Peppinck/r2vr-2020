@@ -303,6 +303,8 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.attributes,
             r2vr_message.replaces_component
           );
+        } else if (r2vr_message.class == 'check') {
+          console.log(333, r2vr_message.imageId, r2vr_message.goldStandard);
         } else if (r2vr_message.class == 'remove_component') {
           target.removeAttribute(r2vr_message.component);
         } else if (r2vr_message.class == 'remove_entity') {
