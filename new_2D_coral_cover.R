@@ -77,7 +77,7 @@ canvas_2d <- a_entity(
     # "./inst/js/new_2D_coral_cover.js",
     "./inst/js/bundle.js"
     ),
-  .assets = list(image2, image3, image4),
+  .assets = list(image2, image3),
   id = "canvas2d",
   src = image1,
   class = img_paths[1],
@@ -1097,12 +1097,73 @@ img1PointsIsCoral = list(
   list(id = 6, isCoral = 0) # sand
 )
 
-check <- function() {
- 
+img2Points = list(
+   list(x = 1000, y = 1000),
+   list(x = 2000, y = 2000)
+)
+
+img2PointsIsCoral = list(
+  list(id = 1, isCoral = 0),
+  list(id = 2, isCoral = 0)
+)
+
+img3Points = list(
+  list(x = 1000, y = 1000),
+  list(x = 2000, y = 2000),
+  list(x = 2500, y = 2500)
+)
+
+img3PointsIsCoral = list(
+  list(id = 1, isCoral = 0),
+  list(id = 2, isCoral = 0),
+  list(id = 3, isCoral = 0)
+)
+
+# img1Points = list(
+#   list(x = 3203, y = 173), # sand
+#   list(x = 1726, y = 356), # sand
+#   list(x = 2291, y = 1086), # sand
+#   list(x = 2141, y = 2163), # sand
+#   list(x = 2824, y = 2643), # sand
+#   list(x = 2335, y = 2755) # sand
+# )
+
+allImagesAnnotated <- FALSE
+
+check <- function(imgNumber) {
+  if (allImagesAnnotated || current_image == img_paths[length(img_paths)]) {
+    allImagesAnnotated <<- TRUE
+  }
+  # Only check if all images are annotated i.e. current image is the last image
+  if (!allImagesAnnotated) {
+    stop('Please annotate all images before calling check!')
+  }
+  # TODO: check valid integer passed as param i.e. 1 - length(img_paths)
+
+  ## Update the remaining points to not be visible
+  for (i in 1:MAX_NUMBER_OF_POINTS) {
+    ## Update the position
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", i),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+  
+  imgNumberCoordinates <- paste0('img', imgNumber, 'Points')
+  imgNumberGoldStandard <- paste0('img', imgNumber, 'PointsIsCoral')
+  
+  # fixedPointsTemp(imgNumberCoordinates)
+  go2(image_paths = img_paths, index = imgNumber)
+  
+  
   check_entities <- list(
     a_check(
-      imageId = current_image,
-      goldStandard = img1PointsIsCoral
+      imageId = img_paths[imgNumber],
+      goldStandard = img1PointsIsCoral # imgNumberGoldStandard
     )
   )
   

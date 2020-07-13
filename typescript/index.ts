@@ -335,12 +335,18 @@ AFRAME.registerComponent('r2vr-message-router', {
             document
               .getElementById(`markerCircumference${incorrectMarker.id}`)!
               .setAttribute('color', '#FF0000');
+            document
+              .getElementById(`markerContainer${incorrectMarker.id}`)!
+              .setAttribute('visible', 'true');
           });
 
           correctResults.forEach((correctMarker: Marker) => {
             document
               .getElementById(`markerCircumference${correctMarker.id}`)!
               .setAttribute('color', '#00FF00');
+            document
+              .getElementById(`markerContainer${correctMarker.id}`)!
+              .setAttribute('visible', 'true');
           });
 
           // TODO: refactor above
