@@ -39,19 +39,16 @@ outer_radius = inner_radius + 0.01
 
 # C:\r2vr2020\r2vr\inst\ext\images\reef
 img_paths <- c(
-  #"./2dimages/10003003901.jpg", 
-  # "./2dimages/latest/14017099802.jpeg", 
-  # "./2dimages/12026189701.jpg", 
-  # "./2dimages/13003028701.jpg",
-  # "./2dimages/130005009301.jpg"
-  
-  "./2dimages/latest/49001074001.jpeg", # img 1
-  "./2dimages/latest/49002256001.jpeg", # img 2
-  "./2dimages/latest/14017099802.jpeg", # img 3
-  "./2dimages/latest/51010026001.jpeg"
-  # "./2dimages/latest/49004035001.jpeg",
-  # "./2dimages/latest/50003181001.jpeg"
+  "./2dimages/latest/49001074001.jpeg", # img1
+  "./2dimages/latest/49002256001.jpeg", # img2
+  "./2dimages/latest/14017099802.jpeg",
+  "./2dimages/latest/51010026001.jpeg",
+  "./2dimages/latest/49004035001.jpeg",
+  "./2dimages/latest/50003181001.jpeg"
 )
+
+# Randomly select 3 out of the 6 images (any order)
+img_paths <- sample(img_paths, 3, replace=FALSE)
 
 ## Create variables for image assets
 for (i in 1:length(img_paths)) {
@@ -1080,6 +1077,17 @@ pop2 <- function(visible = TRUE) {
   animals$send_messages(visible_message)
 }
 
+# Note: defined above, remove
+
+# img1Points = list(
+#   list(x = 3203, y = 173), # sand
+#   list(x = 1726, y = 356), # sand
+#   list(x = 2291, y = 1086), # sand
+#   list(x = 2141, y = 2163), # sand
+#   list(x = 2824, y = 2643), # sand
+#   list(x = 2335, y = 2755) # sand
+# )
+
 img1PointsIsCoral = list(
   list(id = 1, isCoral = 0), # sand
   list(id = 2, isCoral = 0), # sand
@@ -1101,6 +1109,11 @@ check <- function() {
   animals$send_messages(check_entities)
   
 }
+
+# fixedPointsTemp(img1Points)
+# check()
+# go2(image_paths = img_paths, index = 2)
+# createPoints()
 
 
 # data.df <- read("https://r2vr.herokuapp.com/annotated-image")
