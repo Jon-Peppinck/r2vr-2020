@@ -967,7 +967,22 @@ current_image <- img_paths[1]
 
 go2 <- function(image_paths = img_paths, index = NA) {
   # Hide all points when next image called
-  points(0)
+  # points(0)
+  
+  # TODO: refactor higher - hide markers
+  
+  ## Update the remaining points to not be visible
+  for (point in 1:MAX_NUMBER_OF_POINTS) {
+    ## Update the position
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(update_entities)
+  }  
 
   white <- "#ffffff"
 
@@ -1198,3 +1213,11 @@ check <- function(imgNumber) {
 # addBox()
 # rmBox()
 # fixedPointsTemp(img1Points)
+
+## Latest Commands ##
+
+# fixedPointsTemp(img1Points)
+# go2(image_paths = img_paths, index = 2)
+# fixedPointsTemp(img2Points)
+# go2(image_paths = img_paths, index = 3)
+# fixedPointsTemp(img3Points)

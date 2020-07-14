@@ -287,6 +287,7 @@ AFRAME.registerComponent('r2vr-message-router', {
         var target = <any>'';
         if (r2vr_message.id) {
           target = <any>document.querySelector('#' + r2vr_message.id);
+          console.log(77, target, r2vr_message.id);
         }
         if (r2vr_message.class == 'event') {
           target.emit(
@@ -295,9 +296,6 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.message.bubbles
           );
         } else if (r2vr_message.class == 'update') {
-          // TODO: move to else if (r2vr_message.class == 'check') {
-          // const state = store.getState();
-          // console.log(22, state.markerReducer.id);
           target.setAttribute(
             r2vr_message.component,
             r2vr_message.attributes,
