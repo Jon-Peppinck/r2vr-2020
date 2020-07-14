@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const mutationObserver = new MutationObserver(() => {
     const newImage: Image = getImage();
     boundGetImage(newImage);
+    // set markers as not marked
+    // TODO: refactor
+    for (let i = 1; i <= 20; i++) {
+      let marker = <Entity>document.getElementById(`markerContainer${i}`)!;
+      marker.setAttribute('marked', false);
+    }
     // TODO: set previous observation to annotated
     const imageId = (newImage.stringId as unknown) as Pick<
       Annotation,
@@ -281,12 +287,12 @@ AFRAME.registerComponent('r2vr-message-router', {
 
     ws.onmessage = function (msg: any) {
       console.log(msg);
-      var payload = JSON.parse(msg.data);
+      const payload = JSON.parse(msg.data);
       // Assume payload is a list of events
       payload.map((r2vr_message: any) => {
-        var target = <any>'';
+        let target = <any>'';
         if (r2vr_message.id) {
-          target = <any>document.querySelector('#' + r2vr_message.id);
+          target = <Entity>document.querySelector('#' + r2vr_message.id);
           console.log(77, target, r2vr_message.id);
         }
         if (r2vr_message.class == 'event') {
@@ -296,6 +302,7 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.message.bubbles
           );
         } else if (r2vr_message.class == 'update') {
+          console.log(555, target, r2vr_message.id, r2vr_message.component);
           target.setAttribute(
             r2vr_message.component,
             r2vr_message.attributes,
@@ -303,12 +310,31 @@ AFRAME.registerComponent('r2vr-message-router', {
           );
         } else if (r2vr_message.class == 'check') {
           const state = store.getState();
-          const userAnnotations = state.annotationReducer[0].markers;
+          // find current image annotations
+          const allAnnotatedImages = state.annotationReducer;
+          const currentImageId = state.imageReducer.stringId;
+          // TODO: refactor, check if needed
+          // for (let i = 1; i <= 20; i++) {
+          //   let marker = <Entity>(
+          //     document.getElementById(`markerContainer${i}`)!
+          //   );
+          //   marker.setAttribute('visible', false);
+          // }
+
+          const getImage = allAnnotatedImages.find(
+            (image) => image.imageId === currentImageId
+          );
+
+          const imageNumber = getImage!.imageNumber;
+
+          const userAnnotations =
+            state.annotationReducer[imageNumber - 1].markers;
           console.log(
-            333,
+            334,
             r2vr_message.imageId,
             r2vr_message.goldStandard,
-            userAnnotations
+            userAnnotations,
+            imageNumber
           );
           // TODO: refactor to UI
           // returns array of markers (Marker[])

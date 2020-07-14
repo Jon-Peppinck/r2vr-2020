@@ -51,6 +51,7 @@ const save = (markerId: number, coralBinary: CoralBinary) => {
       isCoral: coralBinary,
     };
     boundPostAnnotation(annotatedMarker);
+    console.log(88, annotatedMarker);
   } else {
     // If annotation exists 'marked' => Set PUT data
     data = {
