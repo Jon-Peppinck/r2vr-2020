@@ -10,6 +10,7 @@ import { boundPushNewImage } from './store/annotation/AnnotationAction';
 import boundGetImage from './store/image/ImageAction';
 import boundGetUser from './store/user/UserAction';
 import boundIntersection from './store/intersection/IntersectionAction';
+import boundMarkerIntersection from './store/marker/MarkerAction';
 
 import { Annotation, Marker } from './store/annotation/models/Annotation';
 import { Image } from './store/image/models/Image';
@@ -46,6 +47,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const mutationObserver = new MutationObserver(() => {
     const newImage: Image = getImage();
     boundGetImage(newImage);
+    // reset intersection and marker reducers
+    boundIntersection([]); // Empty array of entities
+    boundMarkerIntersection({ id: 0, isHovered: false }); // default
     // set markers as not marked
     // TODO: refactor
     for (let i = 1; i <= 20; i++) {
