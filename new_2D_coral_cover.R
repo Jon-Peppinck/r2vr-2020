@@ -35,32 +35,89 @@ outer_radius = inner_radius + 0.01
 #                      "/ext/images/reef/130030287.jpg",
 #                      "/ext/images/reef/130050093.jpg"))
 
+img1PointsIsCoral = list(
+  list(id = 1, isCoral = 0), # sand
+  list(id = 2, isCoral = 0), # sand
+  list(id = 3, isCoral = 0), # sand
+  list(id = 4, isCoral = 0), # sand
+  list(id = 5, isCoral = 0), # sand
+  list(id = 6, isCoral = 0) # sand
+)
+
+img1Points = list(
+  list(x = 3203, y = 173), # sand
+  list(x = 1726, y = 356), # sand
+  list(x = 2291, y = 1086), # sand
+  list(x = 2141, y = 2163), # sand
+  list(x = 2824, y = 2643), # sand
+  list(x = 2335, y = 2755) # sand
+)
+
+img2Points = list(
+  list(x = 1000, y = 1000),
+  list(x = 2000, y = 2000)
+)
+
+img2PointsIsCoral = list(
+  list(id = 1, isCoral = 0),
+  list(id = 2, isCoral = 0)
+)
+
 ## Relative image path
 
 # C:\r2vr2020\r2vr\inst\ext\images\reef
-img_paths <- c(
-  "./2dimages/latest/49001074001.jpeg", # img1
-  "./2dimages/latest/49002256001.jpeg", # img2
-  "./2dimages/latest/14017099802.jpeg",
-  "./2dimages/latest/51010026001.jpeg",
-  "./2dimages/latest/49004035001.jpeg",
-  "./2dimages/latest/50003181001.jpeg"
+img_paths <- list(
+  list(img = "./2dimages/latest/49001074001.jpeg", imgPoints = img1Points, img1PointIsCoral =          imgXPointsIsCoral),
+  list(img = "./2dimages/latest/49002256001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
+  list(img = "./2dimages/latest/14017099802.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
+  list(img = "./2dimages/latest/51010026001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
+  list(img = "./2dimages/latest/49004035001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
+  list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral)
 )
+# img_paths <- c(
+#   "./2dimages/latest/49001074001.jpeg", # img1
+#   "./2dimages/latest/49002256001.jpeg", # img2
+#   "./2dimages/latest/14017099802.jpeg",
+#   "./2dimages/latest/51010026001.jpeg",
+#   "./2dimages/latest/49004035001.jpeg",
+#   "./2dimages/latest/50003181001.jpeg"
+# )
 
 # Randomly select 3 out of the 6 images (any order)
 img_paths <- sample(img_paths, 3, replace=FALSE)
 
-## Create variables for image assets
 for (i in 1:length(img_paths)) {
+  currentImgPath <- img_paths[[i]]$img # string
+  currentImgPoints <- img_paths[[i]]$imgPoints # list of lists
+  currentImgGoldStandard <- img_paths[[i]]$imgPointIsCoral # list of lists
+  
   # image1, ... , image<n>, s.t. n = index of last image path
   image_number <- paste0("image", i)
+  image_number_points <- paste0("image", i, "Points")
+  image_number_gold_standard <- paste0("image", i, "GoldStandard")
   # Create image asset with id="img<i>" (to select DOM element)
-  current_image <- a_asset(.tag = "image",
-                           id = paste0("img", i),
-                           src = img_paths[i])
+  current_image <- a_asset(
+    .tag = "image",
+    id = paste0("img", i),
+    src = currentImgPath
+  )
   # Assign image<n> variable to its corresponding image asset
   assign(image_number, current_image)
+  assign(image_number_points, currentImgPoints)
+  assign(image_number_gold_standard, currentImgGoldStandard)
 }
+
+## Create variables for image assets
+# for (i in 1:length(img_paths)) {
+#   # image1, ... , image<n>, s.t. n = index of last image path
+#   image_number <- paste0("image", i)
+#   # Create image asset with id="img<i>" (to select DOM element)
+#   current_image <- a_asset(.tag = "image",
+#                            id = paste0("img", i),
+#                            src = img_paths[i])
+#   # Assign image<n> variable to its corresponding image asset
+#   assign(image_number, current_image)
+# }
 
 ## Z-index positions
 # Note: z-index of camera > z-index of entities
@@ -638,13 +695,13 @@ createPoints <- function(num = 5) {
 # Points (X and Y Flipped from Poor_accuracy_class.csv)
 	
 
-img1Points = list(
-  list(x = 3203, y = 173), # sand
-  list(x = 1726, y = 356), # sand
-  list(x = 2291, y = 1086), # sand
-  list(x = 2141, y = 2163), # sand
-  list(x = 2824, y = 2643), # sand
-  list(x = 2335, y = 2755) # sand
+# img1Points = list(
+#   list(x = 3203, y = 173), # sand
+#   list(x = 1726, y = 356), # sand
+#   list(x = 2291, y = 1086), # sand
+#   list(x = 2141, y = 2163), # sand
+#   list(x = 2824, y = 2643), # sand
+#   list(x = 2335, y = 2755) # sand
 
 
   # list(x = 0, y = 0),
@@ -654,7 +711,7 @@ img1Points = list(
   # list(x = 3000, y = 1500),
   # list(x = 1000, y = 750),
   # list(x = 3000, y = 2250)
-)
+# )
 
 # Image: 49002256001 4000x3000
 
@@ -1105,36 +1162,36 @@ pop2 <- function(visible = TRUE) {
 #   list(x = 2335, y = 2755) # sand
 # )
 
-img1PointsIsCoral = list(
-  list(id = 1, isCoral = 0), # sand
-  list(id = 2, isCoral = 0), # sand
-  list(id = 3, isCoral = 0), # sand
-  list(id = 4, isCoral = 0), # sand
-  list(id = 5, isCoral = 0), # sand
-  list(id = 6, isCoral = 0) # sand
-)
-
-img2Points = list(
-   list(x = 1000, y = 1000),
-   list(x = 2000, y = 2000)
-)
-
-img2PointsIsCoral = list(
-  list(id = 1, isCoral = 0),
-  list(id = 2, isCoral = 0)
-)
-
-img3Points = list(
-  list(x = 1000, y = 1000),
-  list(x = 2000, y = 2000),
-  list(x = 2500, y = 2500)
-)
-
-img3PointsIsCoral = list(
-  list(id = 1, isCoral = 0),
-  list(id = 2, isCoral = 0),
-  list(id = 3, isCoral = 0)
-)
+# img1PointsIsCoral = list(
+#   list(id = 1, isCoral = 0), # sand
+#   list(id = 2, isCoral = 0), # sand
+#   list(id = 3, isCoral = 0), # sand
+#   list(id = 4, isCoral = 0), # sand
+#   list(id = 5, isCoral = 0), # sand
+#   list(id = 6, isCoral = 0) # sand
+# )
+# 
+# img2Points = list(
+#    list(x = 1000, y = 1000),
+#    list(x = 2000, y = 2000)
+# )
+# 
+# img2PointsIsCoral = list(
+#   list(id = 1, isCoral = 0),
+#   list(id = 2, isCoral = 0)
+# )
+# 
+# img3Points = list(
+#   list(x = 1000, y = 1000),
+#   list(x = 2000, y = 2000),
+#   list(x = 2500, y = 2500)
+# )
+# 
+# img3PointsIsCoral = list(
+#   list(id = 1, isCoral = 0),
+#   list(id = 2, isCoral = 0),
+#   list(id = 3, isCoral = 0)
+# )
 
 # img1Points = list(
 #   list(x = 3203, y = 173), # sand
@@ -1226,3 +1283,7 @@ check <- function(imgNumber, goldStandardPoints) {
 # check(1, img1PointsIsCoral)
 # check(2, img2PointsIsCoral)
 # check(3, img3PointsIsCoral)
+
+## LATEST ### 
+# fixedPointsTemp(img1Points)
+# go2(image_paths = img_paths, index = 2)
