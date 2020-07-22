@@ -10,16 +10,21 @@ const handleMarkerIntersection = (): void => {
 
   // Prevents annotation points being marked if missing observation_number data
   const observationNumber = observationReducer.observation_number;
-
+  const intersectedElId = intersectionReducer[0]?.id;
   // TODO: check markers on edge
   if (
     [0, -1].includes(observationNumber) ||
-    intersectionReducer[0]?.id === 'canvas2d' ||
-    intersectionReducer.length === 0
-  )
+    intersectedElId === 'canvas2d' ||
+    intersectionReducer.length === 0 ||
+    intersectedElId.includes('option')
+  ) {
     return;
+  }
+  // TODO - Refactor evaluation question + responses out into separate reducer
+  // and check and return above for this marker handler
+  // Look for the string 'option' for the intersected id
 
-  const matches = intersectionReducer[0].id.match(/(\d+)/);
+  const matches = intersectedElId.match(/(\d+)/);
 
   // Parse the string to a number so the corresponding ID can be used
   // return +matches[0];

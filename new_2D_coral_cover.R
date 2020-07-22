@@ -163,7 +163,8 @@ post_plane <- a_entity(
   color = white,
   height = 0.3,
   width = 0.3,
-  annotated = FALSE # TODO: check if allowed
+  annotated = FALSE, # TODO: check if allowed
+  option_selected = FALSE # TODO: check if needed
 )
 
 # Outer boundary for intersection detection

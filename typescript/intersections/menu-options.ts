@@ -11,8 +11,8 @@ import save from '../helpers/save';
 const selectMenuOption = (): void => {
   const state = store.getState();
   const { id } = state.markerReducer;
-  const els = Object.values(state.intersectionReducer);
-
+  const els = Object.values(state.intersectionReducer); // TODO: consider marker reducer instead
+  // TODO refactor to includes menuCoral, coralText
   if (
     els.some(
       (el: Entity) => el.id === `menuCoral${id}` || el.id === `coralText${id}`
@@ -36,7 +36,9 @@ const selectMenuOption = (): void => {
         el.id === `marker${id}` || el.id === `markerCircumference${id}`
     )
   ) {
+    // TODO: potentially hide ALL menu options
     displayMenuOptions(id);
+  } else {
   }
 };
 

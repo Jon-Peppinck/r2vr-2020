@@ -1,3 +1,4 @@
+// TODO: consider refactoring to have no args in the case to hide ALL menu options
 const displayMenuOptions = (id: number, bool = false) => {
   if (bool) {
     // Menu options are now visible
