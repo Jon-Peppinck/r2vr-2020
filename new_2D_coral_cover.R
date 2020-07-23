@@ -67,12 +67,12 @@ img2PointsIsCoral = list(
 
 # C:\r2vr2020\r2vr\inst\ext\images\reef
 img_paths <- list(
-  list(img = "./2dimages/latest/49001074001.jpeg", imgPoints = img1Points, img1PointIsCoral =          imgXPointsIsCoral),
-  list(img = "./2dimages/latest/49002256001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
-  list(img = "./2dimages/latest/14017099802.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
-  list(img = "./2dimages/latest/51010026001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
-  list(img = "./2dimages/latest/49004035001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral),
-  list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img2Points, img2PointIsCoral =          imgXPointsIsCoral)
+  list(img = "./2dimages/latest/49001074001.jpeg", imgPoints = img1Points, imgPointIsCoral =          img1PointsIsCoral),
+  list(img = "./2dimages/latest/49002256001.jpeg", imgPoints = img2Points, imgPointIsCoral =          img2PointsIsCoral),
+  list(img = "./2dimages/latest/14017099802.jpeg", imgPoints = img2Points, imgPointIsCoral =          img2PointsIsCoral),
+  list(img = "./2dimages/latest/51010026001.jpeg", imgPoints = img2Points, imgPointIsCoral =          img2PointsIsCoral),
+  list(img = "./2dimages/latest/49004035001.jpeg", imgPoints = img2Points, imgPointIsCoral =          img2PointsIsCoral),
+  list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img2Points, imgPointIsCoral =          img2PointsIsCoral)
 )
 # img_paths <- c(
 #   "./2dimages/latest/49001074001.jpeg", # img1
@@ -95,6 +95,7 @@ for (i in 1:length(img_paths)) {
   image_number <- paste0("image", i)
   image_number_points <- paste0("image", i, "Points")
   image_number_gold_standard <- paste0("image", i, "GoldStandard")
+  image_path <- paste0("image", i, "Path")
   # Create image asset with id="img<i>" (to select DOM element)
   current_image <- a_asset(
     .tag = "image",
@@ -105,6 +106,7 @@ for (i in 1:length(img_paths)) {
   assign(image_number, current_image)
   assign(image_number_points, currentImgPoints)
   assign(image_number_gold_standard, currentImgGoldStandard)
+  assign(image_path, currentImgPath)
 }
 
 ## Create variables for image assets
@@ -137,7 +139,7 @@ canvas_2d <- a_entity(
   .assets = list(image2, image3),
   id = "canvas2d",
   src = image1,
-  class = img_paths[1],
+  class = img_paths[[1]]$img,
   height = 3,
   width = 4, # 3
   position = c(0, 0, canvas_z)
@@ -1021,15 +1023,108 @@ addBox <- function() {
 
 # TODO: Refactor retrieval of image ID
 
-current_image <- img_paths[1]
+# current_image <- img_paths[1]
+# 
+# go2 <- function(image_paths = img_paths, index = NA) {
+#   # reset marker colour to white
+#   # TODO
+#   resetMarkersUI(MAX_NUMBER_OF_POINTS)
+#   
+#   # TODO: refactor higher - hide markers
+#   
+#   
+#   # Update points to not be visible
+#   for (point in 1:MAX_NUMBER_OF_POINTS) {
+#     update_entities <- list(
+#       a_update(
+#         id = paste0("markerContainer", point),
+#         component = "visible",
+#         attributes = FALSEz
+#       )
+#     )
+#     animals$send_messages(update_entities)
+#   }
+# 
+#   # white <- "#ffffff"
+# 
+#   # Current image number
+#   if(is.na(index)) { CONTEXT_INDEX <- 1 }
+#   if(!is.na(index)){ CONTEXT_INDEX <- index }
+# 
+#   animal_contexts <- paste0("img", seq(1,length(image_paths),1))
+# 
+#   # TODO: Refactor as an argument?
+#   context_rotations <- list(list(x = 0, y = 0, z = 0),
+#                             list(x = 0, y = 0, z = 0),
+#                             list(x = 0, y = 0, z = 0),
+#                             list(x = 0, y = 0, z = 0))
+# 
+#   if(is.na(index)) {
+#     CONTEXT_INDEX <<- ifelse(CONTEXT_INDEX > length(animal_contexts) - 1,
+#                              yes = 1,
+#                              no = CONTEXT_INDEX + 1)
+#   }
+# 
+#   next_image <- animal_contexts[[CONTEXT_INDEX]]
+#   current_image <<- img_paths[CONTEXT_INDEX] # TODO: refactor if more elegant way
+#   print(next_image)
+# 
+# 
+#   setup_scene <- list(
+#     a_update(id = "canvas2d",
+#              component = "material",
+#              attributes = list(src = paste0("#",next_image))),
+#     a_update(id = "canvas2d",
+#              component = "src",
+#              attributes = paste0("#",next_image)),
+#     a_update(id = "canvas2d",
+#              component = "rotation",
+#              attributes = context_rotations[[CONTEXT_INDEX]]),
+#     a_update(id = "canvas2d",
+#              component = "class",
+#              attributes = img_paths[CONTEXT_INDEX])
+#   )
+# 
+#   for(jj in 1:length(setup_scene)){
+#     if(setup_scene[[jj]]$id == "canvas2d"){
+#       if(setup_scene[[jj]]$component == "material"){
+#         setup_scene[[jj]]$attributes <- list(src = paste0("#",next_image))
+#       }
+#       if(setup_scene[[jj]]$component == "src"){
+#         setup_scene[[jj]]$attributes <- paste0("#",next_image)
+#       }
+#       if(setup_scene[[jj]]$component == "rotation"){
+#         setup_scene[[jj]]$attributes <- context_rotations[[CONTEXT_INDEX]]
+#       }
+#       if(setup_scene[[jj]]$component == "class"){
+#         setup_scene[[jj]]$attributes <- image_paths[CONTEXT_INDEX]
+#       }
+#     }
+#   }
+# 
+#   animals$send_messages(setup_scene)
+# }
 
-go2 <- function(image_paths = img_paths, index = NA) {
-  # reset marker colour to white
-  # TODO
+CONTEXT_INDEX <- 1
+
+current_image <- img_paths[[1]]$img
+
+# TODO: add context rotations for 3D
+goImage <- function(image_paths = img_paths, index = NA) {
+  if (!is.na(index) && index > length(img_paths)) {
+    stop("Please ensure the index does not exceed the total number of images.")
+  }
+  # Prevent image change if last image is showing and no args for index have been passed
+  if (is_last_image && is.na(index)) {
+    stop("Please ensure the index is passed when it is the last image.")
+  }
+  # Prevent image change if an index has been passed but the last image is not displaying
+  if (!is_last_image && !is.na(index)) {
+    stop("Please ensure the index is not passed unless it is the last image and annotation has finished.")
+  }
+  
+  # Reset marker colour to white
   resetMarkersUI(MAX_NUMBER_OF_POINTS)
-  
-  # TODO: refactor higher - hide markers
-  
   
   # Update points to not be visible
   for (point in 1:MAX_NUMBER_OF_POINTS) {
@@ -1042,66 +1137,53 @@ go2 <- function(image_paths = img_paths, index = NA) {
     )
     animals$send_messages(update_entities)
   }
-
-  # white <- "#ffffff"
-
-  # Current image number
-  if(is.na(index)) { CONTEXT_INDEX <- 1 }
-  if(!is.na(index)){ CONTEXT_INDEX <- index }
-
-  animal_contexts <- paste0("img", seq(1,length(image_paths),1))
-
-  # TODO: Refactor as an argument?
-  context_rotations <- list(list(x = 0, y = 0, z = 0),
-                            list(x = 0, y = 0, z = 0),
-                            list(x = 0, y = 0, z = 0),
-                            list(x = 0, y = 0, z = 0))
-
-  if(is.na(index)) {
-    CONTEXT_INDEX <<- ifelse(CONTEXT_INDEX > length(animal_contexts) - 1,
-                             yes = 1,
-                             no = CONTEXT_INDEX + 1)
+  
+  current_image <<- img_paths[[CONTEXT_INDEX]]$img
+  
+  CONTEXT_INDEX <<- ifelse(!is.na(index),
+                           yes = index,
+                           no = CONTEXT_INDEX + 1
+                           )
+  
+  if (CONTEXT_INDEX == length(img_paths)) {
+    is_last_image <<- TRUE
   }
-
-  next_image <- animal_contexts[[CONTEXT_INDEX]]
-  current_image <<- img_paths[CONTEXT_INDEX] # TODO: refactor if more elegant way
+  
+  next_image <- img_paths[[CONTEXT_INDEX]]$img
+  next_image_el_id <- paste0("#img", CONTEXT_INDEX)
   print(next_image)
-
-
+  
   setup_scene <- list(
     a_update(id = "canvas2d",
              component = "material",
-             attributes = list(src = paste0("#",next_image))),
+             attributes = list(src = next_image_el_id)),
     a_update(id = "canvas2d",
              component = "src",
-             attributes = paste0("#",next_image)),
-    a_update(id = "canvas2d",
-             component = "rotation",
-             attributes = context_rotations[[CONTEXT_INDEX]]),
+             attributes = next_image_el_id),
     a_update(id = "canvas2d",
              component = "class",
-             attributes = img_paths[CONTEXT_INDEX])
+             attributes = next_image
+    )
   )
-
-  for(jj in 1:length(setup_scene)){
-    if(setup_scene[[jj]]$id == "canvas2d"){
-      if(setup_scene[[jj]]$component == "material"){
-        setup_scene[[jj]]$attributes <- list(src = paste0("#",next_image))
+  
+  for(aUpdate in 1:length(setup_scene)){
+    if(setup_scene[[aUpdate]]$id == "canvas2d"){
+      if(setup_scene[[aUpdate]]$component == "material"){
+        setup_scene[[aUpdate]]$attributes <- list(src = next_image_el_id)
       }
-      if(setup_scene[[jj]]$component == "src"){
-        setup_scene[[jj]]$attributes <- paste0("#",next_image)
+      if(setup_scene[[aUpdate]]$component == "src"){
+        setup_scene[[aUpdate]]$attributes <- next_image_el_id
       }
-      if(setup_scene[[jj]]$component == "rotation"){
-        setup_scene[[jj]]$attributes <- context_rotations[[CONTEXT_INDEX]]
-      }
-      if(setup_scene[[jj]]$component == "class"){
-        setup_scene[[jj]]$attributes <- image_paths[CONTEXT_INDEX]
+      if(setup_scene[[aUpdate]]$component == "class"){
+        setup_scene[[aUpdate]]$attributes <- next_image
       }
     }
   }
-
+  
   animals$send_messages(setup_scene)
+  
 }
+
 
 
 read <- function(url) {
@@ -1151,65 +1233,13 @@ pop2 <- function(visible = TRUE) {
   animals$send_messages(visible_message)
 }
 
-# Note: defined above, remove
 
-# img1Points = list(
-#   list(x = 3203, y = 173), # sand
-#   list(x = 1726, y = 356), # sand
-#   list(x = 2291, y = 1086), # sand
-#   list(x = 2141, y = 2163), # sand
-#   list(x = 2824, y = 2643), # sand
-#   list(x = 2335, y = 2755) # sand
-# )
-
-# img1PointsIsCoral = list(
-#   list(id = 1, isCoral = 0), # sand
-#   list(id = 2, isCoral = 0), # sand
-#   list(id = 3, isCoral = 0), # sand
-#   list(id = 4, isCoral = 0), # sand
-#   list(id = 5, isCoral = 0), # sand
-#   list(id = 6, isCoral = 0) # sand
-# )
-# 
-# img2Points = list(
-#    list(x = 1000, y = 1000),
-#    list(x = 2000, y = 2000)
-# )
-# 
-# img2PointsIsCoral = list(
-#   list(id = 1, isCoral = 0),
-#   list(id = 2, isCoral = 0)
-# )
-# 
-# img3Points = list(
-#   list(x = 1000, y = 1000),
-#   list(x = 2000, y = 2000),
-#   list(x = 2500, y = 2500)
-# )
-# 
-# img3PointsIsCoral = list(
-#   list(id = 1, isCoral = 0),
-#   list(id = 2, isCoral = 0),
-#   list(id = 3, isCoral = 0)
-# )
-
-# img1Points = list(
-#   list(x = 3203, y = 173), # sand
-#   list(x = 1726, y = 356), # sand
-#   list(x = 2291, y = 1086), # sand
-#   list(x = 2141, y = 2163), # sand
-#   list(x = 2824, y = 2643), # sand
-#   list(x = 2335, y = 2755) # sand
-# )
-
-allImagesAnnotated <- FALSE
+is_last_image <- FALSE
 
 check <- function(imgNumber, goldStandardPoints) {
-  if (allImagesAnnotated || current_image == img_paths[length(img_paths)]) {
-    allImagesAnnotated <<- TRUE
-  }
-  # Only check if all images are annotated i.e. current image is the last image
-  if (!allImagesAnnotated) {
+
+  # Only check if all images are annotated
+  if (!is_last_image) {
     stop('Please annotate all images before calling check!')
   }
   # TODO: check valid integer passed as param i.e. 1 - length(img_paths)
@@ -1285,5 +1315,8 @@ check <- function(imgNumber, goldStandardPoints) {
 # check(3, img3PointsIsCoral)
 
 ## LATEST ### 
-# fixedPointsTemp(img1Points)
-# go2(image_paths = img_paths, index = 2)
+# fixedPointsTemp(image1Points)
+# nextImage()
+# fixedPointsTemp(image2Points)
+# go2(image_paths = img_paths, index = 3)
+# fixedPointsTemp(image3Points)
