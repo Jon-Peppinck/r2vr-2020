@@ -1236,22 +1236,32 @@ pop2 <- function(visible = TRUE) {
 
 is_last_image <- FALSE
 
-check <- function(imgNumber, goldStandardPoints) {
-
+check <- function(imgNumber) {
   # Only check if all images are annotated
   if (!is_last_image) {
     stop('Please annotate all images before calling check!')
   }
-  # TODO: check valid integer passed as param i.e. 1 - length(img_paths)
+  if (!is.na(imgNumber) && imgNumber > length(img_paths)) {
+    stop("Please ensure the index does not exceed the total number of images.")
+  }
+  # TODO: handle case imgNumber not passed and remove goldStandardPoints
   
-  imgNumberCoordinates <- paste0('img', imgNumber, 'Points')
-  imgNumberGoldStandard <- paste0('img', imgNumber, 'PointsIsCoral')
+  imagePath <- img_paths[[imgNumber]]$img
+  imageCoordinates <- img_paths[[imgNumber]]$imgPoints
+  imageGoldStandard <- img_paths[[imgNumber]]$imgPointIsCoral
+  
+  # imgNumberCoordinates <- paste0('img', imgNumber, 'Points')
+  # imgNumberGoldStandard <- paste0('img', imgNumber, 'PointsIsCoral')
+  
+  # img_paths[[i]]$imgPointIsCoral
   
   # fixedPointsTemp(imgNumberCoordinates)
-  go2(image_paths = img_paths, index = imgNumber)
+  # go2(image_paths = img_paths, index = imgNumber)
+  goImage(index = imgNumber)
   
   # Update the remaining points to not be visible
   resetMarkersUI(MAX_NUMBER_OF_POINTS) # is this being applied?
+  
   for (i in 1:MAX_NUMBER_OF_POINTS) {
     ## Update the visbility
     update_entities <- list(
@@ -1266,8 +1276,8 @@ check <- function(imgNumber, goldStandardPoints) {
   
   check_entities <- list(
     a_check(
-      imageId = img_paths[imgNumber],
-      goldStandard = goldStandardPoints
+      imageId = imagePath,
+      goldStandard = imageGoldStandard
     )
   )
   
