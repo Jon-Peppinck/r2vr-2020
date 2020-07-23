@@ -169,12 +169,20 @@ user <- a_entity(
 )
 
 # Evauluation Question Variables
-the_question <- "Indicate your difficulty using the system to annotate 2D images?"
 message_height <- 1.5
-answer_1 <- "Unable to use"
-answer_2 <- "Major difficulty"
-answer_3 <- "Minor difficulty"
-answer_4 <- "No difficulty"
+
+# the_question <- "Indicate your difficulty using the system to annotate 2D images?"
+# 
+# answer_1 <- "Unable to use"
+# answer_2 <- "Major difficulty"
+# answer_3 <- "Minor difficulty"
+# answer_4 <- "No difficulty"
+
+
+questions <- list(
+  list(question = "Did you enjoy this experiment?", answer1 = "Very much", answer2 = "Yes", answer3 = "A little", answer4 = "No"),
+  list(question = "On a scale of 1-4, how would you rate your experience?", answer1 = "4", answer2 = "3", answer3 = "2", answer4 = "1")
+)
 
 # Colours
 dark_red <- "#8c0000"
@@ -183,7 +191,7 @@ white <- "#ffffff"
 black <- "#000000"
 
 question_label <- a_label(
-  text = the_question,
+  text = questions[[1]]$question,
   id = "questionPlaneText",
   color = black,
   font = "mozillavr",
@@ -240,7 +248,7 @@ post_plane_boundary <- a_entity(
 )
 
 option_1_label <- a_label(
-  text = answer_1,
+  text = questions[[1]]$answer1,
   id = "option1Text",
   color = black,
   font = "mozillavr",
@@ -274,7 +282,7 @@ option_1_plane_boundary <- a_entity(
 )
 
 option_2_label <- a_label(
-  text = answer_2,
+  text = questions[[1]]$answer2,
   id = "option2Text",
   color = black,
   font = "mozillavr",
@@ -308,7 +316,7 @@ option_2_plane_boundary <- a_entity(
 )
 
 option_3_label <- a_label(
-  text = answer_3,
+  text = questions[[1]]$answer3,
   id = "option3Text",
   color = black,
   font = "mozillavr",
@@ -342,7 +350,7 @@ option_3_plane_boundary <- a_entity(
 )
 
 option_4_label <- a_label(
-  text = answer_4,
+  text = questions[[1]]$answer4,
   id = "option4Text",
   color = black,
   font = "mozillavr",
@@ -552,20 +560,21 @@ change_message <- function(messages, is_visible){
 }
 
 # Toggle the visibility of the markers
-pop2 <- function(visible = TRUE){
-  if (numberOfPoints)
-  ## TODO: Refactor numberOfPoints?
-  for (i in 1:numberOfPoints) {
-    show_messages <- list(
-      a_update(id = paste0("markerContainer", i),
-               component = "visible",
-               attributes = TRUE)
-    )
+# pop2 <- function(visible = TRUE){
+#   if (numberOfPoints)
+#   ## TODO: Refactor numberOfPoints?
+#   for (i in 1:numberOfPoints) {
+#     show_messages <- list(
+#       a_update(id = paste0("markerContainer", i),
+#                component = "visible",
+#                attributes = TRUE)
+#     )
+# 
+#     visible_message <- change_message(show_messages, visible)
+#     animals$send_messages(visible_message)
+#   }
+# }
 
-    visible_message <- change_message(show_messages, visible)
-    animals$send_messages(visible_message)
-  }
-}
 
 # 
 # # Connect and retrieve infomation from database
@@ -692,47 +701,9 @@ createPoints <- function(num = 5) {
   
 }
 
-# Image: 49001074001 4000x3000
 
 # Points (X and Y Flipped from Poor_accuracy_class.csv)
 	
-
-# img1Points = list(
-#   list(x = 3203, y = 173), # sand
-#   list(x = 1726, y = 356), # sand
-#   list(x = 2291, y = 1086), # sand
-#   list(x = 2141, y = 2163), # sand
-#   list(x = 2824, y = 2643), # sand
-#   list(x = 2335, y = 2755) # sand
-
-
-  # list(x = 0, y = 0),
-  # list(x = 4000, y = 3000),
-  # list(x = 2000, y = 1500),
-  # list(x = 1000, y = 1500),
-  # list(x = 3000, y = 1500),
-  # list(x = 1000, y = 750),
-  # list(x = 3000, y = 2250)
-# )
-
-# Image: 49002256001 4000x3000
-
-
-# img2Points = list(
-#    list(x = 3673, y = 2605), # Hard corals
-#    list(x = 3723, y = 1884) # Algae
-# )
-
-# Image: 14017099802 1031x1031
-
-# img3Points = list(
-#   list(x = 524, y = 481), # Algae
-#   list(x = 524, y = 541), 
-#   list(x = 833, y = 636), # Hard Coral
-#   list(x = 833, y = 696), # 
-#   list(x = 0, y = 0),
-#   list(x = 1031, y = 1031)
-# )
 
 rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   translation = function(oldValue) {
@@ -1193,7 +1164,57 @@ read <- function(url) {
   return(data.df)
 }
 
-pop2 <- function(visible = TRUE) {
+resetQuestionUI <- function(){
+  # TODO: make 4 dynamic
+  for (i in 1:(length(questions[[1]]) - 1)) {
+    reset_response_colors <- list(
+      a_update(
+        id = paste0("option", i, "Plane"),
+        component = "color",
+        attributes = "#FFFF00" # TODO: change to white
+      )
+    )
+    animals$send_messages(reset_response_colors)
+  }
+  # TODO - possibly refactor?
+  reset_post_color <- list(
+    a_update(
+      id = paste0("postPlane"),
+      component = "color",
+      attributes = "#FFFFFF"
+    )
+  )
+  animals$send_messages(reset_post_color)
+}
+
+QUESTION_CONTEXT <- 1
+
+question <- function(index = NA, visible = TRUE){
+  if (!is.na(index) && index > length(questions)) {
+    stop("The index of the question exceeds the total number of questions.")
+  }
+  if (!is.na(index)) {
+    QUESTION_CONTEXT <<- index
+    resetQuestionUI()
+    text_messages <- list(
+      a_update(id = "questionPlaneText",
+               component = "value",
+               attributes = questions[[index]]$question),
+      a_update(id = "option1Text",
+               component = "value",
+               attributes = questions[[index]]$answer1),
+      a_update(id = "option2Text",
+               component = "value",
+               attributes = questions[[index]]$answer2),
+      a_update(id = "option3Text",
+               component = "value",
+               attributes = questions[[index]]$answer3),
+      a_update(id = "option4Text",
+               component = "value",
+               attributes = questions[[index]]$answer4)
+    )
+    animals$send_messages(text_messages)
+  }
   show_messages <- list(
     a_update(id = "questionPlane",
              component = "visible",
@@ -1229,9 +1250,48 @@ pop2 <- function(visible = TRUE) {
              component = "visible",
              attributes = TRUE)
   )
-  visible_message <- change_message(show_messages, visible)
-  animals$send_messages(visible_message)
+  animals$send_messages(show_messages)
 }
+
+# pop2 <- function(visible = TRUE) {
+#   show_messages <- list(
+#     a_update(id = "questionPlane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option1Plane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option3Plane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option4Plane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option2Plane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "postPlane",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "postPlaneBoundary",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option1Boundary",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option3Boundary",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option4Boundary",
+#              component = "visible",
+#              attributes = TRUE),
+#     a_update(id = "option2Boundary",
+#              component = "visible",
+#              attributes = TRUE)
+#   )
+#   visible_message <- change_message(show_messages, visible)
+#   animals$send_messages(visible_message)
+# }
 
 
 is_last_image <- FALSE
