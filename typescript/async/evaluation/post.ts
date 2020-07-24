@@ -16,3 +16,5 @@ const postEvaluation = async (data: any) => {
     throw new Error(`${err} - Unable to post annotation!`);
   }
 };
+
+export default postEvaluation;

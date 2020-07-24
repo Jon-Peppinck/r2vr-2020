@@ -11,6 +11,11 @@ import boundGetImage from './store/image/ImageAction';
 import boundGetUser from './store/user/UserAction';
 import boundIntersection from './store/intersection/IntersectionAction';
 import boundMarkerIntersection from './store/marker/MarkerAction';
+import {
+  boundPostEvaluation,
+  boundUpdateEvaluation,
+  boundNewEvaluation,
+} from './store/evaluation/EvaluationAction';
 
 import { Annotation, Marker } from './store/annotation/models/Annotation';
 import { Image } from './store/image/models/Image';
@@ -21,7 +26,12 @@ import getImage from './helpers/image';
 import displayMenuOptions from './user-interface/menu-options';
 import handleMarkerIntersection from './intersections/marker';
 import handleEvaluationIntersection from './intersections/evaluation';
-import { setOptionColor } from './user-interface/evaluation-option-color';
+import {
+  setOptionColor,
+  resetOptionsColor,
+} from './user-interface/evaluation-option-color';
+import { QuestionResponseOption } from './store/evaluation/models/EvaluationResponse';
+import saveEvaluation from './helpers/evaluation/save';
 
 // Observe canvas for image changes
 document.addEventListener('DOMContentLoaded', () => {
@@ -77,6 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
     attributes: true,
     attributeFilter: ['src'],
   });
+
+  const mutationObserverEvaluation = new MutationObserver(() => {
+    console.log('New question detected');
+    const postPlane = document.getElementById('postPlane')!;
+    postPlane.setAttribute('option-selected', 'false');
+    postPlane.setAttribute('annotated', 'false');
+    boundNewEvaluation();
+  });
+
+  mutationObserverEvaluation.observe(
+    document.getElementById('questionPlaneText')!,
+    {
+      attributes: true,
+      attributeFilter: ['value'],
+    }
+  );
 });
 
 const render = () => {
@@ -118,42 +144,51 @@ AFRAME.registerComponent('coral-cover-2d-buttons', {
     controlsEl.addEventListener('buttondown', () => {
       // If button selected and marker hovered => display menu options
       const state = store.getState();
-      // TODO: Refactor below higher
-      // TODO: store state of evaluation reducer and refactor?
-      const lastHoveredEl = state.intersectionReducer[0]?.id;
-      const lastHoveredOptionId = state.evaluationReducer?.id.toString();
-
-      if (lastHoveredEl && lastHoveredOptionId) {
-        // SELECT OPTION
-      }
-
-      // if (lastHoveredEl && lastHoveredOptionId) {
-      //   // const postPlane = document.getElementById('postPlane')!;
-      //   // let isAnyOptionSelected = postPlane.getAttribute('option-selected');
-      //   // let isPosted = postPlane.getAttribute('annotated');
-      //   if (lastHoveredEl.includes(lastHoveredOptionId)) {
-      //     setOptionColor(+lastHoveredOptionId);
-      //     // postPlane.setAttribute('option-selected', 'true');
-      //   } else if (['postPlane', 'postText'].includes(lastHoveredEl)) {
-      //     console.log('Post selected!');
-
-      //     // postPlane.setAttribute('annotated', 'true');
-      //     // saveEvaluation(selectedOption);
-      //   }
-      // }
-
-      // const annotatedMarker = document.getElementById(
-      //   `markerCircumference${data.site}`
-      // );
-      //   annotatedMarker?.getAttribute('color')
-
-      // if (lastHoveredEl.includes(lastHoveredOption.id))
-      // if (lastHoveredEl) {
-      //   selectEvaluationResponse(lastHoveredEl.id);
-      // }
-      // TODO: Refactor above
-
+      // TODO: Refactor below
+      const {
+        lastHoveredOption,
+        evaluations,
+        questionNumber,
+      } = state.evaluationReducer;
       const { id, isHovered } = state.markerReducer;
+      const intersectionReducer = state.intersectionReducer;
+      const lastIntersectedElId = intersectionReducer[0]?.id;
+
+      const postPlane = document.getElementById('postPlane')!;
+
+      // TODO: potentially remove boundary from check
+      if (
+        lastIntersectedElId &&
+        lastIntersectedElId.includes(`option${lastHoveredOption}`)
+      ) {
+        let isAnyOptionSelected = postPlane.getAttribute('option-selected');
+        if (isAnyOptionSelected === 'false') {
+          console.log(3, 'OPTION SELECTED');
+          setOptionColor(lastHoveredOption);
+          postPlane.setAttribute('option-selected', 'true');
+          boundPostEvaluation({
+            questionNumber: questionNumber as number,
+            responseOption: lastHoveredOption as QuestionResponseOption,
+          });
+        } else {
+          console.log(2, 'OPTION UPDATED');
+          resetOptionsColor();
+          setOptionColor(lastHoveredOption);
+          boundUpdateEvaluation({
+            questionNumber: questionNumber as number,
+            responseOption: lastHoveredOption as QuestionResponseOption,
+          });
+        }
+      } else if (
+        lastHoveredOption !== 0 &&
+        lastIntersectedElId &&
+        lastIntersectedElId.includes(`post`)
+      ) {
+        // TODO: check 1-4
+        const lastHoveredOptionString = `option${lastHoveredOption}Plane`;
+        saveEvaluation(lastHoveredOptionString);
+      }
+      // TODO: Refactor above
 
       if (isHovered) {
         // Marker is hovered thus must have a corresponding ID

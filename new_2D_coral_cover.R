@@ -1188,7 +1188,7 @@ resetQuestionUI <- function(){
 }
 
 QUESTION_CONTEXT <- 1
-
+# TODO check visible FALSE
 question <- function(index = NA, visible = TRUE){
   if (!is.na(index) && index > length(questions)) {
     stop("The index of the question exceeds the total number of questions.")
@@ -1390,3 +1390,5 @@ check <- function(imgNumber) {
 # fixedPointsTemp(image2Points)
 # go2(image_paths = img_paths, index = 3)
 # fixedPointsTemp(image3Points)
+# question()
+# question(2)

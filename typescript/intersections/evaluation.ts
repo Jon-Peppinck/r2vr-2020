@@ -1,5 +1,5 @@
 import { store } from '../store/rootStore';
-import boundEvaluationResponseIntersection from '../store/evaluation/EvaluationAction';
+import { boundEvaluationResponseIntersection } from '../store/evaluation/EvaluationAction';
 
 // Determines if an evaluation response is hovered
 const handleEvaluationIntersection = (): void => {
@@ -24,14 +24,9 @@ const handleEvaluationIntersection = (): void => {
   if (matches && intersectedElId.includes('option')) {
     const optionResponseNumber = <number>+matches[0];
     boundEvaluationResponseIntersection({
-      id: optionResponseNumber,
-      isHovered: true,
+      lastHoveredOption: optionResponseNumber,
     });
   }
-  // if (['postPlane', 'postText'].includes(intersectedElId)) {
-  //   console.log('Post selected');
-  //   // saveEvaluation(selectedOption);
-  // }
 };
 
 export default handleEvaluationIntersection;
