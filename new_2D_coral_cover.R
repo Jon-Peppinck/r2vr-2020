@@ -1386,9 +1386,12 @@ check <- function(imgNumber) {
 
 ## LATEST ### 
 # fixedPointsTemp(image1Points)
-# nextImage()
+# goImage(2)
 # fixedPointsTemp(image2Points)
-# go2(image_paths = img_paths, index = 3)
+# goImage(3)
 # fixedPointsTemp(image3Points)
+# check(1)
+# check(2)
+# check(3)
 # question()
 # question(2)
