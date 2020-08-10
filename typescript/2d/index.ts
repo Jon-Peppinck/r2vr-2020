@@ -35,6 +35,7 @@ import saveEvaluation from './helpers/evaluation/save';
 
 // Observe canvas for image changes
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('index2d.ts');
   // TODO: consider refactoring to image reducer
   const imageIds: Pick<Annotation, 'imageId'>[] = [];
   const name = document.getElementById('user')!.className;

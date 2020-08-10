@@ -2,10 +2,13 @@ const path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: './typescript/index.ts',
+  entry: {
+    bundle2d: './typescript/2d/index.ts',
+    bundle3d: './typescript/3d/index.ts',
+  },
   output: {
     path: path.resolve(__dirname, 'inst', 'js'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     publicPath: '/dist/js/',
   },
   module: {
