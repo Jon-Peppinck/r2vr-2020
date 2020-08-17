@@ -74,42 +74,16 @@ initial_list_length <- length(list_of_children_entities)
 for (i in 1:50) {
   sphere_radius = 500
   # TODO: exclude 0?
-  # x <- runif(1, -1, 1) 
-  # y <- runif(1, -1, 1) 
-  # z <- runif(1, -1, 1)
-  
   u <- runif(1, -1, 1)
-  theta <- runif(1, 0, 2*pi)
-  
+  theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
+  # https://mathworld.wolfram.com/SpherePointPicking.html 
   x <- sqrt(1 - u^2) * cos(theta)
   y <- sqrt(1 - u^2) * sin(theta)
   z <- u
   
-  r_mag <- sqrt(x^2 + y^2 + z^2)
-  
-  angle1 <- atan2(y, x)
-  angle2 <- asin(-u/(r_mag))
-  
-  angle1_deg <- angle1 * (180/pi)
-  angle2_deg <- angle2 * (180/pi)
-  
-  
-  # v <- runif(1)
-  # theta <- 2 * pi * u
-  # phi <- acos((2 * v) -1)
-  
-  # x_normal = x/(x^2 + y^2 + z^2)
-  # y_normal = y/(x^2 + y^2 + z^2)
-  # z_normal = z/(x^2 + y^2 + z^2)
-  # 
-  # x_ring = sphere_radius * x_normal
-  # y_ring = sphere_radius * y_normal
-  # z_ring = sphere_radius * z_normal
-  
   ring <- a_entity(
     .tag = "ring",
     position = c(x, y, z),
-    # rotation = c(angle1_deg, angle2_deg, 0),
     radius_outer = 0.04,
     radius_inner = 0.03,
     color = "#FF0000",
