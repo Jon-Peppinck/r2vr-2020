@@ -110,15 +110,78 @@ AFRAME.registerComponent('look-at', {
   },
 });
 
-AFRAME.registerComponent('btn-down', {
+// TODO: consider moving (look-at) higher
+
+// AFRAME.registerComponent('btn-down', {
+//   init: function () {
+//     console.log(8, 'btn-down registered');
+//     const controlsEl = document.querySelector('[button-controls]');
+//     // Detect buttons selected in WebVR
+//     controlsEl.addEventListener('buttondown', (e) => {
+//       const el = this.el;
+//       if (el.className === 'box') console.log(88, e.target, el, el.className);
+//       this.el.setAttribute('material', 'color', 'red');
+//     });
+//   },
+// });
+
+// TODO: Refactor below
+
+let intersectedEl = '';
+
+AFRAME.registerComponent('raycaster-listen', {
   init: function () {
-    console.log(8, 'btn-down registered');
+    this.el.addEventListener('raycaster-intersected', (evt) => {
+      intersectedEl = evt.currentTarget.id;
+
+      let matches = intersectedEl.match(/(\d+)/);
+
+      if (matches) {
+        const id = matches[0];
+
+        const coralOption = document.querySelector(`#menuCoral${id}`);
+        const notCoralOption = document.querySelector(`#menuNotCoral${id}`);
+        if (
+          coralOption.getAttribute('visible') &&
+          notCoralOption.getAttribute('visible')
+        ) {
+          coralOption.setAttribute('visible', false);
+          notCoralOption.setAttribute('visible', false);
+        }
+      }
+      console.log(1, 'intersected', intersectedEl);
+    });
+    this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
+      intersectedEl = '';
+      console.log(2, 'intersected-cleared', intersectedEl);
+    });
+  },
+});
+
+AFRAME.registerComponent('toggle-menu-listen', {
+  init: function () {
     const controlsEl = document.querySelector('[button-controls]');
-    // Detect buttons selected in WebVR
-    controlsEl.addEventListener('buttondown', (e) => {
-      const el = this.el;
-      if (el.className === 'box') console.log(88, e.target, el, el.className);
-      this.el.setAttribute('material', 'color', 'red');
+
+    controlsEl.addEventListener('buttondown', () => {
+      // console.log(5, intersectedEl);
+      let matches = intersectedEl.match(/(\d+)/);
+      if (matches) {
+        const id = matches[0];
+        const isMarkerIntersected = [
+          `markerInner${id}`,
+          `markerBoundary${id}`,
+        ].includes(intersectedEl);
+        const coralOption = document.querySelector(`#menuCoral${id}`);
+        const notCoralOption = document.querySelector(`#menuNotCoral${id}`);
+        if (
+          !coralOption.getAttribute('visible') &&
+          !notCoralOption.getAttribute('visible') &&
+          isMarkerIntersected
+        ) {
+          coralOption.setAttribute('visible', true);
+          notCoralOption.setAttribute('visible', true);
+        }
+      }
     });
   },
 });
