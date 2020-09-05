@@ -1,6 +1,10 @@
 // @ts-nocheck
 // https://unpkg.com/aframe-look-at-component@0.5.1/index.js
 
+import { Scene, Entity } from 'aframe';
+
+import displayMenuOptions from './user-interface/menu-options';
+
 var debug = AFRAME.utils.debug;
 var coordinates = AFRAME.utils.coordinates;
 
@@ -112,74 +116,44 @@ AFRAME.registerComponent('look-at', {
 
 // TODO: consider moving (look-at) higher
 
-// AFRAME.registerComponent('btn-down', {
-//   init: function () {
-//     console.log(8, 'btn-down registered');
-//     const controlsEl = document.querySelector('[button-controls]');
-//     // Detect buttons selected in WebVR
-//     controlsEl.addEventListener('buttondown', (e) => {
-//       const el = this.el;
-//       if (el.className === 'box') console.log(88, e.target, el, el.className);
-//       this.el.setAttribute('material', 'color', 'red');
-//     });
-//   },
-// });
-
 // TODO: Refactor below
 
-let intersectedEl = '';
+let intersectedElId = '';
 
 AFRAME.registerComponent('raycaster-listen', {
   init: function () {
     this.el.addEventListener('raycaster-intersected', (evt) => {
-      intersectedEl = evt.currentTarget.id;
-
-      let matches = intersectedEl.match(/(\d+)/);
-
+      let { x, y, z } = evt.detail.intersection.point;
+      if ([x, y, z].every((coordinate) => coordinate === 0)) return;
+      intersectedElId = evt.currentTarget.id;
+      if (!intersectedElId) return;
+      let matches = intersectedElId.match(/(\d+)/);
       if (matches) {
-        const id = matches[0];
-
-        const coralOption = document.querySelector(`#menuCoral${id}`);
-        const notCoralOption = document.querySelector(`#menuNotCoral${id}`);
-        if (
-          coralOption.getAttribute('visible') &&
-          notCoralOption.getAttribute('visible')
-        ) {
-          coralOption.setAttribute('visible', false);
-          notCoralOption.setAttribute('visible', false);
-        }
+        const [id]: [number] = matches; // note: id = matches[0]
+        displayMenuOptions(id, 'hide');
       }
-      console.log(1, 'intersected', intersectedEl);
     });
-    this.el.addEventListener('raycaster-intersected-cleared', (evt) => {
-      intersectedEl = '';
-      console.log(2, 'intersected-cleared', intersectedEl);
+    this.el.addEventListener('raycaster-intersected-cleared', () => {
+      if (intersectedElId === '') return;
+      intersectedElId = '';
+      console.log(2, 'intersected-cleared', intersectedElId);
     });
   },
 });
 
 AFRAME.registerComponent('toggle-menu-listen', {
   init: function () {
-    const controlsEl = document.querySelector('[button-controls]');
-
+    const controlsEl = document.querySelector('[button-controls]') as Scene;
     controlsEl.addEventListener('buttondown', () => {
-      // console.log(5, intersectedEl);
-      let matches = intersectedEl.match(/(\d+)/);
+      let matches = intersectedElId.match(/(\d+)/);
       if (matches) {
-        const id = matches[0];
+        const [id]: [number] = matches;
         const isMarkerIntersected = [
           `markerInner${id}`,
           `markerBoundary${id}`,
-        ].includes(intersectedEl);
-        const coralOption = document.querySelector(`#menuCoral${id}`);
-        const notCoralOption = document.querySelector(`#menuNotCoral${id}`);
-        if (
-          !coralOption.getAttribute('visible') &&
-          !notCoralOption.getAttribute('visible') &&
-          isMarkerIntersected
-        ) {
-          coralOption.setAttribute('visible', true);
-          notCoralOption.setAttribute('visible', true);
+        ].includes(intersectedElId);
+        if (isMarkerIntersected) {
+          displayMenuOptions(id, 'show');
         }
       }
     });

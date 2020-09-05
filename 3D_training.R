@@ -37,10 +37,10 @@ canvas_3d <- a_entity(
   .tag = "sky",
   .js_sources = list(
     "./inst/js/button_controls.js",
-    "./inst/js/bundle3d.js",
-    "https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"
+    "./inst/js/bundle3d.js" # ,
+    # "https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"
   ),
-  id = "canvas3d",
+  id = "canvas3d", # TODO: change to canvas so no id match on entities
   class = img_paths[[1]]$img,
   src = image1,
   rotation = c(0, 0, 0),
@@ -76,7 +76,7 @@ inner_radius <- 0.03
 
 for (i in 1:50) {
   sphere_radius = 500
-  # TODO: exclude 0?
+  # TODO: exclude 0? - make sure x = 0, y = 0, z = 0 is not generated
   u <- runif(1, -1, 1)
   theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
   # https://mathworld.wolfram.com/SpherePointPicking.html 
@@ -93,7 +93,7 @@ for (i in 1:50) {
     position = c(x, y, z),
     radius_outer = outer_radius,
     radius_inner = inner_radius,
-    color = "#FF0000",
+    color = "#ffffff",
     side = "double"
   )
   
