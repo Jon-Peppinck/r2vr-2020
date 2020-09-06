@@ -38,7 +38,7 @@ canvas_3d <- a_entity(
   .js_sources = list(
     "./inst/js/button_controls.js",
     "./inst/js/look_at.js",
-    "./inst/js/bundle3d.js"
+    "./inst/js/training3d.js"
   ),
   id = "canvas",
   class = img_paths[[1]]$img,

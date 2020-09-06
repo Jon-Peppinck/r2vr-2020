@@ -20,7 +20,6 @@ AFRAME.registerComponent('raycaster-listen', {
     this.el.addEventListener('raycaster-intersected-cleared', () => {
       if (intersectedElId === '') return;
       intersectedElId = '';
-      console.log(2, 'intersected-cleared', intersectedElId);
     });
   },
 });
