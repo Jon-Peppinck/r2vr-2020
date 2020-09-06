@@ -3,7 +3,7 @@ library(r2vr)
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
 
-## 3D image paths (2400x1200px)
+# 3D image paths (2400x1200px)
 img_paths <- list(
   list(img = "./inst/ext/images/reef/100030039.jpg"),
   list(img = "./inst/ext/images/reef/120261897.jpg"),
@@ -37,10 +37,10 @@ canvas_3d <- a_entity(
   .tag = "sky",
   .js_sources = list(
     "./inst/js/button_controls.js",
-    "./inst/js/bundle3d.js" # ,
-    # "https://unpkg.com/aframe-look-at-component@0.5.1/dist/aframe-look-at-component.min.js"
+    "./inst/js/look_at.js",
+    "./inst/js/bundle3d.js"
   ),
-  id = "canvas3d", # TODO: change to canvas so no id match on entities
+  id = "canvas",
   class = img_paths[[1]]$img,
   src = image1,
   rotation = c(0, 0, 0),
@@ -53,8 +53,8 @@ canvas_3d <- a_entity(
 # Create a cursor
 cursor <- a_entity(
   .tag = "cursor",
-  camera = "",
   look_controls = "",
+  camera = "",
   color = "#ff0000"
 )
 
@@ -62,8 +62,8 @@ cursor <- a_entity(
 camera <- a_entity(
   .tag = "camera",
   .children = list(cursor),
-  position = c(0, 0, 0),
-  cursor = ""
+  cursor = "",
+  position = c(0, 0, 0)
 )
 
 ## Markers
@@ -76,10 +76,8 @@ inner_radius <- 0.03
 
 for (i in 1:50) {
   sphere_radius = 500
-  # TODO: exclude 0? - make sure x = 0, y = 0, z = 0 is not generated
   u <- runif(1, -1, 1)
   theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
-  # https://mathworld.wolfram.com/SpherePointPicking.html 
   x <- sqrt(1 - u^2) * cos(theta)
   y <- sqrt(1 - u^2) * sin(theta)
   z <- u
@@ -102,10 +100,9 @@ for (i in 1:50) {
     look_at = "[cursor]",
     raycaster_listen = "",
     id= paste0("markerInner", i),
-    class = "markerInner",
+    class = "marker-inner",
     position = c(x, y, z),
     radius = inner_radius,
-    # color = "#ffffff" # TODO: Remove 
     opacity = 0
   )
   
