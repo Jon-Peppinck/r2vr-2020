@@ -1,4 +1,8 @@
-const getImage = (): Shared.ImageFile => {
+import { store } from '../store/rootStore';
+
+import { boundPushNewImage } from '../store/annotation/AnnotationAction';
+
+export const getImage = (): Shared.ImageFile => {
   const canvas = document.getElementById('canvas')!;
 
   // The image filename is found through its class
@@ -7,16 +11,21 @@ const getImage = (): Shared.ImageFile => {
   const nameAndExtension = fullName.split('.');
   const [name, extension] = nameAndExtension;
 
+  const state = store.getState();
+  const { annotationReducer } = state;
+  const currentImageNumber = annotationReducer.length;
+
   const imageFile: Shared.ImageFile = {
     fullName,
     name,
     extension,
     isAnnotated: false,
+    uniqueNumberId: currentImageNumber,
   };
   return imageFile;
 };
 
-const imageObserver = () => {
+export const imageObserver = () => {
   const initialImage: Shared.ImageFile = getImage();
   const annotatedImages: Array<string> = [];
   annotatedImages.push(initialImage.name);
@@ -26,6 +35,7 @@ const imageObserver = () => {
     const newImageName = newImage.name;
     if (!annotatedImages.includes(newImageName)) {
       annotatedImages.push(newImageName);
+      boundPushNewImage(newImage);
     }
   });
 
@@ -34,5 +44,3 @@ const imageObserver = () => {
     attributeFilter: ['src'],
   });
 };
-
-export default imageObserver;

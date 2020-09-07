@@ -1,12 +1,29 @@
 import { Scene, Entity } from 'aframe';
 
+import { store } from './store/rootStore';
+import {
+  boundPushNewImage,
+  boundPostAnnotation,
+  boundUpdateAnnotation,
+} from './store/annotation/AnnotationAction';
+
+import { getImage, imageObserver } from './helpers/image';
+import getMarkerIndex from './helpers/findMarkerIndex';
+
+import { setMarkerColor } from '../shared/user-interface/marker-color';
 import displayMenuOptions from '../shared/user-interface/menu-options';
-import imageObserver from '../shared/helpers/image';
-import setMarkerColor from '../shared/user-interface/marker-color';
 
 let intersectedElId = '';
 
+const render = () => {
+  return store.getState();
+};
+render();
+store.subscribe(render);
+
 document.addEventListener('DOMContentLoaded', () => {
+  const initialImage = getImage();
+  boundPushNewImage(initialImage);
   imageObserver();
 });
 
@@ -28,9 +45,20 @@ AFRAME.registerComponent('raycaster-listen', {
         if (!isMenuOptionSelected) return;
         displayMenuOptions(id, 'hide');
 
-        intersectedElId.startsWith('menuCoral')
-          ? setMarkerColor(id, 1)
-          : setMarkerColor(id, 0);
+        let marker: Shared.Marker;
+
+        const foundIndex = getMarkerIndex(id);
+
+        if (intersectedElId.startsWith('menuCoral')) {
+          setMarkerColor(id, 1);
+          marker = { id, isCoral: 1 };
+        } else {
+          setMarkerColor(id, 0);
+          marker = { id, isCoral: 0 };
+        }
+        foundIndex === -1
+          ? boundPostAnnotation(marker)
+          : boundUpdateAnnotation(marker);
       }
     });
     this.el.addEventListener('raycaster-intersected-cleared', () => {
