@@ -1,8 +1,13 @@
 import { Scene, Entity } from 'aframe';
 
 import displayMenuOptions from './user-interface/menu-options';
+import imageObserver from '../shared/helpers/image';
 
 let intersectedElId = '';
+
+window.addEventListener('DOMContentLoaded', () => {
+  imageObserver();
+});
 
 AFRAME.registerComponent('raycaster-listen', {
   init: function () {
