@@ -1,11 +1,12 @@
 import { Scene, Entity } from 'aframe';
 
-import displayMenuOptions from './user-interface/menu-options';
+import displayMenuOptions from '../shared/user-interface/menu-options';
 import imageObserver from '../shared/helpers/image';
+import setMarkerColor from '../shared/user-interface/marker-color';
 
 let intersectedElId = '';
 
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   imageObserver();
 });
 
@@ -16,10 +17,20 @@ AFRAME.registerComponent('raycaster-listen', {
       if ([x, y, z].every((coordinate) => coordinate === 0)) return;
       intersectedElId = e.currentTarget.id;
       if (!intersectedElId) return;
-      let matches = intersectedElId.match(/(\d+)/);
+      const matches = intersectedElId.match(/(\d+)/);
       if (matches) {
         const id = +matches[0];
+        const isMenuOptionSelected = [
+          `menuCoral${id}`,
+          `menuNotCoral${id}`,
+        ].includes(intersectedElId);
+
+        if (!isMenuOptionSelected) return;
         displayMenuOptions(id, 'hide');
+
+        intersectedElId.startsWith('menuCoral')
+          ? setMarkerColor(id, 1)
+          : setMarkerColor(id, 0);
       }
     });
     this.el.addEventListener('raycaster-intersected-cleared', () => {

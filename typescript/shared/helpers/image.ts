@@ -26,7 +26,6 @@ const imageObserver = () => {
     const newImageName = newImage.name;
     if (!annotatedImages.includes(newImageName)) {
       annotatedImages.push(newImageName);
-      console.log(7, 'fired!', annotatedImages);
     }
   });
 

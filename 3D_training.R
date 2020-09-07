@@ -231,19 +231,19 @@ goImage <- function(image_paths = img_paths, index = NA) {
   }
   
   # Reset marker colour to white
-  resetMarkersUI(MAX_NUMBER_OF_POINTS)
-
-  # Update points to not be visible
-  for (point in 1:MAX_NUMBER_OF_POINTS) {
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "visible",
-        attributes = FALSE
-      )
-    )
-    animals$send_messages(update_entities)
-  }
+  # resetMarkersUI(MAX_NUMBER_OF_POINTS)
+  # 
+  # # Update points to not be visible
+  # for (point in 1:MAX_NUMBER_OF_POINTS) {
+  #   update_entities <- list(
+  #     a_update(
+  #       id = paste0("markerContainer", point),
+  #       component = "visible",
+  #       attributes = FALSE
+  #     )
+  #   )
+  #   animals$send_messages(update_entities)
+  # }
   
   current_image <<- img_paths[[CONTEXT_INDEX]]$img
   
