@@ -6,6 +6,7 @@ import {
   boundPostAnnotation,
   boundUpdateAnnotation,
 } from './store/annotation/AnnotationAction';
+import boundGetUser from './store/user/UserAction';
 
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
@@ -22,6 +23,11 @@ render();
 store.subscribe(render);
 
 document.addEventListener('DOMContentLoaded', () => {
+  const name = document.getElementById('user')!.className;
+  const user = {
+    name,
+  };
+  boundGetUser(user);
   const initialImage = getImage();
   boundPushNewImage(initialImage);
   imageObserver();

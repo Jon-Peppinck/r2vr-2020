@@ -1,5 +1,8 @@
 library(r2vr)
 
+# Set observer here
+user <- "Jon-Peppinck"
+
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
 
@@ -66,8 +69,17 @@ camera <- a_entity(
   position = c(0, 0, 0)
 )
 
+# Invisble entity to store user name for client side JS
+user <- a_entity(
+  .tag = "circle",
+  id = "user",
+  class = user,
+  opacity = 0,
+  radius = 0
+)
+
 ## Markers
-list_of_children_entities <- list(canvas_3d, camera)
+list_of_children_entities <- list(canvas_3d, camera, user)
 
 initial_list_length <- length(list_of_children_entities)
 
