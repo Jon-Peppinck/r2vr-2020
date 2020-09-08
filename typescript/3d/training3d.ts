@@ -53,15 +53,23 @@ AFRAME.registerComponent('raycaster-listen', {
 
         let marker: Shared.Marker;
 
+        const markerBoundary = document.getElementById(
+          `markerBoundary${id}`
+        )! as Entity;
+        const x = markerBoundary.getAttribute('position').x;
+        const y = markerBoundary.getAttribute('position').y;
+        const z = markerBoundary.getAttribute('position').y;
+
         const foundIndex = getMarkerIndex(id);
 
         if (intersectedElId.startsWith('menuCoral')) {
           setMarkerColor(id, 1);
-          marker = { id, isCoral: 1 };
+          marker = { id, isCoral: 1, x, y, z };
         } else {
           setMarkerColor(id, 0);
-          marker = { id, isCoral: 0 };
+          marker = { id, isCoral: 0, x, y, z };
         }
+
         foundIndex === -1
           ? boundPostAnnotation(marker)
           : boundUpdateAnnotation(marker);

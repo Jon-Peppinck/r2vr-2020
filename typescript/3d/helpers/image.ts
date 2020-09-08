@@ -1,6 +1,8 @@
 import { store } from '../store/rootStore';
-
 import { boundPushNewImage } from '../store/annotation/AnnotationAction';
+
+import postAnnotations from '../http/postAnnotations';
+import { getMarkers } from './getMarkers';
 
 export const getImage = (): Shared.ImageFile => {
   const canvas = document.getElementById('canvas')!;
@@ -34,6 +36,7 @@ export const imageObserver = () => {
     const newImage: Shared.ImageFile = getImage();
     const newImageName = newImage.name;
     if (!annotatedImages.includes(newImageName)) {
+      postAnnotations();
       annotatedImages.push(newImageName);
       boundPushNewImage(newImage);
     }

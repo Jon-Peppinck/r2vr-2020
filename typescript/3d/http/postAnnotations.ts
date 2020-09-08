@@ -1,0 +1,50 @@
+import { store } from '../store/rootStore';
+
+// import { URL } from '@shared/http/url'; // TODO
+
+const postAnnotation = async (annotation: Api.Annotation) => {
+  try {
+    const response = await fetch(`http://localhost:3000/api/3d/training`, {
+      method: 'POST',
+      body: JSON.stringify(annotation),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (![200, 201].includes(response.status)) {
+      throw new Error('Unable to post annotations!');
+    }
+    // TODO: reset markers UI to white
+    console.log(response.status, '- Request complete! response:', response);
+  } catch (err) {
+    throw new Error(`${err} - Unable to post annotation!`);
+  }
+};
+
+const postAnnotations = () => {
+  const state = store.getState();
+  const { annotationReducer, userReducer } = state;
+  const imageAnnotations = annotationReducer[annotationReducer.length - 1];
+  const { fullName, name, extension } = imageAnnotations.image;
+  const allImageAnnotations = imageAnnotations.markers;
+  const user = userReducer.name;
+
+  allImageAnnotations.forEach((marker) => {
+    const { id, isCoral, x, y, z } = marker;
+    const annotation: Api.Annotation = {
+      image_file_name: fullName,
+      image_file_id: name,
+      image_file_extension: extension,
+      site: id,
+      x,
+      y,
+      z,
+      is_coral: isCoral,
+      observer: user,
+      observation_id: user + 123,
+    };
+    postAnnotation(annotation);
+  });
+};
+
+export default postAnnotations;
