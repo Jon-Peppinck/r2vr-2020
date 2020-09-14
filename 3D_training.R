@@ -1,7 +1,10 @@
 library(r2vr)
 
 # Set observer here
-user <- "Jon-Peppinck"
+USER <- "Jon-Peppinck"
+
+# Set total number of markers
+NUMBER_OF_MARKERS <- 50
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
@@ -13,6 +16,14 @@ img_paths <- list(
   list(img = "./inst/ext/images/reef/130030287.jpg"),
   list(img = "./inst/ext/images/reef/130050093.jpg")
 )
+
+# Colours
+COLOR_MARKER <- "#FFFFFF"
+COLOR_CORAL <- "#FF95BC"
+COLOR_NOT_CORAL <- "#969696"
+COLOR_TEXT <- "#000000"
+COLOR_CAMERA_CURSOR <- "#FF0000"
+
 
 # Randomly select 3 out of the (4) images (any order) to avoid order bias
 img_paths <- sample(img_paths, 3, replace=FALSE)
@@ -58,7 +69,7 @@ cursor <- a_entity(
   .tag = "cursor",
   look_controls = "",
   camera = "",
-  color = "#ff0000"
+  color = COLOR_CAMERA_CURSOR
 )
 
 # Position cursor in center of camera
@@ -73,7 +84,7 @@ camera <- a_entity(
 user <- a_entity(
   .tag = "circle",
   id = "user",
-  class = user,
+  class = USER,
   opacity = 0,
   radius = 0
 )
@@ -83,10 +94,12 @@ list_of_children_entities <- list(canvas_3d, camera, user)
 
 initial_list_length <- length(list_of_children_entities)
 
-outer_radius <- 0.04
-inner_radius <- 0.03
+MARKER_OUTER_RADIUS <- 0.04
+MARKER_INNER_RADIUS <- 0.03
+MENU_OPTION_OUTER_RADIUS <- 0.1
+MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
-for (i in 1:50) {
+for (i in 1:NUMBER_OF_MARKERS) {
   sphere_radius = 500
   u <- runif(1, -1, 1)
   theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
@@ -101,9 +114,9 @@ for (i in 1:50) {
     id = paste0("markerBoundary", i),
     class = "marker-boundary",
     position = c(x, y, z),
-    radius_outer = outer_radius,
-    radius_inner = inner_radius,
-    color = "#ffffff",
+    radius_outer = MARKER_OUTER_RADIUS,
+    radius_inner = MARKER_INNER_RADIUS,
+    color = COLOR_MARKER,
     side = "double"
   )
   
@@ -114,38 +127,63 @@ for (i in 1:50) {
     id= paste0("markerInner", i),
     class = "marker-inner",
     position = c(x, y, z),
-    radius = inner_radius,
+    radius = MARKER_INNER_RADIUS,
     opacity = 0
+  )
+  
+  TEXT_BOX_EDGE_SIZE <- 0.005
+  
+  coral_label <- a_entity(
+    .tag = "text",
+    id = paste0("coralText", i),
+    value = "C",
+    width = 1.2,
+    color = COLOR_TEXT,
+    position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+    # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
+  )
+  
+  not_coral_label <- a_entity(
+    .tag = "text",
+    id = paste0("notCoralText", i),
+    value = "N",
+    width = 1.2,
+    color = COLOR_TEXT,
+    position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
   )
   
   menu_coral <- a_entity(
     .tag = "ring",
+    .children = list(coral_label),
     look_at = "[cursor]",
     raycaster_listen = "",
     id= paste0("menuCoral", i),
     class = "menu-item",
     position = c(x, y, z),
-    radius_outer = outer_radius + 0.06,
-    radius_inner = outer_radius,
+    radius_outer = MENU_OPTION_OUTER_RADIUS,
+    radius_inner = MENU_OPTION_INNER_RADIUS,
     theta_length = 180,
     theta_start = 90,
-    color = "#FF95BC",
+    color = COLOR_CORAL,
     side = "double",
-    visible = FALSE
+    visible = FALSE,
   )
   
   menu_not_coral <- a_entity(
     .tag = "ring",
+    .children = list(not_coral_label),
     look_at = "[cursor]",
     raycaster_listen = "",
     id = paste0("menuNotCoral", i),
     class = "menu-item",
     position = c(x, y, z),
-    radius_outer = outer_radius + 0.06,
-    radius_inner = outer_radius,
+    radius_outer = MENU_OPTION_OUTER_RADIUS,
+    radius_inner = MENU_OPTION_INNER_RADIUS,
     theta_length = 180,
     theta_start = 270,
-    color = "#969696",
+    color = COLOR_NOT_CORAL,
     side = "double",
     visible = FALSE
   )
@@ -159,7 +197,6 @@ for (i in 1:50) {
     position = c(0, 0, 0),
     radius_inner = 0.00001,
     radius_outer = 0.00001,
-    color = "#000000",
     opacity = 0,
     debug = "" # needed for x and y position after an update via web sockets
   )
@@ -212,7 +249,7 @@ resetMarkersUI <- function(numberOfPointsToReset){
       a_update(
         id = paste0("markerCircumference", i),
         component = "color",
-        attributes = "#FFFFFF"
+        attributes = COLOR_MARKER
       )
     )
     animals$send_messages(reset_marker_colors)
