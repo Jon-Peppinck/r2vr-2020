@@ -4,17 +4,24 @@ library(r2vr)
 USER <- "Jon-Peppinck"
 
 # Set total number of markers
-NUMBER_OF_MARKERS <- 50
+NUMBER_OF_MARKERS <- 3
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
 
+# TODO: Annotate markers correctly & add others
+img1Points = list(
+  list(id = 1, x = -0.268, y = -0.739, z = 0.616, isCoral = 0), # sand
+  list(id = 2, x =  -0.8979, y = -0.0452, z = -0.4377, isCoral = 0), # sand/water
+  list(id = 3, x = -0.4749, y = -0.7584, z = 0.4463, isCoral = 0) # sand/water
+)
+
 # 3D image paths (2400x1200px)
 img_paths <- list(
-  list(img = "./inst/ext/images/reef/100030039.jpg"),
-  list(img = "./inst/ext/images/reef/120261897.jpg"),
-  list(img = "./inst/ext/images/reef/130030287.jpg"),
-  list(img = "./inst/ext/images/reef/130050093.jpg")
+  list(img = "./inst/ext/images/reef/100030039.jpg", imgPoints = img1Points),
+  list(img = "./inst/ext/images/reef/120261897.jpg", imgPoints = img1Points),
+  list(img = "./inst/ext/images/reef/130030287.jpg", imgPoints = img1Points),
+  list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img1Points)
 )
 
 # Colours
@@ -24,7 +31,6 @@ COLOR_NOT_CORAL <- "#969696"
 COLOR_TEXT <- "#000000"
 COLOR_CAMERA_CURSOR <- "#FF0000"
 
-
 # Randomly select 3 out of the (4) images (any order) to avoid order bias
 img_paths <- sample(img_paths, 3, replace=FALSE)
 
@@ -33,6 +39,8 @@ for (i in 1:length(img_paths)) {
   currentImgPath <- img_paths[[i]]$img
   image_number <- paste0("image", i) # image1, ... , image<n>
   image_path <- paste0("image", i, "Path") # image1Path, ... , image<n>Path
+  image_number_points <- paste0("image", i, "Points") # image1Points, ... , image<n>Points
+  currentImgPoints <- img_paths[[i]]$imgPoints # list of lists
 
   current_image <- a_asset(
     .tag = "image",
@@ -41,9 +49,11 @@ for (i in 1:length(img_paths)) {
   )
   
   # Assign image<n> variable to its corresponding image asset
-  assign(image_number, current_image) # i.e. image1, image2, image3
-  # Assign image<n>Path variable to its corresponding image asset
-  assign(image_path, currentImgPath) # i.e. image1Path, image2Path, image3Path
+  assign(image_number, current_image)
+  # Assign image<n>Path variable to its corresponding image path
+  assign(image_path, currentImgPath)
+  # Assign image<n>Points variable to its corresponding image points
+  assign(image_number_points, currentImgPoints)
 }
 
 # Create 3D sky with images
@@ -99,14 +109,18 @@ MARKER_INNER_RADIUS <- 0.03
 MENU_OPTION_OUTER_RADIUS <- 0.1
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
-for (i in 1:NUMBER_OF_MARKERS) {
+### GENERATE POINTS ###
+# TODO: Move higher
+generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
+  # TODO: check typeof arg for for int
+  for (i in 1:numberOfMarkers) {
   sphere_radius = 500
   u <- runif(1, -1, 1)
   theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
   x <- sqrt(1 - u^2) * cos(theta)
   y <- sqrt(1 - u^2) * sin(theta)
   z <- u
-  
+
   marker_boundary <- a_entity(
     .tag = "ring",
     look_at = "[cursor]",
@@ -119,7 +133,7 @@ for (i in 1:NUMBER_OF_MARKERS) {
     color = COLOR_MARKER,
     side = "double"
   )
-  
+
   marker_inner <- a_entity(
     .tag = "circle",
     look_at = "[cursor]",
@@ -130,9 +144,9 @@ for (i in 1:NUMBER_OF_MARKERS) {
     radius = MARKER_INNER_RADIUS,
     opacity = 0
   )
-  
+
   TEXT_BOX_EDGE_SIZE <- 0.005
-  
+
   coral_label <- a_entity(
     .tag = "text",
     id = paste0("coralText", i),
@@ -143,7 +157,7 @@ for (i in 1:NUMBER_OF_MARKERS) {
     geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
     # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
   )
-  
+
   not_coral_label <- a_entity(
     .tag = "text",
     id = paste0("notCoralText", i),
@@ -153,7 +167,7 @@ for (i in 1:NUMBER_OF_MARKERS) {
     position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
     geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
   )
-  
+
   menu_coral <- a_entity(
     .tag = "ring",
     .children = list(coral_label),
@@ -170,7 +184,7 @@ for (i in 1:NUMBER_OF_MARKERS) {
     side = "double",
     visible = FALSE,
   )
-  
+
   menu_not_coral <- a_entity(
     .tag = "ring",
     .children = list(not_coral_label),
@@ -187,7 +201,7 @@ for (i in 1:NUMBER_OF_MARKERS) {
     side = "double",
     visible = FALSE
   )
-  
+
   # Marker container: Encapsulate a marker and its menu options inside a parent container
   marker_container <- a_entity(
     .tag = "ring",
@@ -200,14 +214,54 @@ for (i in 1:NUMBER_OF_MARKERS) {
     opacity = 0,
     debug = "" # needed for x and y position after an update via web sockets
   )
-  
+
   marker_container_number <- paste0("markerContainer", i)
-  list_of_children_entities[[initial_list_length + i]] <- assign(marker_container_number, marker_container)
+  list_of_children_entities[[initial_list_length + i]] <<- assign(marker_container_number, marker_container)
+  }
 }
 
+generatePoints()
 
-### GENERATE POINTS ###
+fixedPoints <- function(points) {
+  for(point in 1:length(points)) {
+    fixedCoordinateX <- points[[point]]$x
+    fixedCoordinateY <- points[[point]]$y
+    fixedCoordinateZ <- points[[point]]$z
 
+    # Update the position for the number of points specified
+    update_entities <- list(
+      a_update(
+        id = paste0("markerBoundary", point),
+        component = "position",
+        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = fixedCoordinateZ)
+      ),
+      # Update the specified number of points to be visible
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = TRUE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+  
+  startNumberOfRemainingPoints <- length(points) + 1
+  
+  if (startNumberOfRemainingPoints > NUMBER_OF_MARKERS) return() # TODO: Check edge cases
+  
+  # Update the remaining points to not be visible
+  for (point in startNumberOfRemainingPoints:NUMBER_OF_MARKERS) {
+    # Update the position
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+}
 
 ### RENDER SCENE
 
