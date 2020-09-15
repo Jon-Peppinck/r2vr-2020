@@ -41,7 +41,7 @@ for (i in 1:length(img_paths)) {
   image_path <- paste0("image", i, "Path") # image1Path, ... , image<n>Path
   image_number_points <- paste0("image", i, "Points") # image1Points, ... , image<n>Points
   currentImgPoints <- img_paths[[i]]$imgPoints # list of lists
-
+  
   current_image <- a_asset(
     .tag = "image",
     id = paste0("img", i), # id = "img<i>" used to select DOM element
@@ -62,7 +62,7 @@ canvas_3d <- a_entity(
   .js_sources = list(
     "./inst/js/button_controls.js",
     "./inst/js/look_at.js",
-    "./inst/js/training3d.js"
+    "./inst/js/testing3d.js"
   ),
   id = "canvas",
   class = img_paths[[1]]$img,
@@ -114,154 +114,113 @@ MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   # TODO: check typeof arg for for int
   for (i in 1:numberOfMarkers) {
-  sphere_radius = 500
-  u <- runif(1, -1, 1)
-  theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
-  x <- sqrt(1 - u^2) * cos(theta)
-  y <- sqrt(1 - u^2) * sin(theta)
-  z <- u
-
-  marker_boundary <- a_entity(
-    .tag = "ring",
-    look_at = "[cursor]",
-    raycaster_listen = "",
-    id = paste0("markerBoundary", i),
-    class = "marker-boundary",
-    position = c(x, y, z),
-    radius_outer = MARKER_OUTER_RADIUS,
-    radius_inner = MARKER_INNER_RADIUS,
-    color = COLOR_MARKER,
-    side = "double"
-  )
-
-  marker_inner <- a_entity(
-    .tag = "circle",
-    look_at = "[cursor]",
-    raycaster_listen = "",
-    id= paste0("markerInner", i),
-    class = "marker-inner",
-    position = c(x, y, z),
-    radius = MARKER_INNER_RADIUS,
-    opacity = 0
-  )
-
-  TEXT_BOX_EDGE_SIZE <- 0.005
-
-  coral_label <- a_entity(
-    .tag = "text",
-    id = paste0("coralText", i),
-    value = "C",
-    width = 1.2,
-    color = COLOR_TEXT,
-    position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
-    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
-    # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
-  )
-
-  not_coral_label <- a_entity(
-    .tag = "text",
-    id = paste0("notCoralText", i),
-    value = "N",
-    width = 1.2,
-    color = COLOR_TEXT,
-    position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
-    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
-  )
-
-  menu_coral <- a_entity(
-    .tag = "ring",
-    .children = list(coral_label),
-    look_at = "[cursor]",
-    raycaster_listen = "",
-    id= paste0("menuCoral", i),
-    class = "menu-item",
-    position = c(x, y, z),
-    radius_outer = MENU_OPTION_OUTER_RADIUS,
-    radius_inner = MENU_OPTION_INNER_RADIUS,
-    theta_length = 180,
-    theta_start = 90,
-    color = COLOR_CORAL,
-    side = "double",
-    visible = FALSE,
-  )
-
-  menu_not_coral <- a_entity(
-    .tag = "ring",
-    .children = list(not_coral_label),
-    look_at = "[cursor]",
-    raycaster_listen = "",
-    id = paste0("menuNotCoral", i),
-    class = "menu-item",
-    position = c(x, y, z),
-    radius_outer = MENU_OPTION_OUTER_RADIUS,
-    radius_inner = MENU_OPTION_INNER_RADIUS,
-    theta_length = 180,
-    theta_start = 270,
-    color = COLOR_NOT_CORAL,
-    side = "double",
-    visible = FALSE
-  )
-
-  # Marker container: Encapsulate a marker and its menu options inside a parent container
-  marker_container <- a_entity(
-    .tag = "ring",
-    .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
-    id = paste0("markerContainer", i),
-    class = "marker-container",
-    position = c(0, 0, 0),
-    radius_inner = 0.00001,
-    radius_outer = 0.00001,
-    opacity = 0,
-    debug = "" # needed for x and y position after an update via web sockets
-  )
-
-  marker_container_number <- paste0("markerContainer", i)
-  list_of_children_entities[[initial_list_length + i]] <<- assign(marker_container_number, marker_container)
+    sphere_radius = 500
+    u <- runif(1, -1, 1)
+    theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
+    x <- sqrt(1 - u^2) * cos(theta)
+    y <- sqrt(1 - u^2) * sin(theta)
+    z <- u
+    
+    marker_boundary <- a_entity(
+      .tag = "ring",
+      look_at = "[cursor]",
+      raycaster_listen = "",
+      id = paste0("markerBoundary", i),
+      class = "marker-boundary",
+      position = c(x, y, z),
+      radius_outer = MARKER_OUTER_RADIUS,
+      radius_inner = MARKER_INNER_RADIUS,
+      color = COLOR_MARKER,
+      side = "double"
+    )
+    
+    marker_inner <- a_entity(
+      .tag = "circle",
+      look_at = "[cursor]",
+      raycaster_listen = "",
+      id= paste0("markerInner", i),
+      class = "marker-inner",
+      position = c(x, y, z),
+      radius = MARKER_INNER_RADIUS,
+      opacity = 0
+    )
+    
+    TEXT_BOX_EDGE_SIZE <- 0.005
+    
+    coral_label <- a_entity(
+      .tag = "text",
+      id = paste0("coralText", i),
+      value = "C",
+      width = 1.2,
+      color = COLOR_TEXT,
+      position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+      geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+      # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
+    )
+    
+    not_coral_label <- a_entity(
+      .tag = "text",
+      id = paste0("notCoralText", i),
+      value = "N",
+      width = 1.2,
+      color = COLOR_TEXT,
+      position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+      geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+    )
+    
+    menu_coral <- a_entity(
+      .tag = "ring",
+      .children = list(coral_label),
+      look_at = "[cursor]",
+      raycaster_listen = "",
+      id= paste0("menuCoral", i),
+      class = "menu-item",
+      position = c(x, y, z),
+      radius_outer = MENU_OPTION_OUTER_RADIUS,
+      radius_inner = MENU_OPTION_INNER_RADIUS,
+      theta_length = 180,
+      theta_start = 90,
+      color = COLOR_CORAL,
+      side = "double",
+      visible = FALSE,
+    )
+    
+    menu_not_coral <- a_entity(
+      .tag = "ring",
+      .children = list(not_coral_label),
+      look_at = "[cursor]",
+      raycaster_listen = "",
+      id = paste0("menuNotCoral", i),
+      class = "menu-item",
+      position = c(x, y, z),
+      radius_outer = MENU_OPTION_OUTER_RADIUS,
+      radius_inner = MENU_OPTION_INNER_RADIUS,
+      theta_length = 180,
+      theta_start = 270,
+      color = COLOR_NOT_CORAL,
+      side = "double",
+      visible = FALSE
+    )
+    
+    # Marker container: Encapsulate a marker and its menu options inside a parent container
+    marker_container <- a_entity(
+      .tag = "ring",
+      .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
+      id = paste0("markerContainer", i),
+      class = "marker-container",
+      position = c(0, 0, 0),
+      radius_inner = 0.00001,
+      radius_outer = 0.00001,
+      opacity = 0,
+      debug = "" # needed for x and y position after an update via web sockets
+    )
+    
+    marker_container_number <- paste0("markerContainer", i)
+    list_of_children_entities[[initial_list_length + i]] <<- assign(marker_container_number, marker_container)
   }
 }
 
 generatePoints()
-
-fixedPoints <- function(points) {
-  for(point in 1:length(points)) {
-    fixedCoordinateX <- points[[point]]$x
-    fixedCoordinateY <- points[[point]]$y
-    fixedCoordinateZ <- points[[point]]$z
-
-    # Update the position for the number of points specified
-    update_entities <- list(
-      a_update(
-        id = paste0("markerBoundary", point),
-        component = "position",
-        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = fixedCoordinateZ)
-      ),
-      # Update the specified number of points to be visible
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "visible",
-        attributes = TRUE
-      )
-    )
-    animals$send_messages(update_entities)
-  }
-  
-  startNumberOfRemainingPoints <- length(points) + 1
-  
-  if (startNumberOfRemainingPoints > NUMBER_OF_MARKERS) return() # TODO: Check edge cases
-  
-  # Update the remaining points to not be visible
-  for (point in startNumberOfRemainingPoints:NUMBER_OF_MARKERS) {
-    # Update the position
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "visible",
-        attributes = FALSE
-      )
-    )
-    animals$send_messages(update_entities)
-  }
-}
 
 ### RENDER SCENE
 
