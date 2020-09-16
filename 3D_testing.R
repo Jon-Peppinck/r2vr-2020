@@ -4,7 +4,7 @@ library(r2vr)
 USER <- "Jon-Peppinck"
 
 # Set total number of markers
-NUMBER_OF_MARKERS <- 3
+NUMBER_OF_MARKERS <- 20
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
@@ -115,6 +115,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   # TODO: check typeof arg for for int
   for (i in 1:numberOfMarkers) {
     sphere_radius = 500
+    # TODO: consider factoring out and setting x = y = z = 0
     u <- runif(1, -1, 1)
     theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
     x <- sqrt(1 - u^2) * cos(theta)
@@ -127,7 +128,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id = paste0("markerBoundary", i),
       class = "marker-boundary",
-      position = c(x, y, z),
       radius_outer = MARKER_OUTER_RADIUS,
       radius_inner = MARKER_INNER_RADIUS,
       color = COLOR_MARKER,
@@ -140,7 +140,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id= paste0("markerInner", i),
       class = "marker-inner",
-      position = c(x, y, z),
       radius = MARKER_INNER_RADIUS,
       opacity = 0
     )
@@ -175,7 +174,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id= paste0("menuCoral", i),
       class = "menu-item",
-      position = c(x, y, z),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
@@ -192,7 +190,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id = paste0("menuNotCoral", i),
       class = "menu-item",
-      position = c(x, y, z),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
@@ -208,7 +205,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
       id = paste0("markerContainer", i),
       class = "marker-container",
-      position = c(0, 0, 0),
+      position = c(x, y, z),
       radius_inner = 0.00001,
       radius_outer = 0.00001,
       opacity = 0,
@@ -221,6 +218,29 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
 }
 
 generatePoints()
+
+### RANDOMIZE POINTS ###
+randomizePoints <- function() {
+  ## Assign a new position and display the visibility for the number of points
+  for (i in 1:NUMBER_OF_MARKERS) {
+    u <- runif(1, -1, 1)
+    theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
+    random_coordinate_x <- sqrt(1 - u^2) * cos(theta)
+    random_coordinate_y <- sqrt(1 - u^2) * sin(theta)
+    random_coordinate_z <- u
+
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", i),
+        component = "position",
+        attributes = list(
+          x = random_coordinate_x, y = random_coordinate_y, z = random_coordinate_z
+        )
+      )
+    )
+    animals$send_messages(update_entities)
+  }  
+}
 
 ### RENDER SCENE
 
@@ -253,21 +273,19 @@ restart <- function(){
 }
 
 ## Helper function for points() to reset annotation marker colors
-resetMarkersUI <- function(numberOfPointsToReset){
+resetMarkersUI <- function(numberOfPointsToReset = NUMBER_OF_MARKERS){
   # TODO: check numberOfPointsToReset !> 20
-  
   for (i in 1:numberOfPointsToReset) {
     # Reset marker colors
     reset_marker_colors <- list(
       a_update(
-        id = paste0("markerCircumference", i),
+        id = paste0("markerBoundary", i),
         component = "color",
         attributes = COLOR_MARKER
       )
     )
     animals$send_messages(reset_marker_colors)
   }
-  
 }
 
 ## Go to next image

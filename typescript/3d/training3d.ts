@@ -53,12 +53,12 @@ AFRAME.registerComponent('raycaster-listen', {
 
         let marker: Shared.Marker;
 
-        const markerBoundary = document.getElementById(
-          `markerBoundary${id}`
+        const markerContainer = document.getElementById(
+          `markerContainer${id}`
         )! as Entity;
-        const x = markerBoundary.getAttribute('position').x;
-        const y = markerBoundary.getAttribute('position').y;
-        const z = markerBoundary.getAttribute('position').y;
+        const x = markerContainer.getAttribute('position').x;
+        const y = markerContainer.getAttribute('position').y;
+        const z = markerContainer.getAttribute('position').y;
 
         const foundIndex = getMarkerIndex(id);
 
