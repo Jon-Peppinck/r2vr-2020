@@ -1,8 +1,8 @@
 import { store } from '../store/rootStore';
 import { boundPushNewImage } from '../store/annotation/AnnotationAction';
+import boundGetImage from '../store/image/ImageAction';
 
 import postAnnotations from '../http/postAnnotations';
-import { getMarkers } from './getMarkers';
 
 export const getImage = (): Shared.ImageFile => {
   const canvas = document.getElementById('canvas')!;
@@ -31,10 +31,11 @@ export const imageObserver = () => {
   const initialImage: Shared.ImageFile = getImage();
   const annotatedImages: Array<string> = [];
   annotatedImages.push(initialImage.name);
-
+  boundGetImage(initialImage.name);
   const mutationObserver = new MutationObserver(() => {
     const newImage: Shared.ImageFile = getImage();
     const newImageName = newImage.name;
+    boundGetImage(newImageName);
     if (!annotatedImages.includes(newImageName)) {
       postAnnotations();
       annotatedImages.push(newImageName);

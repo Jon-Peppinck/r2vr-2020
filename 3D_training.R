@@ -9,19 +9,37 @@ NUMBER_OF_MARKERS <- 3
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
 
-# TODO: Annotate markers correctly & add others
+# TODO: Annotate markers correctly
 img1Points = list(
   list(id = 1, x = -0.268, y = -0.739, z = 0.616, isCoral = 0), # sand ?
   list(id = 2, x =  -0.8979, y = -0.0452, z = -0.4377, isCoral = 0), 
   list(id = 3, x = -0.4749, y = -0.7584, z = 0.4463, isCoral = 0) 
 )
 
+img2Points = list(
+  list(id = 1, x = -0.220426988945576 , y = -0.971593315593853 , z = -0.0861299694515765, isCoral = 0),
+  list(id = 2, x = -0.719527832018227 , y = -0.430690836388991 , z = -0.5447798660025, isCoral = 0), 
+  list(id = 3, x = 0.972865988610512 , y = -0.0633466723423909 , z = -0.22252857638523, isCoral = 0) 
+)
+
+img3Points = list(
+  list(id = 1, -0.360107366234836 , y = -0.153838364908118 , z = 0.920139360241592, isCoral = 0),
+  list(id = 2, x = 0.66401612970315 , y = -0.53627251455049 , z = -0.521051215939224, isCoral = 0), 
+  list(id = 3, x = 0.594898269501156 , y = -0.487906233530624 , z = 0.638782870955765, isCoral = 0) 
+)
+
+img4Points = list(
+  list(id = 1, x = 0.236554238200567 , y = -0.645350804079801 , z = -0.726336307823658, isCoral = 0),
+  list(id = 2, x = 0.560689468806834 , y = -0.295637517136722 , z = -0.773450565990061, isCoral = 0), 
+  list(id = 3, x = -0.741564092459525 , y = -0.0768210007796801 , z = -0.66646922705695, isCoral = 0) 
+)
+
 # 3D image paths (2400x1200px)
 img_paths <- list(
   list(img = "./inst/ext/images/reef/100030039.jpg", imgPoints = img1Points),
-  list(img = "./inst/ext/images/reef/120261897.jpg", imgPoints = img1Points),
-  list(img = "./inst/ext/images/reef/130030287.jpg", imgPoints = img1Points),
-  list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img1Points)
+  list(img = "./inst/ext/images/reef/120261897.jpg", imgPoints = img2Points),
+  list(img = "./inst/ext/images/reef/130030287.jpg", imgPoints = img3Points),
+  list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img4Points)
 )
 
 # Colours
@@ -373,11 +391,46 @@ goImage <- function(index = NA, image_paths = img_paths) {
   animals$send_messages(setup_scene)
 }
 
+check <- function(imgNumber) {
+  # Only check if all images are annotated
+  if (!has_last_image_displayed) {
+    stop('Please annotate all images before calling check!')
+  }
+  if (!is.na(imgNumber) && imgNumber > length(img_paths)) {
+    stop("Please ensure the index does not exceed the total number of images.")
+  }
+  # TODO: handle case imgNumber not passed
+
+  # Determine image path of the image to be checked
+  imagePath <- img_paths[[imgNumber]]$img
+  # Determine the gold standard of the image to be checked
+  imageGoldStandard <- img_paths[[imgNumber]]$imgPoints
+  # Display fixed points in the location previously annotated
+  fixedPoints(imageGoldStandard)
+  # Display the image to be checked
+  goImage(imgNumber) # Note: Also reset markers back to white
+  # Pick out id and isCoral from correctly annotated markers
+  mutatedImageGoldStandard <- list()
+  # Select id and isCoral from mutatedImageGoldStandard
+  for (annotation in imageGoldStandard) {
+    currentAnnotation <- list(id = annotation$id, isCoral = annotation$isCoral)
+    mutatedImageGoldStandard[[length(mutatedImageGoldStandard) + 1]] <- currentAnnotation
+  }
+  # Check if markers are correct or incorrect
+  check_entities <- list(
+    a_check(
+      imageId = imagePath,
+      goldStandard = mutatedImageGoldStandard
+    )
+  )
+  animals$send_messages(check_entities)
+}
+
 ### COMMANDS ###
+# rm(list=ls())
 # fixedPoints(image1Points)
 # goImage()
+# fixedPoints(image2Points)
 # goImage()
-# goImage()
-# goImage(1)
-# goImage(2)
-# goImage(3)
+# fixedPoints(image3Points)
+# check(1)

@@ -3,12 +3,14 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { logger } from 'redux-logger';
 
 import { annotationReducer } from './annotation/AnnotationReducer';
+import { imageReducer } from './image/ImageReducer';
 import { userReducer } from './user/UserReducer';
 
 import { AppActions } from './models/actions';
 
 const rootReducer = combineReducers({
   annotationReducer,
+  imageReducer,
   userReducer,
 });
 

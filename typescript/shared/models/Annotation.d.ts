@@ -7,6 +7,11 @@ declare namespace Shared {
     z?: number;
   };
 
+  export type AnnotatedMarker = {
+    id: number;
+    isCoral: Shared.CoralBinary;
+  };
+
   export interface Annotation {
     image: Shared.ImageFile;
     markers: Marker[];

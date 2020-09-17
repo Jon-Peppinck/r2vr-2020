@@ -141,9 +141,70 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.attributes,
             r2vr_message.replaces_component
           );
-        }
-        // TODO: else if 'check'
-        else if (r2vr_message.class == 'remove_component') {
+        } else if (r2vr_message.class == 'check') {
+          // console.log(9, r2vr_message.imageId, r2vr_message.goldStandard);
+          // TODO: Refactor below
+          const state = store.getState();
+          // find current image annotations
+          const allAnnotatedImages = state.annotationReducer;
+          const currentImageName = state.imageReducer;
+          console.log(122, currentImageName);
+
+          const imageToCheck = allAnnotatedImages.find(
+            (annotation) => annotation.image.name === currentImageName
+          );
+
+          console.log(324, imageToCheck);
+          if (!imageToCheck) return;
+          const { uniqueNumberId } = imageToCheck.image;
+
+          const userAnnotations =
+            allAnnotatedImages[uniqueNumberId - 1].markers;
+          console.log(
+            334,
+            r2vr_message.imageId,
+            r2vr_message.goldStandard,
+            userAnnotations,
+            uniqueNumberId
+          );
+
+          const incorrectResults = r2vr_message.goldStandard.filter(
+            ({ id: id1, isCoral: isCoral1 }: Shared.AnnotatedMarker) =>
+              !userAnnotations.some(
+                ({ id: id2, isCoral: isCoral2 }: Shared.AnnotatedMarker) =>
+                  id2 === id1 && isCoral1 === isCoral2
+              )
+          );
+
+          const correctResults = r2vr_message.goldStandard.filter(
+            ({ id: id1, isCoral: isCoral1 }: Shared.AnnotatedMarker) =>
+              userAnnotations.some(
+                ({ id: id2, isCoral: isCoral2 }: Shared.AnnotatedMarker) =>
+                  id2 === id1 && isCoral1 === isCoral2
+              )
+          );
+
+          incorrectResults.forEach(
+            (incorrectMarker: Shared.AnnotatedMarker) => {
+              document
+                .getElementById(`markerBoundary${incorrectMarker.id}`)!
+                .setAttribute('color', '#FF0000');
+              document
+                .getElementById(`markerContainer${incorrectMarker.id}`)!
+                .setAttribute('visible', 'true');
+            }
+          );
+
+          correctResults.forEach((correctMarker: Shared.AnnotatedMarker) => {
+            document
+              .getElementById(`markerBoundary${correctMarker.id}`)!
+              .setAttribute('color', '#00FF00');
+            document
+              .getElementById(`markerContainer${correctMarker.id}`)!
+              .setAttribute('visible', 'true');
+          });
+          // TODO: refactor above
+        } else if (r2vr_message.class == 'remove_component') {
           target.removeAttribute(r2vr_message.component);
         } else if (r2vr_message.class == 'remove_entity') {
           target.removeFromParent();
