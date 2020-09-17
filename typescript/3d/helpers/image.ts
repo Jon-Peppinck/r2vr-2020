@@ -36,10 +36,17 @@ export const imageObserver = () => {
     const newImage: Shared.ImageFile = getImage();
     const newImageName = newImage.name;
     boundGetImage(newImageName);
-    if (!annotatedImages.includes(newImageName)) {
+    let isLastImageAnnotated = false;
+    let allowLastImageAnnotation =
+      !isLastImageAnnotated && newImageName === initialImage.name;
+    if (!annotatedImages.includes(newImageName) || allowLastImageAnnotation) {
       postAnnotations();
       annotatedImages.push(newImageName);
       boundPushNewImage(newImage);
+    }
+    if (newImageName === initialImage.name) {
+      isLastImageAnnotated = true;
+      console.warn('last image annotated.');
     }
   });
 
