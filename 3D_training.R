@@ -310,52 +310,39 @@ CONTEXT_INDEX <- 1
 
 current_image <- img_paths[[1]]$img # TODO: check if needed
 
-is_last_image <- FALSE
+has_last_image_displayed <- FALSE
 
-MAX_NUMBER_OF_POINTS <- 50
-
-goImage <- function(image_paths = img_paths, index = NA) {
+goImage <- function(index = NA, image_paths = img_paths) {
   if (!is.na(index) && index > length(img_paths)) {
     stop("Please ensure the index does not exceed the total number of images.")
   }
-  # Prevent image change if last image is showing and no args for index have been passed
-  if (is_last_image && is.na(index)) {
+  # Prevent image change if last image has showed and no args for index have been passed
+  if (has_last_image_displayed && is.na(index)) {
     stop("Please ensure the index is passed when it is the last image.")
   }
-  # Prevent image change if an index has been passed but the last image is not displaying
-  if (!is_last_image && !is.na(index)) {
+  # Prevent image change if an index has been passed but the last image has not displayed
+  if (!has_last_image_displayed && !is.na(index)) {
     stop("Please ensure the index is not passed unless it is the last image and annotation has finished.")
   }
-  
   # Reset marker colour to white
-  # resetMarkersUI(MAX_NUMBER_OF_POINTS)
-  # 
-  # # Update points to not be visible
-  # for (point in 1:MAX_NUMBER_OF_POINTS) {
-  #   update_entities <- list(
-  #     a_update(
-  #       id = paste0("markerContainer", point),
-  #       component = "visible",
-  #       attributes = FALSE
-  #     )
-  #   )
-  #   animals$send_messages(update_entities)
-  # }
+  resetMarkersUI()
   
+  # Relative path of current image
   current_image <<- img_paths[[CONTEXT_INDEX]]$img
   
+  # Set the index of the next image to be displayed
   CONTEXT_INDEX <<- ifelse(!is.na(index),
                            yes = index,
                            no = CONTEXT_INDEX + 1
   )
-  
+  # Indicate if the last image has displayed (Allows to go back to an image to check it)
   if (CONTEXT_INDEX == length(img_paths)) {
-    is_last_image <<- TRUE
+    has_last_image_displayed <<- TRUE
   }
-  
+  # Set the next image path and ID
   next_image <- img_paths[[CONTEXT_INDEX]]$img
   next_image_el_id <- paste0("#img", CONTEXT_INDEX)
-  print(next_image)
+  print(paste("Image", CONTEXT_INDEX, "is displayed from", next_image))
   
   setup_scene <- list(
     a_update(id = "canvas",
@@ -383,7 +370,14 @@ goImage <- function(image_paths = img_paths, index = NA) {
       }
     }
   }
-  
   animals$send_messages(setup_scene)
-  
 }
+
+### COMMANDS ###
+# fixedPoints(image1Points)
+# goImage()
+# goImage()
+# goImage()
+# goImage(1)
+# goImage(2)
+# goImage(3)
