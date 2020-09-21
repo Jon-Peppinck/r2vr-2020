@@ -50,7 +50,6 @@ export const imageObserver = () => {
       isInitialImageReselected && initialImageReselectionCount === 1;
     // Post annotated image if the current image is not already in the list OR the first image is reselected (for the first time)
     if (!annotatedImages.includes(newImageName) || postLastImage) {
-      console.error(9, 'image annotations posted!');
       postAnnotations();
       annotatedImages.push(newImageName);
       boundPushNewImage(newImage);

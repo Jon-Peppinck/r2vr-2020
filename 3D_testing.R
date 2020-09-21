@@ -220,26 +220,80 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
 generatePoints()
 
 ### RANDOMIZE POINTS ###
+Point <- R6::R6Class("Point", public = list(
+  x = NA,
+  y = NA,
+  z = NA,
+  n = NA,
+  initialize = function(x, y, z, n) {
+    stopifnot(is.numeric(x) || is.numeric(y) || is.numeric(z))
+    stopifnot(is.numeric(n))
+    
+    self$x <- x
+    self$y <- y
+    self$z <- z
+    self$n <- n
+  })
+)
+
+euclideanDistance3d <- function(p1, p2) {
+  return(sqrt((p2$x - p1$x)^2 + (p2$y - p1$y)^2 + (p2$z - p1$z)^2))
+}
+
+points.list <- list()
+
 randomizePoints <- function() {
-  ## Assign a new position and display the visibility for the number of points
-  for (i in 1:NUMBER_OF_MARKERS) {
+  # Reset the color of the annnotation points
+  resetMarkersUI()
+  # reset list of points back to initial value
+  points.list <<- list()
+  # Set a guard to prevent a possible infinite loop if n is too large
+  guard = 0
+  # Create annotation markers
+  while (length(points.list) < NUMBER_OF_MARKERS) {
     u <- runif(1, -1, 1)
     theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
     random_coordinate_x <- sqrt(1 - u^2) * cos(theta)
     random_coordinate_y <- sqrt(1 - u^2) * sin(theta)
     random_coordinate_z <- u
+    n <- length(points.list) + 1
+    overlapping = FALSE
+    
+    # Create a new point object
+    p <- Point$new(random_coordinate_x, random_coordinate_y, random_coordinate_z, n)
 
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", i),
-        component = "position",
-        attributes = list(
-          x = random_coordinate_x, y = random_coordinate_y, z = random_coordinate_z
+    if (length(points.list) > 0) {
+      # Determine if the new point intersects with any of the other points in list
+      for (j in 1:length(points.list)) {
+        markerInList = points.list[[j]]
+        # Find the distance between the new point and the point in the list
+        distance = euclideanDistance3d(p, markerInList)
+        # If the new point overlaps with any current point set overlapping to true
+        if (distance < 2 * MARKER_OUTER_RADIUS) {
+          overlapping = TRUE
+          break
+        }
+      }
+    }
+    
+    # If there is no overlap then new point can be added to the list
+    if (!overlapping) {
+      points.list[[n]] <<- p
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "position",
+          attributes = list(
+            x = random_coordinate_x, y = random_coordinate_y, z = random_coordinate_z
+          )
         )
       )
-    )
-    animals$send_messages(update_entities)
-  }  
+      animals$send_messages(update_entities)
+    }
+    # Increment the guard for each while loop iteration
+    guard = guard + 1
+    if (guard > 1000) break
+  }
 }
 
 ### RENDER SCENE
@@ -268,7 +322,7 @@ end <- function(){
 ## Restart the server with file changes
 restart <- function(){
   a_kill_all_scenes()
-  source('C:/r2vr2020/r2vr/3D_training.R', echo=TRUE)
+  source('C:/r2vr2020/r2vr/3D_testing.R', echo=TRUE)
   animals$serve(host = IPv4_ADDRESS)
 }
 
@@ -295,7 +349,7 @@ current_image <- img_paths[[1]]$img # TODO: check if needed
 
 is_last_image <- FALSE
 
-MAX_NUMBER_OF_POINTS <- 50
+# MAX_NUMBER_OF_POINTS <- 50
 
 goImage <- function(image_paths = img_paths, index = NA) {
   if (!is.na(index) && index > length(img_paths)) {
