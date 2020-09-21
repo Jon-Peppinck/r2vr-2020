@@ -141,9 +141,7 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.attributes,
             r2vr_message.replaces_component
           );
-        }
-        // TODO: else if 'check'
-        else if (r2vr_message.class == 'remove_component') {
+        } else if (r2vr_message.class == 'remove_component') {
           target.removeAttribute(r2vr_message.component);
         } else if (r2vr_message.class == 'remove_entity') {
           target.removeFromParent();

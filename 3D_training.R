@@ -428,9 +428,12 @@ check <- function(imgNumber) {
 
 ### COMMANDS ###
 # rm(list=ls())
+# start()
 # fixedPoints(image1Points)
 # goImage()
 # fixedPoints(image2Points)
 # goImage()
 # fixedPoints(image3Points)
 # check(1)
+# check(2)
+# check(3)

@@ -6,7 +6,6 @@ import postAnnotations from '../http/postAnnotations';
 
 export const getImage = (): Shared.ImageFile => {
   const canvas = document.getElementById('canvas')!;
-
   // The image filename is found through its class
   // Note: the class will be updated when the next image is called via the R console through a websocket connection between R2VR and the browser
   const fullName = canvas.getAttribute('class')!.split('/').pop() as string;
@@ -28,25 +27,33 @@ export const getImage = (): Shared.ImageFile => {
 };
 
 export const imageObserver = () => {
-  const initialImage: Shared.ImageFile = getImage();
+  // Push initial image to annotated images state
   const annotatedImages: Array<string> = [];
-  annotatedImages.push(initialImage.name);
-  boundGetImage(initialImage.name);
+  const initialImage: Shared.ImageFile = getImage();
+  const initialImageName = initialImage.name;
+  let initialImageReselectionCount = 0;
+  annotatedImages.push(initialImageName);
+  boundGetImage(initialImageName);
+  // Detect image src changes and push to state
   const mutationObserver = new MutationObserver(() => {
     const newImage: Shared.ImageFile = getImage();
     const newImageName = newImage.name;
     boundGetImage(newImageName);
-    let isLastImageAnnotated = false;
-    let allowLastImageAnnotation =
-      !isLastImageAnnotated && newImageName === initialImage.name;
-    if (!annotatedImages.includes(newImageName) || allowLastImageAnnotation) {
+    // Determine if the initial image is re-selected
+    let isInitialImageReselected = newImageName === initialImageName;
+    // Indicate the first occurrence of the initial image being selected
+    if (isInitialImageReselected) {
+      initialImageReselectionCount++;
+    }
+    // Only post the first time the initial image is re-selected=> e.g. check(1)
+    const postLastImage =
+      isInitialImageReselected && initialImageReselectionCount === 1;
+    // Post annotated image if the current image is not already in the list OR the first image is reselected (for the first time)
+    if (!annotatedImages.includes(newImageName) || postLastImage) {
+      console.error(9, 'image annotations posted!');
       postAnnotations();
       annotatedImages.push(newImageName);
       boundPushNewImage(newImage);
-    }
-    if (newImageName === initialImage.name) {
-      isLastImageAnnotated = true;
-      console.warn('last image annotated.');
     }
   });
 

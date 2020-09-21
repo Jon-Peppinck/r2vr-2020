@@ -1171,7 +1171,7 @@ resetQuestionUI <- function(){
       a_update(
         id = paste0("option", i, "Plane"),
         component = "color",
-        attributes = "#FFFF00" # TODO: change to white
+        attributes = "#FFFFFF"
       )
     )
     animals$send_messages(reset_response_colors)

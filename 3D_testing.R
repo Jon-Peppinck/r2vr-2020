@@ -370,3 +370,8 @@ goImage <- function(image_paths = img_paths, index = NA) {
   animals$send_messages(setup_scene)
   
 }
+
+### COMMANDS ###
+# rm(list=ls())
+# goImage()
+# randomizePoints()
