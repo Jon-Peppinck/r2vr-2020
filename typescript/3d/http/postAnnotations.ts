@@ -1,10 +1,13 @@
 import { store } from '../store/rootStore';
 
-// import { URL } from '@shared/http/url'; // TODO
+// import { URL } from '@shared/http/url'; // TODO dotenv?
+const url = 'http://localhost:3000/api';
 
 const postAnnotation = async (annotation: Api.Annotation) => {
+  const metaData = store.getState().metaDataReducer;
+  const { module, annotationType } = metaData;
   try {
-    const response = await fetch(`http://localhost:3000/api/3d/training`, {
+    const response = await fetch(`${url}/${module}/${annotationType}`, {
       method: 'POST',
       body: JSON.stringify(annotation),
       headers: {
