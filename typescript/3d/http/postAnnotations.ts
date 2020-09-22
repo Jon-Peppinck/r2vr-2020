@@ -14,7 +14,7 @@ const postAnnotation = async (annotation: Api.Annotation) => {
     if (![200, 201].includes(response.status)) {
       throw new Error('Unable to post annotations!');
     }
-    // TODO: reset markers UI to white
+    // TODO: reset markers UI to white ? Check if done in R
     console.log(response.status, '- Request complete! response:', response);
   } catch (err) {
     throw new Error(`${err} - Unable to post annotation!`);

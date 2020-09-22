@@ -1,3 +1,5 @@
+// NOTE: shared post.ts/update.ts is for 2D as of 22/9/2020
+
 import { URL } from '@shared/http/url';
 
 import { setMarkerColor } from '@shared/user-interface/marker-color';

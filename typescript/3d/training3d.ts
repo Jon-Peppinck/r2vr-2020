@@ -7,6 +7,7 @@ import {
   boundUpdateAnnotation,
 } from './store/annotation/AnnotationAction';
 import boundGetUser from './store/user/UserAction';
+import boundGetMetaData from './store/metadata/MetaDataAction';
 
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
@@ -28,6 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
     name,
   };
   boundGetUser(user);
+  const metaData = document.getElementById('metaData')!.className;
+  const moduleAndType = metaData.split('/');
+  const [module, annotationType] = moduleAndType as [
+    Shared.MetaDataModule,
+    Shared.MetaDataAnnotationType
+  ];
+  boundGetMetaData({ module, annotationType });
   const initialImage = getImage();
   boundPushNewImage(initialImage);
   imageObserver();
