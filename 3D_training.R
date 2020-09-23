@@ -132,7 +132,7 @@ meta_data <- a_entity(
 ## Markers
 list_of_children_entities <- list(canvas_3d, camera, user, meta_data)
 
-initial_list_length <- length(list_of_children_entities)
+list_length <- length(list_of_children_entities)
 
 MARKER_OUTER_RADIUS <- 0.04
 MARKER_INNER_RADIUS <- 0.03
@@ -242,7 +242,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   )
 
   marker_container_number <- paste0("markerContainer", i)
-  list_of_children_entities[[initial_list_length + i]] <<- assign(marker_container_number, marker_container)
+  list_of_children_entities[[list_length + i]] <<- assign(marker_container_number, marker_container)
   }
 }
 

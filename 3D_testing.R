@@ -12,7 +12,7 @@ NUMBER_OF_MARKERS <- 20
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
 
-# TODO: Annotate markers correctly & add others
+# TODO: Not needed for testing => consider refactoring
 img1Points = list(
   list(id = 1, x = -0.268, y = -0.739, z = 0.616, isCoral = 0), # sand ?
   list(id = 2, x =  -0.8979, y = -0.0452, z = -0.4377, isCoral = 0), 
@@ -27,8 +27,14 @@ img_paths <- list(
   list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img1Points)
 )
 
+evaluationQuestions <- list(
+  list(question = "Did you enjoy this experiment?", answerOne = "Very much", answerTwo = "Yes", answerThree = "A little", answerFour = "No"),
+  list(question = "On a scale of 1-4, how would you rate your experience?", answerOne = "1", answerTwo = "2", answerThree = "3", answerFour = "4")
+)
+
 # Colours
 COLOR_MARKER <- "#FFFFFF"
+COLOR_PLANE <- "#FFFFFF"
 COLOR_CORAL <- "#FF95BC"
 COLOR_NOT_CORAL <- "#969696"
 COLOR_TEXT <- "#000000"
@@ -114,7 +120,7 @@ meta_data <- a_entity(
 ## Markers
 list_of_children_entities <- list(canvas_3d, camera, user, meta_data)
 
-initial_list_length <- length(list_of_children_entities)
+list_length <- length(list_of_children_entities)
 
 MARKER_OUTER_RADIUS <- 0.04
 MARKER_INNER_RADIUS <- 0.03
@@ -124,6 +130,8 @@ MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 ### GENERATE POINTS ###
 # TODO: Move higher
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
+  # Append markers to the end of the list of children entities
+  list_length <- length(list_of_children_entities)
   # TODO: check typeof arg for for int
   for (i in 1:numberOfMarkers) {
     sphere_radius = 500
@@ -221,15 +229,162 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       radius_inner = 0.00001,
       radius_outer = 0.00001,
       opacity = 0,
-      debug = "" # needed for x and y position after an update via web sockets
+      debug = "" # needed for x, y, and z position after an update via web sockets
     )
     
     marker_container_number <- paste0("markerContainer", i)
-    list_of_children_entities[[initial_list_length + i]] <<- assign(marker_container_number, marker_container)
+    list_of_children_entities[[list_length + i]] <<- assign(marker_container_number, marker_container)
   }
 }
 
+### GENERATE EVALUATION QUESTIONS ###
+# TODO: Move higher
+generateEvaluationQuestions <- function() {
+  message_height <- 1
+  
+  list_length <- length(list_of_children_entities)
+  
+  question_label <- a_label(
+    text = evaluationQuestions[[1]]$question,
+    id = "questionPlaneText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  question_plane <- a_entity(
+    .tag = "plane",
+    .children = list(question_label),
+    id = "questionPlane",
+    visible = TRUE, # FALSE
+    position = c(0, message_height, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 2,
+  )
+  
+  post_label <- a_label(
+    text = "Submit",
+    id = "postText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2, # Note: width exceeds plane for long text, consistent size & static text though
+    position = c(0, 0.05, 0)
+  )
+  
+  post_plane <- a_entity(
+    .tag = "plane",
+    .children = list(post_label),
+    id = "postPlane",
+    visible = TRUE, # FALSE
+    position = c(1.35, message_height, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5,
+  )
+  
+  option_one_label <- a_label(
+    text = evaluationQuestions[[1]]$answerOne,
+    id = "optionOneText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_one_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_one_label),
+    id = "optionOnePlane",
+    visible = TRUE, # FALSE,
+    position = c(-0.3, message_height-0.6, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_two_label <- a_label(
+    text = evaluationQuestions[[1]]$answerTwo,
+    id = "optionTwoText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_two_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_two_label),
+    id = "optionTwoPlane",
+    visible = TRUE, # FALSE,
+    position = c(-0.3, message_height-1.2, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_three_label <- a_label(
+    text = evaluationQuestions[[1]]$answerThree,
+    id = "optionThreeText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_three_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_three_label),
+    id = "optionThreePlane",
+    visible = TRUE, # FALSE,
+    position = c(0.3, message_height-0.6, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_four_label <- a_label(
+    text = evaluationQuestions[[1]]$answerFour,
+    id = "optionFourText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_four_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_four_label),
+    id = "optionFourPlane",
+    visible = TRUE, # FALSE,
+    position = c(0.3, message_height-1.2, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  # q_number <- "qNumber1"
+  
+  list_of_children_entities[[list_length + 1]] <<- question_plane # assign(q_number, question_plane)
+  list_of_children_entities[[list_length + 2]] <<- post_plane
+  list_of_children_entities[[list_length + 3]] <<- option_one_plane
+  list_of_children_entities[[list_length + 4]] <<- option_two_plane
+  list_of_children_entities[[list_length + 5]] <<- option_three_plane
+  list_of_children_entities[[list_length + 6]] <<- option_four_plane
+}
+
+generateEvaluationQuestions() # Note: Call before generatePoints() for DOM rendering
+
 generatePoints()
+
+
 
 ### RANDOMIZE POINTS ###
 Point <- R6::R6Class("Point", public = list(
