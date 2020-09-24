@@ -6,8 +6,13 @@ import {
   boundPostAnnotation,
   boundUpdateAnnotation,
 } from './store/annotation/AnnotationAction';
-import boundGetUser from './store/user/UserAction';
+import {
+  boundChangeEvaluation,
+  boundPostEvaluation,
+  boundSelectEvaluation,
+} from './store/evaluation/EvaluationAction';
 import boundGetMetaData from './store/metadata/MetaDataAction';
+import boundGetUser from './store/user/UserAction';
 
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
@@ -94,6 +99,40 @@ AFRAME.registerComponent('toggle-menu-listen', {
   init: function () {
     const controlsEl = document.querySelector('[button-controls]') as Scene;
     controlsEl.addEventListener('buttondown', () => {
+      if (
+        [
+          'optionOnePlane',
+          'optionTwoPlane',
+          'optionThreePlane',
+          'optionFourPlane',
+        ].includes(intersectedElId)
+      ) {
+        const state = store.getState();
+        const {
+          isCurrentOptionSelected,
+          isCurrentOptionSubmitted,
+        } = state.evaluationReducer;
+
+        const evaluationEl = document.getElementById(intersectedElId) as Entity;
+        // e.g. evaluationEl = 'option1' => evaluationOption = 1
+        const evaluationOption = +evaluationEl.className.replace(
+          'option',
+          ''
+        ) as Shared.QuestionResponseOption;
+        console.log(89, isCurrentOptionSelected);
+        if (!isCurrentOptionSubmitted) {
+          if (!isCurrentOptionSelected) {
+            boundSelectEvaluation(evaluationOption);
+          } else {
+            boundChangeEvaluation(evaluationOption);
+          }
+        }
+      } else if (intersectedElId === 'postPlane') {
+        boundPostEvaluation();
+      }
+      // else {
+      // TODO
+      // }
       let matches = intersectedElId.match(/(\d+)/);
       if (matches) {
         const id = +matches[0];

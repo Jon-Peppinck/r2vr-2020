@@ -278,6 +278,7 @@ generateEvaluationQuestions <- function() {
   post_plane <- a_entity(
     .tag = "plane",
     .children = list(post_label),
+    raycaster_listen = "",
     id = "postPlane",
     visible = TRUE, # FALSE
     position = c(1.35, message_height, -2),
@@ -299,7 +300,9 @@ generateEvaluationQuestions <- function() {
   option_one_plane <- a_entity(
     .tag = "plane",
     .children = list(option_one_label),
+    raycaster_listen = "",
     id = "optionOnePlane",
+    class="option1",
     visible = TRUE, # FALSE,
     position = c(-0.3, message_height-0.6, -2),
     color = COLOR_PLANE,
@@ -320,7 +323,9 @@ generateEvaluationQuestions <- function() {
   option_two_plane <- a_entity(
     .tag = "plane",
     .children = list(option_two_label),
+    raycaster_listen = "",
     id = "optionTwoPlane",
+    class="option2",
     visible = TRUE, # FALSE,
     position = c(-0.3, message_height-1.2, -2),
     color = COLOR_PLANE,
@@ -341,7 +346,9 @@ generateEvaluationQuestions <- function() {
   option_three_plane <- a_entity(
     .tag = "plane",
     .children = list(option_three_label),
+    raycaster_listen = "",
     id = "optionThreePlane",
+    class="option3",
     visible = TRUE, # FALSE,
     position = c(0.3, message_height-0.6, -2),
     color = COLOR_PLANE,
@@ -362,7 +369,9 @@ generateEvaluationQuestions <- function() {
   option_four_plane <- a_entity(
     .tag = "plane",
     .children = list(option_four_label),
+    raycaster_listen = "",
     id = "optionFourPlane",
+    class="option4",
     visible = TRUE, # FALSE,
     position = c(0.3, message_height-1.2, -2),
     color = COLOR_PLANE,
