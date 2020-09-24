@@ -258,7 +258,7 @@ generateEvaluationQuestions <- function() {
     .tag = "plane",
     .children = list(question_label),
     id = "questionPlane",
-    visible = TRUE, # FALSE
+    visible = FALSE,
     position = c(0, message_height, -2),
     color = COLOR_PLANE,
     height = 0.5,
@@ -280,7 +280,7 @@ generateEvaluationQuestions <- function() {
     .children = list(post_label),
     raycaster_listen = "",
     id = "postPlane",
-    visible = TRUE, # FALSE
+    visible = FALSE,
     position = c(1.35, message_height, -2),
     color = COLOR_PLANE,
     height = 0.5,
@@ -303,7 +303,7 @@ generateEvaluationQuestions <- function() {
     raycaster_listen = "",
     id = "optionOnePlane",
     class="option1",
-    visible = TRUE, # FALSE,
+    visible = FALSE,
     position = c(-0.3, message_height-0.6, -2),
     color = COLOR_PLANE,
     height = 0.5,
@@ -326,7 +326,7 @@ generateEvaluationQuestions <- function() {
     raycaster_listen = "",
     id = "optionTwoPlane",
     class="option2",
-    visible = TRUE, # FALSE,
+    visible = FALSE,
     position = c(-0.3, message_height-1.2, -2),
     color = COLOR_PLANE,
     height = 0.5,
@@ -349,7 +349,7 @@ generateEvaluationQuestions <- function() {
     raycaster_listen = "",
     id = "optionThreePlane",
     class="option3",
-    visible = TRUE, # FALSE,
+    visible = FALSE,
     position = c(0.3, message_height-0.6, -2),
     color = COLOR_PLANE,
     height = 0.5,
@@ -372,14 +372,12 @@ generateEvaluationQuestions <- function() {
     raycaster_listen = "",
     id = "optionFourPlane",
     class="option4",
-    visible = TRUE, # FALSE,
+    visible = FALSE,
     position = c(0.3, message_height-1.2, -2),
     color = COLOR_PLANE,
     height = 0.5,
     width = 0.5
   )
-  
-  # q_number <- "qNumber1"
   
   list_of_children_entities[[list_length + 1]] <<- question_plane # assign(q_number, question_plane)
   list_of_children_entities[[list_length + 2]] <<- post_plane
@@ -599,6 +597,57 @@ goImage <- function(image_paths = img_paths, index = NA) {
   
   animals$send_messages(setup_scene)
   
+}
+
+QUESTION_CONTEXT <- 1
+# TODO check visible FALSE
+# TODO: refactor so after first question and visible true, no need to a_update visibility
+question <- function(index = NA, visible = TRUE){
+  if (!is.na(index) && index > length(evaluationQuestions)) {
+    stop("The index of the question exceeds the total number of questions.")
+  }
+  if (!is.na(index)) {
+    QUESTION_CONTEXT <<- index
+    text_messages <- list(
+      a_update(id = "questionPlaneText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$question),
+      a_update(id = "optionOneText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerOne),
+      a_update(id = "optionTwoText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerTwo),
+      a_update(id = "optionThreeText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerThree),
+      a_update(id = "optionFourText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerFour)
+    )
+    animals$send_messages(text_messages)
+  }
+  show_messages <- list(
+    a_update(id = "questionPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionOnePlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionTwoPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionThreePlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionFourPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "postPlane",
+             component = "visible",
+             attributes = TRUE)
+  )
+  animals$send_messages(show_messages)
 }
 
 ### COMMANDS ###
