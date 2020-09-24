@@ -1,3 +1,4 @@
+// TODO: consider refactoring as duplicated in postEvaluation (3d)
 const numberAsWordLookup = {
   1: 'One',
   2: 'Two',
@@ -12,7 +13,6 @@ export const setOptionColor = (
   optionResponseNumber: Shared.QuestionResponseOption
 ) => {
   const optionNumberAsWord = numberAsWordLookup[optionResponseNumber];
-  console.log(optionNumberAsWord);
   document
     .getElementById(`option${optionNumberAsWord}Plane`)!
     .setAttribute('color', EVALUATION_RESPONSE_COLOR);

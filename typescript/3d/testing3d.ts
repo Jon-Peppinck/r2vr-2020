@@ -14,6 +14,8 @@ import {
 import boundGetMetaData from './store/metadata/MetaDataAction';
 import boundGetUser from './store/user/UserAction';
 
+import postEvaluation from './http/postEvaluation';
+
 import { evaluationObserver } from './helpers/evaluation';
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
@@ -139,10 +141,14 @@ AFRAME.registerComponent('toggle-menu-listen', {
       } else if (intersectedElId === 'postPlane') {
         // TODO: consider refactoring s.t. if option1-4 or post plane needs to be selected and wraps both cases so getting state not duplicated
         const state = store.getState();
-        const { isCurrentOptionSelected } = state.evaluationReducer;
-        if (!isCurrentOptionSelected) return;
+        const {
+          isCurrentOptionSelected,
+          isCurrentOptionSubmitted,
+        } = state.evaluationReducer;
+        if (!isCurrentOptionSelected || isCurrentOptionSubmitted) return;
         setPostColor();
         boundPostEvaluation();
+        postEvaluation();
       }
       // else {
       // TODO
