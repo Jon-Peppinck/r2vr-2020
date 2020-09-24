@@ -14,11 +14,17 @@ import {
 import boundGetMetaData from './store/metadata/MetaDataAction';
 import boundGetUser from './store/user/UserAction';
 
+import { evaluationObserver } from './helpers/evaluation';
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
 
 import { setMarkerColor } from '../shared/user-interface/marker-color';
 import displayMenuOptions from '../shared/user-interface/menu-options';
+import {
+  setOptionColor,
+  resetOptionColor,
+  setPostColor,
+} from '../shared/user-interface/evaluation-color';
 
 let intersectedElId = '';
 
@@ -44,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialImage = getImage();
   boundPushNewImage(initialImage);
   imageObserver();
+  evaluationObserver();
 });
 
 AFRAME.registerComponent('raycaster-listen', {
@@ -119,15 +126,22 @@ AFRAME.registerComponent('toggle-menu-listen', {
           'option',
           ''
         ) as Shared.QuestionResponseOption;
-        console.log(89, isCurrentOptionSelected);
         if (!isCurrentOptionSubmitted) {
           if (!isCurrentOptionSelected) {
+            setOptionColor(evaluationOption);
             boundSelectEvaluation(evaluationOption);
           } else {
+            resetOptionColor();
+            setOptionColor(evaluationOption);
             boundChangeEvaluation(evaluationOption);
           }
         }
       } else if (intersectedElId === 'postPlane') {
+        // TODO: consider refactoring s.t. if option1-4 or post plane needs to be selected and wraps both cases so getting state not duplicated
+        const state = store.getState();
+        const { isCurrentOptionSelected } = state.evaluationReducer;
+        if (!isCurrentOptionSelected) return;
+        setPostColor();
         boundPostEvaluation();
       }
       // else {

@@ -40,10 +40,11 @@ export const evaluationReducer = (
       postState.isCurrentOptionSubmitted = true;
       return postState;
 
-    // case 'NEW_EVALUATION':
-    //   const newState = { ...state };
-    //   newState.questionNumber!++;
-    //   return newState;
+    case 'NEW_EVALUATION':
+      const newState = { ...state };
+      newState.isCurrentOptionSelected = false;
+      newState.isCurrentOptionSubmitted = false;
+      return newState;
 
     default:
       return state;
