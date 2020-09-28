@@ -134,7 +134,6 @@ AFRAME.registerComponent('r2vr-message-router', {
         let target = <any>'';
         if (r2vr_message.id) {
           target = <Entity>document.querySelector('#' + r2vr_message.id);
-          console.log(77, target, r2vr_message.id);
         }
         if (r2vr_message.class == 'event') {
           target.emit(
@@ -143,38 +142,24 @@ AFRAME.registerComponent('r2vr-message-router', {
             r2vr_message.message.bubbles
           );
         } else if (r2vr_message.class == 'update') {
-          console.log(555, target, r2vr_message.id, r2vr_message.component);
           target.setAttribute(
             r2vr_message.component,
             r2vr_message.attributes,
             r2vr_message.replaces_component
           );
         } else if (r2vr_message.class == 'check') {
-          // console.log(9, r2vr_message.imageId, r2vr_message.goldStandard);
           // TODO: Refactor below
           const state = store.getState();
           // find current image annotations
           const allAnnotatedImages = state.annotationReducer;
           const currentImageName = state.imageReducer;
-          console.log(122, currentImageName);
-
           const imageToCheck = allAnnotatedImages.find(
             (annotation) => annotation.image.name === currentImageName
           );
-
-          console.log(324, imageToCheck);
           if (!imageToCheck) return;
           const { uniqueNumberId } = imageToCheck.image;
-
           const userAnnotations =
             allAnnotatedImages[uniqueNumberId - 1].markers;
-          console.log(
-            334,
-            r2vr_message.imageId,
-            r2vr_message.goldStandard,
-            userAnnotations,
-            uniqueNumberId
-          );
 
           const incorrectResults = r2vr_message.goldStandard.filter(
             ({ id: id1, isCoral: isCoral1 }: Shared.AnnotatedMarker) =>
