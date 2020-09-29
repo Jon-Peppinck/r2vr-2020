@@ -45,6 +45,7 @@ const postAnnotations = () => {
       observer: user,
       observation_id: user + 123, // TODO
     };
+    console.log(9, annotation);
     postAnnotation(annotation);
   });
 };

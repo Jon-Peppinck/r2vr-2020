@@ -1,52 +1,41 @@
 library(r2vr)
 
 # Set meta data
-META_DATA <- "2d/training"
+META_DATA <- "2d/testing"
 
 # Set observer here
 USER <- "Jon-Peppinck"
 
-# Set the number of markers here
-## NOTE: Do not exceed 20 for performance reasons
-NUMBER_OF_MARKERS <- 10
+# Set total number of markers
+NUMBER_OF_MARKERS <- 20
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP()
 
-## TODO: Annotate markers correctly
-img1Points = list(
-  list(id = 1, x = 3203, y = 173, isCoral = 0), ## sand (TODO)
-  list(id = 2, x = 1726, y = 356, isCoral = 0),
-  list(id = 3, x = 2291, y = 1086, isCoral = 0)
-)
-
-img2Points = list(
-  list(id = 1, x = 1000, y = 1000, isCoral = 0),
-  list(id = 2, x = 2000, y = 2000, isCoral = 0)
-)
-
-img3Points = list(
-  list(id = 1, x = 500, y = 500, isCoral = 0),
-  list(id = 2, x = 1000, y = 1000, isCoral = 0)
-)
-
+# 2D image paths  4000x3000
 img_paths <- list(
-  # 2D image paths  4000x3000
-  list(img = "./2dimages/latest/49001074001.jpeg", imgPoints = img1Points),
-  list(img = "./2dimages/latest/49002256001.jpeg", imgPoints = img2Points),
-  list(img = "./2dimages/latest/51010026001.jpeg", imgPoints = img3Points),
-  list(img = "./2dimages/latest/49004035001.jpeg", imgPoints = img3Points),
-  list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img3Points)
+  list(img = "./2dimages/latest/49001074001.jpeg"),
+  list(img = "./2dimages/latest/49002256001.jpeg"),
+  list(img = "./2dimages/latest/51010026001.jpeg"),
+  list(img = "./2dimages/latest/49004035001.jpeg"),
+  list(img = "./2dimages/latest/50003181001.jpeg")
+)
+
+# Set evaluation questions
+evaluationQuestions <- list(
+  list(question = "Did you enjoy this experiment?", answerOne = "Very much", answerTwo = "Yes", answerThree = "A little", answerFour = "No"),
+  list(question = "On a scale of 1-4, how would you rate your experience?", answerOne = "1", answerTwo = "2", answerThree = "3", answerFour = "4")
 )
 
 # Colours
 COLOR_MARKER <- "#FFFFFF"
+COLOR_PLANE <- "#FFFFFF"
 COLOR_CORAL <- "#FF95BC"
 COLOR_NOT_CORAL <- "#969696"
 COLOR_TEXT <- "#000000"
 COLOR_CAMERA_CURSOR <- "#FF0000"
 
-# Randomly select 3 out of the 6 images (any order)
+# Randomly select 3 out of the (5) images (any order) to avoid order bias
 img_paths <- sample(img_paths, 3, replace=FALSE)
 
 for (i in 1:length(img_paths)) {
@@ -82,7 +71,7 @@ canvas_2d <- a_entity(
   # TODO: change to CDN ?
   .js_sources = list(
     "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master/inst/js/button_controls.js",
-    "./inst/js/training2d.js"
+    "./inst/js/testing2d.js"
   ),
   .assets = list(image2, image3),
   id = "canvas",
@@ -129,7 +118,7 @@ meta_data <- a_entity(
 # Setup
 list_of_children_entities <- list(canvas_2d, camera, user, meta_data)
 
-list_length <- length(list_of_children_entities)
+list_length <- length(list_of_children_entities) # TODO: check if needed
 
 MARKER_OUTER_RADIUS <- 0.04
 MARKER_INNER_RADIUS <- 0.03
@@ -139,6 +128,9 @@ MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 ### GENERATE POINTS ###
 # TODO: Move higher
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
+  # Append markers to the end of the list of children entities
+  list_length <- length(list_of_children_entities)
+  
   # TODO: check typeof arg for for int, check called once only
   for (i in 1:numberOfMarkers) {
     marker_boundary <- a_entity(
@@ -228,8 +220,161 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   }
 }
 
+### GENERATE EVALUATION QUESTIONS ###
+# TODO: Move higher
+generateEvaluationQuestions <- function() {
+  message_height <- 1
+  
+  list_length <- length(list_of_children_entities)
+  
+  question_label <- a_label(
+    text = evaluationQuestions[[1]]$question,
+    id = "questionPlaneText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  question_plane <- a_entity(
+    .tag = "plane",
+    .children = list(question_label),
+    id = "questionPlane",
+    visible = FALSE,
+    position = c(0, message_height, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 2,
+  )
+  
+  post_label <- a_label(
+    text = "Submit",
+    id = "postText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2, # Note: width exceeds plane for long text, consistent size & static text though
+    position = c(0, 0.05, 0)
+  )
+  
+  post_plane <- a_entity(
+    .tag = "plane",
+    .children = list(post_label),
+    raycaster_listen = "",
+    id = "postPlane",
+    visible = FALSE,
+    position = c(1.35, message_height, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5,
+  )
+  
+  option_one_label <- a_label(
+    text = evaluationQuestions[[1]]$answerOne,
+    id = "optionOneText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_one_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_one_label),
+    raycaster_listen = "",
+    id = "optionOnePlane",
+    class="option1",
+    visible = FALSE,
+    position = c(-0.3, message_height-0.6, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_two_label <- a_label(
+    text = evaluationQuestions[[1]]$answerTwo,
+    id = "optionTwoText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_two_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_two_label),
+    raycaster_listen = "",
+    id = "optionTwoPlane",
+    class="option2",
+    visible = FALSE,
+    position = c(-0.3, message_height-1.2, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_three_label <- a_label(
+    text = evaluationQuestions[[1]]$answerThree,
+    id = "optionThreeText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_three_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_three_label),
+    raycaster_listen = "",
+    id = "optionThreePlane",
+    class="option3",
+    visible = FALSE,
+    position = c(0.3, message_height-0.6, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  option_four_label <- a_label(
+    text = evaluationQuestions[[1]]$answerFour,
+    id = "optionFourText",
+    color = COLOR_TEXT,
+    font = "mozillavr",
+    height = 3,
+    width = 2,
+    position = c(0, 0.05, 0)
+  )
+  
+  option_four_plane <- a_entity(
+    .tag = "plane",
+    .children = list(option_four_label),
+    raycaster_listen = "",
+    id = "optionFourPlane",
+    class="option4",
+    visible = FALSE,
+    position = c(0.3, message_height-1.2, -2),
+    color = COLOR_PLANE,
+    height = 0.5,
+    width = 0.5
+  )
+  
+  list_of_children_entities[[list_length + 1]] <<- question_plane # assign(q_number, question_plane)
+  list_of_children_entities[[list_length + 2]] <<- post_plane
+  list_of_children_entities[[list_length + 3]] <<- option_one_plane
+  list_of_children_entities[[list_length + 4]] <<- option_two_plane
+  list_of_children_entities[[list_length + 5]] <<- option_three_plane
+  list_of_children_entities[[list_length + 6]] <<- option_four_plane
+}
+
+generateEvaluationQuestions() # Note: Call before generatePoints() for DOM rendering
+
 generatePoints()
 
+# TODO: move higher
 rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   translation = function(oldValue) {
     if (oldValue < 0) {
@@ -244,48 +389,80 @@ rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   return(translation)
 }
 
-fixedPoints <- function(points) {
-  ## Generate the transformation functions
-  xTranslation <- rangeTranslation(4000, 0, 4/3, -4/3)
-  yTranslation <- rangeTranslation(3000)
-  
-  for(point in 1:length(points)) {
-    ## Find the transformed x and y values
-    fixedCoordinateX <- xTranslation(img1Points[[point]]$x)/2 # TODO: investigate x/2
-    fixedCoordinateY <- -yTranslation(img1Points[[point]]$y)/2
+### RANDOMIZE POINTS ###
+# TODO: Have 3d extend 2d Point
+Point <- R6::R6Class("Point", public = list(
+  x = NA,
+  y = NA,
+  n = NA,
+  initialize = function(x, y, n) {
+    stopifnot(is.numeric(x) || is.numeric(y))
+    stopifnot(is.numeric(n))
     
-    # Update the position for the number of points specified
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "position",
-        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = -1)
-      ),
-      # Update the specified number of points to be visible
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "visible",
-        attributes = TRUE
+    self$x <- x
+    self$y <- y
+    self$n <- n
+  })
+)
+
+# TODO: generalize
+euclideanDistance2d <- function(p1, p2) {
+  return(sqrt((p2$x - p1$x)^2 + (p2$y - p1$y)^2))
+}
+
+points.list <- list()
+
+randomizePoints <- function() {
+  ## TODO: consider refactoring rangeTranslation higher
+  # Reset the color of the annnotation points
+  resetMarkersUI()
+  # reset list of points back to initial value
+  points.list <<- list()
+  # Set a guard to prevent a possible infinite loop if n is too large
+  guard = 0
+  # Create annotation markers
+  while (length(points.list) < NUMBER_OF_MARKERS) {
+    # TODO: investigate canvas size and x/2
+    # Note: Canvas: -1/2 < x < 1/2, -2/3 < y < 2/3
+    random_coordinate_x <- runif(1, -4/3 + MARKER_OUTER_RADIUS, 4/3 - MARKER_OUTER_RADIUS)/2 
+    random_coordinate_y <- runif(1, -1 + MARKER_OUTER_RADIUS, 1 - MARKER_OUTER_RADIUS)/2
+    n <- length(points.list) + 1
+    overlapping = FALSE
+
+    # Create a new point object
+    p <- Point$new(random_coordinate_x, random_coordinate_y, n)
+
+    if (length(points.list) > 0) {
+      # Determine if the new point intersects with any of the other points in list
+      for (j in 1:length(points.list)) {
+        markerInList = points.list[[j]]
+        # Find the distance between the new point and the point in the list
+        distance = euclideanDistance2d(p, markerInList)
+        # If the new point overlaps with any current point set overlapping to true
+        if (distance < 2 * MARKER_OUTER_RADIUS) {
+          overlapping = TRUE
+          break
+        }
+      }
+    }
+
+    # If there is no overlap then new point can be added to the list
+    if (!overlapping) {
+      points.list[[n]] <<- p
+      update_entities <- list(
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "position",
+          attributes = list(
+            x = random_coordinate_x, y = random_coordinate_y, z = -1
+          )
+        )
       )
-    )
-    animals$send_messages(update_entities)
-  }
-  
-  startNumberOfRemainingPoints <- length(points) + 1
-  
-  if (startNumberOfRemainingPoints > NUMBER_OF_MARKERS) return() # TODO: Check edge cases
-  
-  # Update the remaining points to not be visible
-  for (point in startNumberOfRemainingPoints:NUMBER_OF_MARKERS) {
-    # Update the position
-    update_entities <- list(
-      a_update(
-        id = paste0("markerContainer", point),
-        component = "visible",
-        attributes = FALSE
-      )
-    )
-    animals$send_messages(update_entities)
+      animals$send_messages(update_entities)
+    }
+    # Increment the guard for each while loop iteration
+    guard = guard + 1
+    if (guard > 1000) break
   }
 }
 
@@ -314,7 +491,7 @@ end <- function(){
 ## Restart the server with file changes
 restart <- function(){
   a_kill_all_scenes()
-  source('C:/r2vr2020/r2vr/2D_training.R', echo=TRUE)
+  source('C:/r2vr2020/r2vr/2D_testing.R', echo=TRUE)
   animals$serve(host = IPv4_ADDRESS)
 }
 
@@ -402,49 +579,63 @@ goImage <- function(index = NA, image_paths = img_paths) {
   animals$send_messages(setup_scene)
 }
 
-check <- function(imgNumber) {
-  # Only check if all images are annotated
-  if (!has_last_image_displayed) {
-    stop('Please annotate all images before calling check!')
+QUESTION_CONTEXT <- 1
+# TODO check visible FALSE
+# TODO: refactor so after first question and visible true, no need to a_update visibility
+question <- function(index = NA, visible = TRUE){
+  if (!is.na(index) && index > length(evaluationQuestions)) {
+    stop("The index of the question exceeds the total number of questions.")
   }
-  if (!is.na(imgNumber) && imgNumber > length(img_paths)) {
-    stop("Please ensure the index does not exceed the total number of images.")
-  }
-  # TODO: handle case imgNumber not passed
-  
-  # Determine image path of the image to be checked
-  imagePath <- img_paths[[imgNumber]]$img
-  # Determine the gold standard of the image to be checked
-  imageGoldStandard <- img_paths[[imgNumber]]$imgPoints
-  # Display fixed points in the location previously annotated
-  fixedPoints(imageGoldStandard)
-  # Display the image to be checked
-  goImage(imgNumber) # Note: Also reset markers back to white
-  # Pick out id and isCoral from correctly annotated markers
-  mutatedImageGoldStandard <- list()
-  # Select id and isCoral from mutatedImageGoldStandard
-  for (annotation in imageGoldStandard) {
-    currentAnnotation <- list(id = annotation$id, isCoral = annotation$isCoral)
-    mutatedImageGoldStandard[[length(mutatedImageGoldStandard) + 1]] <- currentAnnotation
-  }
-  # Check if markers are correct or incorrect
-  check_entities <- list(
-    a_check(
-      imageId = imagePath,
-      goldStandard = mutatedImageGoldStandard
+  if (!is.na(index)) {
+    QUESTION_CONTEXT <<- index
+    text_messages <- list(
+      a_update(id = "questionPlaneText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$question),
+      a_update(id = "optionOneText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerOne),
+      a_update(id = "optionTwoText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerTwo),
+      a_update(id = "optionThreeText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerThree),
+      a_update(id = "optionFourText",
+               component = "value",
+               attributes = evaluationQuestions[[index]]$answerFour)
     )
+    animals$send_messages(text_messages)
+  }
+  show_messages <- list(
+    a_update(id = "questionPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionOnePlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionTwoPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionThreePlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "optionFourPlane",
+             component = "visible",
+             attributes = TRUE),
+    a_update(id = "postPlane",
+             component = "visible",
+             attributes = TRUE)
   )
-  animals$send_messages(check_entities)
+  animals$send_messages(show_messages)
 }
 
 ### COMMANDS ###
 # rm(list=ls())
 # start()
-# fixedPoints(image1Points)
+# randomizePoints()
 # goImage()
-# fixedPoints(image2Points)
+# randomizePoints()
 # goImage()
-# fixedPoints(image3Points)
-# check(1)
-# check(2)
-# check(3)
+# randomizePoints()
+# question(1)

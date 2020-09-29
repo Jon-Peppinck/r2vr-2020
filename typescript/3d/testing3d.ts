@@ -80,7 +80,7 @@ AFRAME.registerComponent('raycaster-listen', {
         )! as Entity;
         const x = markerContainer.getAttribute('position').x;
         const y = markerContainer.getAttribute('position').y;
-        const z = markerContainer.getAttribute('position').y;
+        const z = markerContainer.getAttribute('position').z;
 
         const foundIndex = getMarkerIndex(id);
 
