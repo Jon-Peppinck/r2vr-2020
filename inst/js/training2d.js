@@ -167,6 +167,42 @@ eval("module.exports = function(originalModule) {\n\tif (!originalModule.webpack
 
 /***/ }),
 
+/***/ "./typescript/2dNew/store/metadata/MetaDataAction.ts":
+/*!***********************************************************!*\
+  !*** ./typescript/2dNew/store/metadata/MetaDataAction.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar rootStore_1 = __webpack_require__(/*! ../rootStore */ \"./typescript/2dNew/store/rootStore.ts\");\r\nvar actions_1 = __webpack_require__(/*! ./models/actions */ \"./typescript/2dNew/store/metadata/models/actions.ts\");\r\nvar getMetaData = function (metaData) {\r\n    return {\r\n        type: actions_1.GET_METADATA,\r\n        metaData: metaData,\r\n    };\r\n};\r\nvar boundGetMetaData = function (metaData) {\r\n    return rootStore_1.store.dispatch(getMetaData(metaData));\r\n};\r\nexports.default = boundGetMetaData;\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/store/metadata/MetaDataAction.ts?");
+
+/***/ }),
+
+/***/ "./typescript/2dNew/store/metadata/MetaDataReducer.ts":
+/*!************************************************************!*\
+  !*** ./typescript/2dNew/store/metadata/MetaDataReducer.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nvar __assign = (this && this.__assign) || function () {\r\n    __assign = Object.assign || function(t) {\r\n        for (var s, i = 1, n = arguments.length; i < n; i++) {\r\n            s = arguments[i];\r\n            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))\r\n                t[p] = s[p];\r\n        }\r\n        return t;\r\n    };\r\n    return __assign.apply(this, arguments);\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar defaultState = {\r\n    module: '',\r\n    annotationType: '',\r\n};\r\nexports.metaDataReducer = function (state, action) {\r\n    if (state === void 0) { state = defaultState; }\r\n    switch (action.type) {\r\n        case 'GET_METADATA':\r\n            return __assign({}, action.metaData);\r\n        default:\r\n            return state;\r\n    }\r\n};\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/store/metadata/MetaDataReducer.ts?");
+
+/***/ }),
+
+/***/ "./typescript/2dNew/store/metadata/models/actions.ts":
+/*!***********************************************************!*\
+  !*** ./typescript/2dNew/store/metadata/models/actions.ts ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nexports.GET_METADATA = 'GET_METADATA';\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/store/metadata/models/actions.ts?");
+
+/***/ }),
+
 /***/ "./typescript/2dNew/store/rootStore.ts":
 /*!*********************************************!*\
   !*** ./typescript/2dNew/store/rootStore.ts ***!
@@ -175,7 +211,7 @@ eval("module.exports = function(originalModule) {\n\tif (!originalModule.webpack
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar redux_1 = __webpack_require__(/*! redux */ \"./node_modules/redux/es/redux.js\");\r\nvar redux_thunk_1 = __importDefault(__webpack_require__(/*! redux-thunk */ \"./node_modules/redux-thunk/es/index.js\"));\r\nvar redux_logger_1 = __webpack_require__(/*! redux-logger */ \"./node_modules/redux-logger/dist/redux-logger.js\");\r\nvar UserReducer_1 = __webpack_require__(/*! ./user/UserReducer */ \"./typescript/2dNew/store/user/UserReducer.ts\");\r\nvar rootReducer = redux_1.combineReducers({\r\n    userReducer: UserReducer_1.userReducer,\r\n});\r\nexports.store = redux_1.createStore(rootReducer, redux_1.applyMiddleware(redux_thunk_1.default, redux_logger_1.logger));\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/store/rootStore.ts?");
+eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar redux_1 = __webpack_require__(/*! redux */ \"./node_modules/redux/es/redux.js\");\r\nvar redux_thunk_1 = __importDefault(__webpack_require__(/*! redux-thunk */ \"./node_modules/redux-thunk/es/index.js\"));\r\nvar redux_logger_1 = __webpack_require__(/*! redux-logger */ \"./node_modules/redux-logger/dist/redux-logger.js\");\r\nvar MetaDataReducer_1 = __webpack_require__(/*! ./metadata/MetaDataReducer */ \"./typescript/2dNew/store/metadata/MetaDataReducer.ts\");\r\nvar UserReducer_1 = __webpack_require__(/*! ./user/UserReducer */ \"./typescript/2dNew/store/user/UserReducer.ts\");\r\nvar rootReducer = redux_1.combineReducers({\r\n    metaDataReducer: MetaDataReducer_1.metaDataReducer,\r\n    userReducer: UserReducer_1.userReducer,\r\n});\r\nexports.store = redux_1.createStore(rootReducer, redux_1.applyMiddleware(redux_thunk_1.default, redux_logger_1.logger));\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/store/rootStore.ts?");
 
 /***/ }),
 
@@ -223,7 +259,7 @@ eval("\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nex
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar rootStore_1 = __webpack_require__(/*! ./store/rootStore */ \"./typescript/2dNew/store/rootStore.ts\");\r\nvar UserAction_1 = __importDefault(__webpack_require__(/*! ./store/user/UserAction */ \"./typescript/2dNew/store/user/UserAction.ts\"));\r\nvar render = function () {\r\n    return rootStore_1.store.getState();\r\n};\r\nrender();\r\nrootStore_1.store.subscribe(render);\r\ndocument.addEventListener('DOMContentLoaded', function () {\r\n    var name = document.getElementById('user').className;\r\n    var user = {\r\n        name: name,\r\n    };\r\n    UserAction_1.default(user);\r\n});\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/training2d.ts?");
+eval("\r\nvar __importDefault = (this && this.__importDefault) || function (mod) {\r\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\r\n};\r\nObject.defineProperty(exports, \"__esModule\", { value: true });\r\nvar rootStore_1 = __webpack_require__(/*! ./store/rootStore */ \"./typescript/2dNew/store/rootStore.ts\");\r\nvar MetaDataAction_1 = __importDefault(__webpack_require__(/*! ./store/metadata/MetaDataAction */ \"./typescript/2dNew/store/metadata/MetaDataAction.ts\"));\r\nvar UserAction_1 = __importDefault(__webpack_require__(/*! ./store/user/UserAction */ \"./typescript/2dNew/store/user/UserAction.ts\"));\r\nvar render = function () {\r\n    return rootStore_1.store.getState();\r\n};\r\nrender();\r\nrootStore_1.store.subscribe(render);\r\ndocument.addEventListener('DOMContentLoaded', function () {\r\n    var name = document.getElementById('user').className;\r\n    var user = {\r\n        name: name,\r\n    };\r\n    UserAction_1.default(user);\r\n    var metaData = document.getElementById('metaData').className;\r\n    var moduleAndType = metaData.split('/');\r\n    var _a = moduleAndType, module = _a[0], annotationType = _a[1];\r\n    MetaDataAction_1.default({ module: module, annotationType: annotationType });\r\n});\r\n\n\n//# sourceURL=webpack:///./typescript/2dNew/training2d.ts?");
 
 /***/ })
 

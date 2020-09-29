@@ -1,5 +1,8 @@
 library(r2vr)
 
+# Set meta data
+META_DATA <- "2d/training"
+
 # Set observer here
 USER <- "Jon-Peppinck"
 
@@ -81,8 +84,17 @@ user <- a_entity(
   radius = 0
 )
 
+# Invisble entity to store meta data for client side JS
+meta_data <- a_entity(
+  .tag = "circle",
+  id = "metaData",
+  class = META_DATA,
+  opacity = 0,
+  radius = 0
+)
+
 # Markers
-list_of_children_entities <- list(canvas_2d, camera, user)
+list_of_children_entities <- list(canvas_2d, camera, user, meta_data)
 
 ## RENDER SCENE
 animals <- a_scene(
