@@ -182,7 +182,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     width = 1.2,
     color = COLOR_TEXT,
     position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
-    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE) # ,
     # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
   )
 

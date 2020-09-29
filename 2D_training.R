@@ -6,13 +6,37 @@ META_DATA <- "2d/training"
 # Set observer here
 USER <- "Jon-Peppinck"
 
+# Set the number of markers here
+## NOTE: Do not exceed 20 for performance reasons
+NUMBER_OF_MARKERS <- 10
+
 # Find the user's IP address as it is required for WebSocket connection
-IPv4_ADDRESS <- find_IP() 
+IPv4_ADDRESS <- find_IP()
+
+## TODO: Annotate markers correctly
+img1Points = list(
+  list(id = 1, x = 3203, y = 173, isCoral = 0), ## sand (TODO)
+  list(id = 2, x = 1726, y = 356, isCoral = 0),
+  list(id = 3, x = 2291, y = 1086, isCoral = 0)
+)
+
+img2Points = list(
+  list(id = 1, x = 1000, y = 1000, isCoral = 0),
+  list(id = 2, x = 2000, y = 2000, isCoral = 0)
+)
+
+img3Points = list(
+  list(id = 1, x = 500, y = 500, isCoral = 0),
+  list(id = 2, x = 1000, y = 1000, isCoral = 0)
+)
 
 img_paths <- list(
-  list(img = "./2dimages/latest/49001074001.jpeg"),
-  list(img = "./2dimages/latest/49002256001.jpeg"),
-  list(img = "./2dimages/latest/14017099802.jpeg")
+  # 2D image paths  4000x3000
+  list(img = "./2dimages/latest/49001074001.jpeg", imgPoints = img1Points),
+  list(img = "./2dimages/latest/49002256001.jpeg", imgPoints = img2Points),
+  list(img = "./2dimages/latest/51010026001.jpeg", imgPoints = img3Points),
+  list(img = "./2dimages/latest/49004035001.jpeg", imgPoints = img3Points),
+  list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img3Points)
 )
 
 # Colours
@@ -27,10 +51,11 @@ img_paths <- sample(img_paths, 3, replace=FALSE)
 
 for (i in 1:length(img_paths)) {
   currentImgPath <- img_paths[[i]]$img # string
-  
   # image1, ... , image<n>, s.t. n = index of last image path
   image_number <- paste0("image", i)
   image_path <- paste0("image", i, "Path")
+  image_number_points <- paste0("image", i, "Points") # image1Points, ... , image<n>Points
+  currentImgPoints <- img_paths[[i]]$imgPoints # list of lists
   # Create image asset with id="img<i>" (to select DOM element)
   current_image <- a_asset(
     .tag = "image",
@@ -41,7 +66,15 @@ for (i in 1:length(img_paths)) {
   assign(image_number, current_image)
   # Assign image<n>Path variable to its corresponding image path
   assign(image_path, currentImgPath)
+  # Assign image<n>Points variable to its corresponding image points
+  assign(image_number_points, currentImgPoints)
 }
+
+# Z-index positions
+## Note: z-index of camera > z-index of entities
+canvas_z = -3
+marker_z = -1
+camera_z = 0
 
 # Create a canvas for the image to be attached to
 canvas_2d <- a_entity(
@@ -57,7 +90,7 @@ canvas_2d <- a_entity(
   class = img_paths[[1]]$img,
   height = 3,
   width = 4,
-  position = c(0, 0, -3)
+  position = c(0, 0, canvas_z)
 )
 
 # Create a cursor
@@ -93,8 +126,174 @@ meta_data <- a_entity(
   radius = 0
 )
 
-# Markers
+# Setup
 list_of_children_entities <- list(canvas_2d, camera, user, meta_data)
+
+list_length <- length(list_of_children_entities)
+
+MARKER_OUTER_RADIUS <- 0.04
+MARKER_INNER_RADIUS <- 0.03
+MENU_OPTION_OUTER_RADIUS <- 0.1
+MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
+
+# Arbitrarily small value
+epsilon = 0.00001
+delta = 100*epsilon
+
+### GENERATE POINTS ###
+# TODO: Move higher
+generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
+  # TODO: check typeof arg for for int, check called once only
+  for (i in 1:numberOfMarkers) {
+    marker_boundary <- a_entity(
+      .tag = "ring",
+      raycaster_listen = "",
+      id = paste0("markerBoundary", i),
+      class = "marker-boundary",
+      radius_outer = MARKER_OUTER_RADIUS,
+      radius_inner = MARKER_INNER_RADIUS,
+      color = COLOR_MARKER
+    )
+    
+    marker_inner <- a_entity(
+      .tag = "circle",
+      raycaster_listen = "",
+      id= paste0("markerInner", i),
+      class = "marker-inner",
+      radius = MARKER_INNER_RADIUS,
+      opacity = 0
+    )
+    
+    TEXT_BOX_EDGE_SIZE <- 0.005
+    
+    coral_label <- a_entity(
+      .tag = "text",
+      id = paste0("coralText", i),
+      value = "C",
+      width = 1.2,
+      color = COLOR_TEXT,
+      position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+      geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE)
+    )
+    
+    not_coral_label <- a_entity(
+      .tag = "text",
+      id = paste0("notCoralText", i),
+      value = "N",
+      width = 1.2,
+      color = COLOR_TEXT,
+      position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+      geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+    )
+    
+    menu_coral <- a_entity(
+      .tag = "ring",
+      .children = list(coral_label),
+      raycaster_listen = "",
+      id= paste0("menuCoral", i),
+      class = "menu-item",
+      radius_outer = MENU_OPTION_OUTER_RADIUS,
+      radius_inner = MENU_OPTION_INNER_RADIUS,
+      theta_length = 180,
+      theta_start = 90,
+      color = COLOR_CORAL,
+      visible = FALSE,
+    )
+    
+    menu_not_coral <- a_entity(
+      .tag = "ring",
+      .children = list(not_coral_label),
+      raycaster_listen = "",
+      id = paste0("menuNotCoral", i),
+      class = "menu-item",
+      radius_outer = MENU_OPTION_OUTER_RADIUS,
+      radius_inner = MENU_OPTION_INNER_RADIUS,
+      theta_length = 180,
+      theta_start = 270,
+      color = COLOR_NOT_CORAL,
+      visible = FALSE
+    )
+    
+    # Marker container: Encapsulate a marker and its menu options inside a parent container
+    marker_container <- a_entity(
+      .tag = "ring",
+      .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
+      id = paste0("markerContainer", i),
+      class = "marker-container",
+      position = c(0, 0, marker_z),
+      radius_inner = 0.00001, # TODO: check 0?
+      radius_outer = 0.00001,
+      opacity = 0,
+      debug = "" # needed for x and y position after an update via web sockets
+    )
+    
+    marker_container_number <- paste0("markerContainer", i)
+    list_of_children_entities[[list_length + i]] <<- assign(marker_container_number, marker_container)
+  }
+}
+
+generatePoints()
+
+rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
+  translation = function(oldValue) {
+    if (oldValue < 0) {
+      stop('Please enter a non-negative value')
+    }
+    if (oldValue > oldMax || oldValue < oldMin) {
+      stop(paste('Please enter a value between', oldMin, 'and', oldMax, '. You entered:', oldValue))
+    }
+    # To translate a point A on a scale with range (Omin, Omax) to a point B in a range (Nmin,        Nmax) then: B = [( A - O_min)/(O_max - O_min)](N_max - N_min) + N_min
+    ((oldValue - oldMin)/(oldMax - oldMin)) * (newMax - newMin) + newMin
+  }
+  return(translation)
+}
+
+fixedPoints <- function(points) {
+  ## Generate the transformation functions
+  xTranslation <- rangeTranslation(4000, 0, 4/3, -4/3)
+  yTranslation <- rangeTranslation(3000)
+  
+  for(point in 1:length(points)) {
+    ## Find the transformed x and y values
+    fixedCoordinateX <- xTranslation(img1Points[[point]]$x)/2 # TODO: investigate x/2
+    fixedCoordinateY <- -yTranslation(img1Points[[point]]$y)/2
+    print(fixedCoordinateX)
+    print(fixedCoordinateY)
+    
+    # Update the position for the number of points specified
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "position",
+        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = -1)
+      ),
+      # Update the specified number of points to be visible
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = TRUE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+  
+  startNumberOfRemainingPoints <- length(points) + 1
+  
+  if (startNumberOfRemainingPoints > NUMBER_OF_MARKERS) return() # TODO: Check edge cases
+  
+  # Update the remaining points to not be visible
+  for (point in startNumberOfRemainingPoints:NUMBER_OF_MARKERS) {
+    # Update the position
+    update_entities <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(update_entities)
+  }
+}
 
 ## RENDER SCENE
 animals <- a_scene(
@@ -103,7 +302,7 @@ animals <- a_scene(
   .websocket_host = IPv4_ADDRESS,
   .template = "empty",
   button_controls = "debug: true;",
-  # toggle_menu_listen = ""
+  toggle_menu_listen = ""
 )
 
 ### FUNCTIONS ###
@@ -124,3 +323,134 @@ restart <- function(){
   source('C:/r2vr2020/r2vr/2D_training.R', echo=TRUE)
   animals$serve(host = IPv4_ADDRESS)
 }
+
+## Helper function for points() to reset annotation marker colors
+resetMarkersUI <- function(numberOfPointsToReset = NUMBER_OF_MARKERS){
+  # TODO: check numberOfPointsToReset !> 20
+  for (i in 1:numberOfPointsToReset) {
+    # Reset marker colors
+    reset_marker_colors <- list(
+      a_update(
+        id = paste0("markerBoundary", i),
+        component = "color",
+        attributes = COLOR_MARKER
+      )
+    )
+    animals$send_messages(reset_marker_colors)
+  }
+}
+
+## Go to next image
+CONTEXT_INDEX <- 1
+
+current_image <- img_paths[[1]]$img # TODO: check if needed
+
+has_last_image_displayed <- FALSE
+
+goImage <- function(index = NA, image_paths = img_paths) {
+  if (!is.na(index) && index > length(img_paths)) {
+    stop("Please ensure the index does not exceed the total number of images.")
+  }
+  # Prevent image change if last image has showed and no args for index have been passed
+  if (has_last_image_displayed && is.na(index)) {
+    stop("Please ensure the index is passed when it is the last image.")
+  }
+  # Prevent image change if an index has been passed but the last image has not displayed
+  if (!has_last_image_displayed && !is.na(index)) {
+    stop("Please ensure the index is not passed unless it is the last image and annotation has finished.")
+  }
+  # Reset marker colour to white
+  resetMarkersUI()
+  
+  # Relative path of current image
+  current_image <<- img_paths[[CONTEXT_INDEX]]$img
+  
+  # Set the index of the next image to be displayed
+  CONTEXT_INDEX <<- ifelse(!is.na(index),
+                           yes = index,
+                           no = CONTEXT_INDEX + 1
+  )
+  # Indicate if the last image has displayed (Allows to go back to an image to check it)
+  if (CONTEXT_INDEX == length(img_paths)) {
+    has_last_image_displayed <<- TRUE
+  }
+  # Set the next image path and ID
+  next_image <- img_paths[[CONTEXT_INDEX]]$img
+  next_image_el_id <- paste0("#img", CONTEXT_INDEX)
+  print(paste("Image", CONTEXT_INDEX, "is displayed from", next_image))
+  
+  setup_scene <- list(
+    a_update(id = "canvas",
+             component = "material",
+             attributes = list(src = next_image_el_id)),
+    a_update(id = "canvas",
+             component = "src",
+             attributes = next_image_el_id),
+    a_update(id = "canvas",
+             component = "class",
+             attributes = next_image
+    )
+  )
+  
+  for(aUpdate in 1:length(setup_scene)){
+    if(setup_scene[[aUpdate]]$id == "canvas"){
+      if(setup_scene[[aUpdate]]$component == "material"){
+        setup_scene[[aUpdate]]$attributes <- list(src = next_image_el_id)
+      }
+      if(setup_scene[[aUpdate]]$component == "src"){
+        setup_scene[[aUpdate]]$attributes <- next_image_el_id
+      }
+      if(setup_scene[[aUpdate]]$component == "class"){
+        setup_scene[[aUpdate]]$attributes <- next_image
+      }
+    }
+  }
+  animals$send_messages(setup_scene)
+}
+
+check <- function(imgNumber) {
+  # Only check if all images are annotated
+  if (!has_last_image_displayed) {
+    stop('Please annotate all images before calling check!')
+  }
+  if (!is.na(imgNumber) && imgNumber > length(img_paths)) {
+    stop("Please ensure the index does not exceed the total number of images.")
+  }
+  # TODO: handle case imgNumber not passed
+  
+  # Determine image path of the image to be checked
+  imagePath <- img_paths[[imgNumber]]$img
+  # Determine the gold standard of the image to be checked
+  imageGoldStandard <- img_paths[[imgNumber]]$imgPoints
+  # Display fixed points in the location previously annotated
+  fixedPoints(imageGoldStandard)
+  # Display the image to be checked
+  goImage(imgNumber) # Note: Also reset markers back to white
+  # Pick out id and isCoral from correctly annotated markers
+  mutatedImageGoldStandard <- list()
+  # Select id and isCoral from mutatedImageGoldStandard
+  for (annotation in imageGoldStandard) {
+    currentAnnotation <- list(id = annotation$id, isCoral = annotation$isCoral)
+    mutatedImageGoldStandard[[length(mutatedImageGoldStandard) + 1]] <- currentAnnotation
+  }
+  # Check if markers are correct or incorrect
+  check_entities <- list(
+    a_check(
+      imageId = imagePath,
+      goldStandard = mutatedImageGoldStandard
+    )
+  )
+  animals$send_messages(check_entities)
+}
+
+### COMMANDS ###
+# rm(list=ls())
+# start()
+# fixedPoints(image1Points)
+# goImage()
+# fixedPoints(image2Points)
+# goImage()
+# fixedPoints(image3Points)
+# check(1)
+# check(2)
+# check(3)
