@@ -423,9 +423,9 @@ randomizePoints <- function() {
   # Create annotation markers
   while (length(points.list) < NUMBER_OF_MARKERS) {
     # TODO: investigate canvas size and x/2
-    # Note: Canvas: -1/2 < x < 1/2, -2/3 < y < 2/3
-    random_coordinate_x <- runif(1, -4/3 + MARKER_OUTER_RADIUS, 4/3 - MARKER_OUTER_RADIUS)/2 
-    random_coordinate_y <- runif(1, -1 + MARKER_OUTER_RADIUS, 1 - MARKER_OUTER_RADIUS)/2
+    # Note: Canvas: -2/3 < x < 2/3, -1/2 < y < 1/2
+    random_coordinate_x <- runif(1, -2/3 + MARKER_OUTER_RADIUS, 2/3 - MARKER_OUTER_RADIUS)
+    random_coordinate_y <- runif(1, -1/2 + MARKER_OUTER_RADIUS, 1/2 - MARKER_OUTER_RADIUS)
     n <- length(points.list) + 1
     overlapping = FALSE
 
