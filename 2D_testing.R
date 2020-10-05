@@ -240,6 +240,7 @@ generateEvaluationQuestions <- function() {
   question_plane <- a_entity(
     .tag = "plane",
     .children = list(question_label),
+    questioned = FALSE,
     id = "questionPlane",
     visible = FALSE,
     position = c(0, message_height, -2),
@@ -628,6 +629,13 @@ question <- function(index = NA, visible = TRUE){
              attributes = TRUE)
   )
   animals$send_messages(show_messages)
+  
+  question_messages <- list(
+    a_update(id = "questionPlane",
+             component = "questioned",
+             attributes = TRUE)
+  )
+  animals$send_messages(question_messages)
 }
 
 ### COMMANDS ###

@@ -108,60 +108,67 @@ AFRAME.registerComponent('toggle-menu-listen', {
   init: function () {
     const controlsEl = document.querySelector('[button-controls]') as Scene;
     controlsEl.addEventListener('buttondown', () => {
-      if (
-        [
+      const questionPlane = document.getElementById(`questionPlane`)! as Entity;
+      const hasQuestionBeenAsked =
+        questionPlane.getAttribute('questioned') === 'true';
+
+      if (hasQuestionBeenAsked) {
+        const isOptionSelected = [
           'optionOnePlane',
           'optionTwoPlane',
           'optionThreePlane',
           'optionFourPlane',
-        ].includes(intersectedElId)
-      ) {
-        const state = store.getState();
-        const {
-          isCurrentOptionSelected,
-          isCurrentOptionSubmitted,
-        } = state.evaluationReducer;
-
-        const evaluationEl = document.getElementById(intersectedElId) as Entity;
-        // e.g. evaluationEl = 'option1' => evaluationOption = 1
-        const evaluationOption = +evaluationEl.className.replace(
-          'option',
-          ''
-        ) as Shared.QuestionResponseOption;
-        if (!isCurrentOptionSubmitted) {
-          if (!isCurrentOptionSelected) {
-            setOptionColor(evaluationOption);
-            boundSelectEvaluation(evaluationOption);
-          } else {
-            resetOptionColor();
-            setOptionColor(evaluationOption);
-            boundChangeEvaluation(evaluationOption);
-          }
-        }
-      } else if (intersectedElId === 'postPlane') {
-        // TODO: consider refactoring s.t. if option1-4 or post plane needs to be selected and wraps both cases so getting state not duplicated
-        const state = store.getState();
-        const {
-          isCurrentOptionSelected,
-          isCurrentOptionSubmitted,
-        } = state.evaluationReducer;
-        if (!isCurrentOptionSelected || isCurrentOptionSubmitted) return;
-        setPostColor();
-        boundPostEvaluation();
-        postEvaluation();
-      }
-      // else {
-      // TODO
-      // }
-      let matches = intersectedElId.match(/(\d+)/);
-      if (matches) {
-        const id = +matches[0];
-        const isMarkerIntersected = [
-          `markerInner${id}`,
-          `markerBoundary${id}`,
         ].includes(intersectedElId);
-        if (isMarkerIntersected) {
-          displayMenuOptions(id, 'show');
+        const isPostSelected = intersectedElId === 'postPlane';
+
+        if (isOptionSelected) {
+          const state = store.getState();
+          const {
+            isCurrentOptionSelected,
+            isCurrentOptionSubmitted,
+          } = state.evaluationReducer;
+
+          const evaluationEl = document.getElementById(
+            intersectedElId
+          ) as Entity;
+          // e.g. evaluationEl = 'option1' => evaluationOption = 1
+          const evaluationOption = +evaluationEl.className.replace(
+            'option',
+            ''
+          ) as Shared.QuestionResponseOption;
+          if (!isCurrentOptionSubmitted) {
+            if (!isCurrentOptionSelected) {
+              setOptionColor(evaluationOption);
+              boundSelectEvaluation(evaluationOption);
+            } else {
+              resetOptionColor();
+              setOptionColor(evaluationOption);
+              boundChangeEvaluation(evaluationOption);
+            }
+          }
+        } else if (isPostSelected) {
+          // TODO: consider refactoring s.t. if option1-4 or post plane needs to be selected and wraps both cases so getting state not duplicated
+          const state = store.getState();
+          const {
+            isCurrentOptionSelected,
+            isCurrentOptionSubmitted,
+          } = state.evaluationReducer;
+          if (!isCurrentOptionSelected || isCurrentOptionSubmitted) return;
+          setPostColor();
+          boundPostEvaluation();
+          postEvaluation();
+        }
+      } else {
+        let matches = intersectedElId.match(/(\d+)/);
+        if (matches) {
+          const id = +matches[0];
+          const isMarkerIntersected = [
+            `markerInner${id}`,
+            `markerBoundary${id}`,
+          ].includes(intersectedElId);
+          if (isMarkerIntersected) {
+            displayMenuOptions(id, 'show');
+          }
         }
       }
     });
