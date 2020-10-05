@@ -1,5 +1,8 @@
 library(r2vr)
 
+library(httr)
+library(jsonlite)
+
 # Set meta data
 META_DATA <- "3d/testing"
 
@@ -650,7 +653,17 @@ question <- function(index = NA, visible = TRUE){
   animals$send_messages(show_messages)
 }
 
+read <- function(url) {
+  # Deserialize the payload so data can be read and converted from JSON to data frame
+  data.df <<- jsonlite::fromJSON(httr::content(httr::GET(url), "text"), flatten = TRUE)
+  
+  return(data.df)
+}
+
 ### COMMANDS ###
 # rm(list=ls())
 # goImage()
 # randomizePoints()
+# question(1)
+# question(2)
+# data.df <- read("http://localhost:3000/api/3d/evaluation")

@@ -639,3 +639,4 @@ question <- function(index = NA, visible = TRUE){
 # goImage()
 # randomizePoints()
 # question(1)
+# question(2)
