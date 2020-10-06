@@ -10,7 +10,7 @@ META_DATA <- "3d/testing"
 USER <- "Jon-Peppinck"
 
 # Set total number of markers
-NUMBER_OF_MARKERS <- 20
+NUMBER_OF_MARKERS <- 50
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 
@@ -130,6 +130,21 @@ MARKER_INNER_RADIUS <- 0.03
 MENU_OPTION_OUTER_RADIUS <- 0.1
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
+# TODO: move higher
+# Ensures menu options in-front of markers
+adjustMenuPosition <- function(num, delta = 0.003) {
+  stopifnot(is.numeric(num))
+  stopifnot(is.numeric(delta))
+  
+  if (num > 0) {
+    return(-delta)
+  } else if (num < 0) {
+      return(delta)
+  } else {
+    return(0)
+  }
+}
+
 ### GENERATE POINTS ###
 # TODO: Move higher
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
@@ -144,6 +159,10 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     x <- sqrt(1 - u^2) * cos(theta)
     y <- sqrt(1 - u^2) * sin(theta)
     z <- u
+    
+    menuXPosition <- adjustMenuPosition(x)
+    menuYPosition <- adjustMenuPosition(y)
+    menuZPosition <- adjustMenuPosition(z)
     
     marker_boundary <- a_entity(
       .tag = "ring",
@@ -197,6 +216,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id= paste0("menuCoral", i),
       class = "menu-item",
+      position = c(menuXPosition, menuYPosition, menuZPosition),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
@@ -213,6 +233,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id = paste0("menuNotCoral", i),
       class = "menu-item",
+      position = c(menuXPosition, menuYPosition, menuZPosition),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
@@ -434,6 +455,11 @@ randomizePoints <- function() {
     random_coordinate_x <- sqrt(1 - u^2) * cos(theta)
     random_coordinate_y <- sqrt(1 - u^2) * sin(theta)
     random_coordinate_z <- u
+    
+    menuXPosition <- adjustMenuPosition(random_coordinate_x)
+    menuYPosition <- adjustMenuPosition(random_coordinate_y)
+    menuZPosition <- adjustMenuPosition(random_coordinate_z)
+    
     n <- length(points.list) + 1
     overlapping = FALSE
     
@@ -463,6 +489,20 @@ randomizePoints <- function() {
           component = "position",
           attributes = list(
             x = random_coordinate_x, y = random_coordinate_y, z = random_coordinate_z
+          )
+        ),
+        a_update(
+          id = paste0("menuCoral", n),
+          component = "position",
+          attributes = list(
+            x = menuXPosition, y = menuYPosition, z = menuZPosition
+          )
+        ),
+        a_update(
+          id = paste0("menuNotCoral", n),
+          component = "position",
+          attributes = list(
+            x = menuXPosition, y = menuYPosition, z = menuZPosition
           )
         )
       )

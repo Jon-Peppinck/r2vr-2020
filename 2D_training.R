@@ -182,12 +182,15 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
     )
     
+    delta <- 0.001 # Small value to position menu options in-front of other markers
+    
     menu_coral <- a_entity(
       .tag = "ring",
       .children = list(coral_label),
       raycaster_listen = "",
       id= paste0("menuCoral", i),
       class = "menu-item",
+      position = c(0, 0, delta),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
@@ -202,6 +205,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       raycaster_listen = "",
       id = paste0("menuNotCoral", i),
       class = "menu-item",
+      position = c(0, 0, delta),
       radius_outer = MENU_OPTION_OUTER_RADIUS,
       radius_inner = MENU_OPTION_INNER_RADIUS,
       theta_length = 180,
