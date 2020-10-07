@@ -27,7 +27,7 @@ this vignette in this release. This will be deferred until a suitable usecase is
 found (Feel free to open a GitHub issue if you find yourself wanting to do this
 and we can discuss).
 
-# Elemnts of R-VR communication
+# Elements of R-VR communication
 
 ## Websocket enabled r2vr server
 The communication layer is enabled by creating scene object using `a_scene()`
@@ -35,7 +35,7 @@ with the `.websocket = TRUE` argument. This will cause each user browser session
 to open a websocket connection with the `r2vr` server as part of the scene
 rendering process.
 
-A websocket enabled `r2vr` server can broadcast messgages to connected users
+A websocket enabled `r2vr` server can broadcast messages to connected users
 that can trigger updates in their VR scenes. This is done by calling the
 `send_messgages()` method of the server.
 

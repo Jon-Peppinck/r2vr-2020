@@ -603,6 +603,8 @@ goImage <- function(index = NA, image_paths = img_paths) {
 QUESTION_CONTEXT <- 1
 # TODO check visible FALSE
 # TODO: refactor so after first question and visible true, no need to a_update visibility
+# TODO: either require index (1,2,3,...) or not need it by tracking index globally
+# TODO: markers display if question()
 question <- function(index = NA, visible = TRUE){
   if (!is.na(index) && index > length(evaluationQuestions)) {
     stop("The index of the question exceeds the total number of questions.")

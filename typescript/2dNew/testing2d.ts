@@ -17,6 +17,7 @@ import boundGetUser from './store/user/UserAction';
 import postEvaluation from './http/postEvaluation';
 import { evaluationObserver } from './helpers/evaluation';
 import { getImage, imageObserver } from './helpers/image';
+import { questionObserver } from './helpers/question';
 import getMarkerIndex from './helpers/findMarkerIndex';
 
 import { setMarkerColor } from '../shared/user-interface/marker-color';
@@ -54,6 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
   boundPushNewImage(initialImage);
   imageObserver();
   evaluationObserver();
+  // Detects change in question plane to post last annotation (singleton)
+  questionObserver();
 });
 
 AFRAME.registerComponent('raycaster-listen', {
