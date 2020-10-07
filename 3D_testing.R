@@ -253,7 +253,8 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       radius_inner = 0.00001,
       radius_outer = 0.00001,
       opacity = 0,
-      debug = "" # needed for x, y, and z position after an update via web sockets
+      debug = "", # needed for x, y, and z position after an update via web sockets
+      visible = FALSE
     )
     
     marker_container_number <- paste0("markerContainer", i)
@@ -490,6 +491,11 @@ randomizePoints <- function() {
           attributes = list(
             x = random_coordinate_x, y = random_coordinate_y, z = random_coordinate_z
           )
+        ),
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "visible",
+          attributes = TRUE
         ),
         a_update(
           id = paste0("menuCoral", n),

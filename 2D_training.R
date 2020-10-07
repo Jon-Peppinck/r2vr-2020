@@ -225,7 +225,8 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       radius_inner = 0.00001, # TODO: check 0?
       radius_outer = 0.00001,
       opacity = 0,
-      debug = "" # needed for x and y position after an update via web sockets
+      debug = "", # needed for x and y position after an update via web sockets
+      visible = FALSE
     )
     
     marker_container_number <- paste0("markerContainer", i)

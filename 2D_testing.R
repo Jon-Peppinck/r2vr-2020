@@ -216,7 +216,8 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       radius_inner = 0.00001, # TODO: check 0?
       radius_outer = 0.00001,
       opacity = 0,
-      debug = "" # needed for x and y position after an update via web sockets
+      debug = "", # needed for x and y position after an update via web sockets
+      visible = FALSE
     )
     
     marker_container_number <- paste0("markerContainer", i)
@@ -461,6 +462,12 @@ randomizePoints <- function() {
           attributes = list(
             x = random_coordinate_x, y = random_coordinate_y, z = -1
           )
+        ),
+        # Update the specified number of points to be visible
+        a_update(
+          id = paste0("markerContainer", n),
+          component = "visible",
+          attributes = TRUE
         )
       )
       animals$send_messages(update_entities)
