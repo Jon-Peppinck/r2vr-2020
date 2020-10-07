@@ -95,15 +95,19 @@ AFRAME.registerComponent('toggle-menu-listen', {
   init: function () {
     const controlsEl = document.querySelector('[button-controls]') as Scene;
     controlsEl.addEventListener('buttondown', () => {
-      let matches = intersectedElId.match(/(\d+)/);
-      if (matches) {
-        const id = +matches[0];
-        const isMarkerIntersected = [
-          `markerInner${id}`,
-          `markerBoundary${id}`,
-        ].includes(intersectedElId);
-        if (isMarkerIntersected) {
-          displayMenuOptions(id, 'show');
+      const metaData = document.getElementById(`metaData`)! as Entity;
+      const hasMarkersBeenChecked = metaData.getAttribute('checked') === 'true';
+      if (!hasMarkersBeenChecked) {
+        let matches = intersectedElId.match(/(\d+)/);
+        if (matches) {
+          const id = +matches[0];
+          const isMarkerIntersected = [
+            `markerInner${id}`,
+            `markerBoundary${id}`,
+          ].includes(intersectedElId);
+          if (isMarkerIntersected) {
+            displayMenuOptions(id, 'show');
+          }
         }
       }
     });

@@ -122,6 +122,7 @@ meta_data <- a_entity(
   .tag = "circle",
   id = "metaData",
   class = META_DATA,
+  checked = FALSE,
   opacity = 0,
   radius = 0
 )
@@ -439,6 +440,13 @@ check <- function(imgNumber) {
     )
   )
   animals$send_messages(check_entities)
+  
+  checked_messages <- list(
+    a_update(id = "metaData",
+             component = "checked",
+             attributes = TRUE)
+  )
+  animals$send_messages(checked_messages)
 }
 
 ### COMMANDS ###
