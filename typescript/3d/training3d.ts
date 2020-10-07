@@ -128,7 +128,6 @@ AFRAME.registerComponent('r2vr-message-router', {
       console.log(
         'r2vr-message-router: Established connection with server session.'
       );
-      ws.send('124');
     };
 
     ws.onmessage = function (msg: any) {
