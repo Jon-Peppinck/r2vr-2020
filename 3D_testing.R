@@ -560,6 +560,22 @@ resetMarkersUI <- function(numberOfPointsToReset = NUMBER_OF_MARKERS){
   }
 }
 
+# TODO: move higher
+## Helper function for question() to hide the visibility of the markers
+hideMarkers <- function(numberOfMarkersToHide = NUMBER_OF_MARKERS){
+  # TODO: check numberOfPointsToReset !> 20
+  for (point in 1:numberOfMarkersToHide) {
+    container_messages <- list(
+      a_update(
+        id = paste0("markerContainer", point),
+        component = "visible",
+        attributes = FALSE
+      )
+    )
+    animals$send_messages(container_messages)
+  }
+}
+
 ## Go to next image
 CONTEXT_INDEX <- 1
 
@@ -652,6 +668,11 @@ question <- function(index = NA, visible = TRUE){
   }
   if (!is.na(index)) {
     QUESTION_CONTEXT <<- index
+    
+    if (QUESTION_CONTEXT == 1) {
+      hideMarkers()
+    }
+    
     text_messages <- list(
       a_update(id = "questionPlaneText",
                component = "value",
