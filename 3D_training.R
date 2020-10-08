@@ -26,7 +26,7 @@ img2Points = list(
 )
 
 img3Points = list(
-  list(id = 1, -0.360107366234836 , y = -0.153838364908118 , z = 0.920139360241592, isCoral = 0),
+  list(id = 1, x = -0.360107366234836 , y = -0.153838364908118 , z = 0.920139360241592, isCoral = 0),
   list(id = 2, x = 0.66401612970315 , y = -0.53627251455049 , z = -0.521051215939224, isCoral = 0), 
   list(id = 3, x = 0.594898269501156 , y = -0.487906233530624 , z = 0.638782870955765, isCoral = 0) 
 )
@@ -160,7 +160,7 @@ adjustMenuPosition <- function(num, delta = 0.003) {
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   # TODO: check typeof arg for for int, check called once only
   for (i in 1:numberOfMarkers) {
-  sphere_radius = 500
+  sphere_radius = 500 # TODO: check if can delete
   u <- runif(1, -1, 1)
   theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
   x <- sqrt(1 - u^2) * cos(theta)

@@ -133,8 +133,8 @@ MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 # TODO: move higher
 # Ensures menu options in-front of markers
 adjustMenuPosition <- function(num, delta = 0.003) {
-  stopifnot(is.numeric(num))
-  stopifnot(is.numeric(delta))
+  stopifnot(is.double(num))
+  stopifnot(is.double(delta))
   
   if (num > 0) {
     return(-delta)
@@ -152,7 +152,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   list_length <- length(list_of_children_entities)
   # TODO: check typeof arg for for int
   for (i in 1:numberOfMarkers) {
-    sphere_radius = 500
+    sphere_radius = 500 # TODO: consider removing if not needed
     # TODO: consider factoring out and setting x = y = z = 0
     u <- runif(1, -1, 1)
     theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
