@@ -1,7 +1,8 @@
 import { store } from '../store/rootStore';
 
 // import { URL } from '@shared/http/url'; // TODO dotenv?
-const url = 'http://localhost:3000/api';
+// const url = 'http://localhost:3000/api';
+const url = 'https://r2vr.herokuapp.com/api';
 
 const postAnnotation = async (annotation: Api.Annotation) => {
   const metaData = store.getState().metaDataReducer;
