@@ -140,21 +140,6 @@ MARKER_INNER_RADIUS <- 0.03
 MENU_OPTION_OUTER_RADIUS <- 0.1
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
-# TODO: move higher
-# Ensures menu options in-front of markers
-adjustMenuPosition <- function(num, delta = 0.003) {
-  stopifnot(is.numeric(num))
-  stopifnot(is.numeric(delta))
-  
-  if (num > 0) {
-    return(-delta)
-  } else if (num < 0) {
-    return(delta)
-  } else {
-    return(0)
-  }
-}
-
 ### GENERATE POINTS ###
 # TODO: Move higher
 generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
@@ -168,9 +153,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   z <- u
   # TODO check if x, y, and z can be 0
   # Check if menu position needed on generation of points
-  menuXPosition <- adjustMenuPosition(x)
-  menuYPosition <- adjustMenuPosition(y)
-  menuZPosition <- adjustMenuPosition(z)
 
   marker_boundary <- a_entity(
     .tag = "ring",
@@ -224,7 +206,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     raycaster_listen = "",
     id= paste0("menuCoral", i),
     class = "menu-item",
-    position = c(menuXPosition, menuYPosition, menuZPosition),
     radius_outer = MENU_OPTION_OUTER_RADIUS,
     radius_inner = MENU_OPTION_INNER_RADIUS,
     theta_length = 180,
@@ -241,7 +222,6 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     raycaster_listen = "",
     id = paste0("menuNotCoral", i),
     class = "menu-item",
-    position = c(menuXPosition, menuYPosition, menuZPosition),
     radius_outer = MENU_OPTION_OUTER_RADIUS,
     radius_inner = MENU_OPTION_INNER_RADIUS,
     theta_length = 180,
@@ -277,10 +257,6 @@ fixedPoints <- function(points) {
     fixedCoordinateX <- points[[point]]$x
     fixedCoordinateY <- points[[point]]$y
     fixedCoordinateZ <- points[[point]]$z
-    
-    menuXPosition <- adjustMenuPosition(fixedCoordinateX)
-    menuYPosition <- adjustMenuPosition(fixedCoordinateY)
-    menuZPosition <- adjustMenuPosition(fixedCoordinateZ)
 
     # Update the position for the number of points specified
     update_entities <- list(
@@ -294,21 +270,6 @@ fixedPoints <- function(points) {
         id = paste0("markerContainer", point),
         component = "visible",
         attributes = TRUE
-      ),
-      # Update the menu position relative to new position s.t. menu sits infront of markers
-      a_update(
-        id = paste0("menuCoral", point),
-        component = "position",
-        attributes = list(
-          x = menuXPosition, y = menuYPosition, z = menuZPosition
-        )
-      ),
-      a_update(
-        id = paste0("menuNotCoral", point),
-        component = "position",
-        attributes = list(
-          x = menuXPosition, y = menuYPosition, z = menuZPosition
-        )
       )
     )
     animals$send_messages(update_entities)
