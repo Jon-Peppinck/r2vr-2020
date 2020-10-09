@@ -32,6 +32,8 @@ const postAnnotations = () => {
   const allImageAnnotations = imageAnnotations.markers;
   const user = userReducer.name;
 
+  const uuid = user + '-' + new Date().toISOString();
+
   allImageAnnotations.forEach((marker) => {
     const { id, isCoral, x, y, z } = marker;
     const annotation: Api.Annotation = {
@@ -44,7 +46,7 @@ const postAnnotations = () => {
       z,
       is_coral: isCoral,
       observer: user,
-      observation_id: user + 123,
+      observation_id: uuid,
     };
     postAnnotation(annotation);
   });
