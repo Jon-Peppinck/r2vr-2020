@@ -177,6 +177,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   )
 
   TEXT_BOX_EDGE_SIZE <- 0.005
+  DELTA <- 0.0001 # Make primitive box of text label small enought so it is hidden
 
   coral_label <- a_entity(
     .tag = "text",
@@ -185,7 +186,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     width = 1.2,
     color = COLOR_TEXT,
     position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
-    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE) # ,
+    geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA) # ,
     # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
   )
 
@@ -196,7 +197,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     width = 1.2,
     color = COLOR_TEXT,
     position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
-    geometry = list(primitive = "box", width = TEXT_BOX_EDGE_SIZE, height = TEXT_BOX_EDGE_SIZE, depth = TEXT_BOX_EDGE_SIZE),
+    geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA),
   )
 
   menu_coral <- a_entity(
