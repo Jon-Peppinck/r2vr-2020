@@ -135,9 +135,9 @@ list_of_children_entities <- list(canvas_3d, camera, user, meta_data)
 
 list_length <- length(list_of_children_entities)
 
-MARKER_OUTER_RADIUS <- 0.04
-MARKER_INNER_RADIUS <- 0.03
-MENU_OPTION_OUTER_RADIUS <- 0.1
+MARKER_OUTER_RADIUS <- 4
+MARKER_INNER_RADIUS <- 3
+MENU_OPTION_OUTER_RADIUS <- 9
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
 ### GENERATE POINTS ###
@@ -176,16 +176,16 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
     opacity = 0
   )
 
-  TEXT_BOX_EDGE_SIZE <- 0.005
+  TEXT_BOX_EDGE_SIZE <- 0.5
   DELTA <- 0.0001 # Make primitive box of text label small enought so it is hidden
 
   coral_label <- a_entity(
     .tag = "text",
     id = paste0("coralText", i),
     value = "C",
-    width = 1.2,
+    width = 100,
     color = COLOR_TEXT,
-    position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+    position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0.1),
     geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA) # ,
     # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
   )
@@ -255,9 +255,9 @@ generatePoints()
 
 fixedPoints <- function(points) {
   for(point in 1:length(points)) {
-    fixedCoordinateX <- points[[point]]$x
-    fixedCoordinateY <- points[[point]]$y
-    fixedCoordinateZ <- points[[point]]$z
+    fixedCoordinateX <- 100 * points[[point]]$x
+    fixedCoordinateY <- 100 * points[[point]]$y
+    fixedCoordinateZ <- 100 * points[[point]]$z
 
     # Update the position for the number of points specified
     update_entities <- list(

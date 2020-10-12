@@ -125,9 +125,9 @@ list_of_children_entities <- list(canvas_3d, camera, user, meta_data)
 
 list_length <- length(list_of_children_entities)
 
-MARKER_OUTER_RADIUS <- 0.04
-MARKER_INNER_RADIUS <- 0.03
-MENU_OPTION_OUTER_RADIUS <- 0.1
+MARKER_OUTER_RADIUS <- 4
+MARKER_INNER_RADIUS <- 3
+MENU_OPTION_OUTER_RADIUS <- 9
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
 ### GENERATE POINTS ###
@@ -137,7 +137,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
   list_length <- length(list_of_children_entities)
   # TODO: check typeof arg for for int
   for (i in 1:numberOfMarkers) {
-    sphere_radius = 500 # TODO: consider removing if not needed
+    # sphere_radius = 500 # TODO: consider removing if not needed
     # TODO: consider factoring out and setting x = y = z = 0
     u <- runif(1, -1, 1)
     theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
@@ -167,16 +167,16 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       opacity = 0
     )
     
-    TEXT_BOX_EDGE_SIZE <- 0.005
+    TEXT_BOX_EDGE_SIZE <- 0.5
     DELTA <- 0.0001 # Make primitive box of text label small enought so it is hidden
     
     coral_label <- a_entity(
       .tag = "text",
       id = paste0("coralText", i),
       value = "C",
-      width = 1.2,
+      width = 100,
       color = COLOR_TEXT,
-      position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+      position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0.1),
       geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA),
       # material = list(transparent = TRUE, opacity = 0.5) # TODO: remove
     )
@@ -431,11 +431,11 @@ randomizePoints <- function() {
   guard = 0
   # Create annotation markers
   while (length(points.list) < NUMBER_OF_MARKERS) {
-    u <- runif(1, -1, 1)
+    u <- runif(1, -1, 1) # runif(1, -1, 1)
     theta <- runif(1, -pi, 0) # Full sphere: runif(1, 0, pi)
-    random_coordinate_x <- sqrt(1 - u^2) * cos(theta)
-    random_coordinate_y <- sqrt(1 - u^2) * sin(theta)
-    random_coordinate_z <- u
+    random_coordinate_x <- 100 * sqrt(1 - u^2) * cos(theta)
+    random_coordinate_y <- 100 * sqrt(1 - u^2) * sin(theta)
+    random_coordinate_z <- 100 * u
     
     n <- length(points.list) + 1
     overlapping = FALSE
