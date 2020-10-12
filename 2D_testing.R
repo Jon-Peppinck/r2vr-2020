@@ -7,7 +7,7 @@ META_DATA <- "2d/testing"
 USER <- "Jon-Peppinck"
 
 # Set total number of markers
-NUMBER_OF_MARKERS <- 1
+NUMBER_OF_MARKERS <- 50
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP()
@@ -79,7 +79,7 @@ canvas_2d <- a_entity(
   class = img_paths[[1]]$img,
   height = 3,
   width = 4,
-  position = c(0, 0, canvas_z)
+  position = c(0, 0, canvas_z + 0.01)
 )
 
 # Create a cursor
@@ -120,9 +120,9 @@ list_of_children_entities <- list(canvas_2d, camera, user, meta_data)
 
 list_length <- length(list_of_children_entities) # TODO: check if needed
 
-MARKER_OUTER_RADIUS <- 0.04
-MARKER_INNER_RADIUS <- 0.03
-MENU_OPTION_OUTER_RADIUS <- 0.1
+MARKER_OUTER_RADIUS <- 0.12
+MARKER_INNER_RADIUS <- 0.09
+MENU_OPTION_OUTER_RADIUS <- 0.3
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
 ### GENERATE POINTS ###
@@ -213,7 +213,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
       id = paste0("markerContainer", i),
       class = "marker-container",
-      position = c(0, 0, marker_z),
+      position = c(0, 0, canvas_z + 0.01), # TODO: dynamic
       radius_inner = 0.00001, # TODO: check 0?
       radius_outer = 0.00001,
       opacity = 0,
@@ -430,9 +430,9 @@ randomizePoints <- function() {
   # Create annotation markers
   while (length(points.list) < NUMBER_OF_MARKERS) {
     # TODO: investigate canvas size and x/2
-    # Note: Canvas: -2/3 < x < 2/3, -1/2 < y < 1/2
-    random_coordinate_x <- runif(1, -2/3 + MARKER_OUTER_RADIUS, 2/3 - MARKER_OUTER_RADIUS)
-    random_coordinate_y <- runif(1, -1/2 + MARKER_OUTER_RADIUS, 1/2 - MARKER_OUTER_RADIUS)
+    # Note: Canvas: -2/3 < x < 2/3, -1/2 < y < 1/2 # TODO: update
+    random_coordinate_x <- runif(1, -2 + MARKER_OUTER_RADIUS, 2 - MARKER_OUTER_RADIUS)
+    random_coordinate_y <- runif(1, -1.5 + MARKER_OUTER_RADIUS, 1.5 - MARKER_OUTER_RADIUS)
     n <- length(points.list) + 1
     overlapping = FALSE
 
@@ -461,7 +461,7 @@ randomizePoints <- function() {
           id = paste0("markerContainer", n),
           component = "position",
           attributes = list(
-            x = random_coordinate_x, y = random_coordinate_y, z = -1
+            x = random_coordinate_x, y = random_coordinate_y, z = canvas_z + 0.01
           )
         ),
         # Update the specified number of points to be visible

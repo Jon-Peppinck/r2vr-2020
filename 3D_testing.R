@@ -10,7 +10,7 @@ META_DATA <- "3d/testing"
 USER <- "Jon-Peppinck"
 
 # Set total number of markers
-NUMBER_OF_MARKERS <- 50
+NUMBER_OF_MARKERS <- 20
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() 

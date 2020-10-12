@@ -8,7 +8,7 @@ USER <- "Jon-Peppinck"
 
 # Set the number of markers here
 ## NOTE: Do not exceed 20 for performance reasons
-NUMBER_OF_MARKERS <- 10
+NUMBER_OF_MARKERS <- 40
 
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP()
@@ -26,8 +26,8 @@ img2Points = list(
 )
 
 img3Points = list(
-  list(id = 1, x = 500, y = 500, isCoral = 0),
-  list(id = 2, x = 1000, y = 1000, isCoral = 0)
+  list(id = 1, x = 0, y = 0, isCoral = 0),
+  list(id = 2, x = 4000, y = 3000, isCoral = 0)
 )
 
 img_paths <- list(
@@ -90,7 +90,7 @@ canvas_2d <- a_entity(
   class = img_paths[[1]]$img,
   height = 3,
   width = 4,
-  position = c(0, 0, canvas_z)
+  position = c(0, 0, canvas_z + 0.01)
 )
 
 # Create a cursor
@@ -132,9 +132,9 @@ list_of_children_entities <- list(canvas_2d, camera, user, meta_data)
 
 list_length <- length(list_of_children_entities)
 
-MARKER_OUTER_RADIUS <- 0.04
-MARKER_INNER_RADIUS <- 0.03
-MENU_OPTION_OUTER_RADIUS <- 0.1
+MARKER_OUTER_RADIUS <- 0.12
+MARKER_INNER_RADIUS <- 0.09
+MENU_OPTION_OUTER_RADIUS <- 0.3
 MENU_OPTION_INNER_RADIUS <- MARKER_OUTER_RADIUS
 
 ### GENERATE POINTS ###
@@ -222,7 +222,7 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
       .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
       id = paste0("markerContainer", i),
       class = "marker-container",
-      position = c(0, 0, marker_z),
+      position = c(0, 0, canvas_z + 0.01),
       radius_inner = 0.00001, # TODO: check 0?
       radius_outer = 0.00001,
       opacity = 0,
@@ -253,20 +253,21 @@ rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
 
 fixedPoints <- function(points) {
   ## Generate the transformation functions
-  xTranslation <- rangeTranslation(4000, 0, 4/3, -4/3)
-  yTranslation <- rangeTranslation(3000)
+  xTranslation <- rangeTranslation(4000, 0, 2, -2)
+  yTranslation <- rangeTranslation(3000, 0, 3/2, -3/2)
   
   for(point in 1:length(points)) {
     ## Find the transformed x and y values
-    fixedCoordinateX <- xTranslation(img1Points[[point]]$x)/2 # TODO: investigate x/2
-    fixedCoordinateY <- -yTranslation(img1Points[[point]]$y)/2
+    # TODO: make dynamic
+    fixedCoordinateX <- xTranslation(img3Points[[point]]$x)
+    fixedCoordinateY <- -yTranslation(img3Points[[point]]$y)
     
     # Update the position for the number of points specified
     update_entities <- list(
       a_update(
         id = paste0("markerContainer", point),
         component = "position",
-        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = -1)
+        attributes = list(x = fixedCoordinateX, y = fixedCoordinateY, z = canvas_z + 0.02)
       ),
       # Update the specified number of points to be visible
       a_update(
