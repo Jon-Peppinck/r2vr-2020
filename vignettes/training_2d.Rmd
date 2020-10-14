@@ -1,0 +1,36 @@
+---
+title: "Coral Cover (2D Training)"
+author: "Jon Peppinck"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_width: 7
+fig_height: 3
+vignette: >
+  %\VignetteIndexEntry{Coral Cover (2D Training)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r setup, include = FALSE}
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 3,
+  fig.width = 7
+  )
+require(knitr)
+```
+  
+# Annotate 2D Virtual Reality Images by Creating an Interactive WebVR scene
+
+`r2vr` has been extended to be able to help train users to annotate virtual reality images more accurately. The 2D Training will randomly select `3` images from a pool of images. Users are able to annotate selected markers (for each image) as either `C` or `N` to classify the bounded region as either containing mostly `Coral` or `Not Coral` respectively. The user's annotations are then compared to a `gold standard`, which are the correct annotations for the corresponding fixed points in which the user annotated. The user will then be able to receive visual feedback with markers changing to `green` or `red` depending on if they annotated the marker correctly or incorrectly respectively.
+
+## Case Study: Coral Cover
+
+TODO
+
+```{r}
+library(r2vr)
+
+## Find the IPv4 Address
+```
