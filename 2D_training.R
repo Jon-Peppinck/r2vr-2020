@@ -1,17 +1,32 @@
 library(r2vr)
 
-# Set meta data
-META_DATA <- "2d/training"
-
 # Set observer here
 USER <- "Jon-Peppinck"
+
+# Set meta data
+MODULE <- "2d"
+MODULE_TYPE <- "training"
+META_DATA <- paste0(MODULE, "/", MODULE_TYPE)
 
 # Set the number of markers here
 ## NOTE: Do not exceed 20 for performance reasons
 NUMBER_OF_MARKERS <- 40
 
+# Colours
+COLOR_MARKER <- "#FFFFFF"
+COLOR_CORAL <- "#FF95BC"
+COLOR_NOT_CORAL <- "#969696"
+COLOR_TEXT <- "#000000"
+COLOR_CAMERA_CURSOR <- "#FF0000"
+
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP()
+
+is_IPv4_set <- identical(q, character(0))
+
+if (!is_IPv4_set) {
+  stop('IPv4 Address not found. Please try checking your internet connection!')
+}
 
 ## TODO: Annotate markers correctly
 img1Points = list(
@@ -39,12 +54,7 @@ img_paths <- list(
   list(img = "./2dimages/latest/50003181001.jpeg", imgPoints = img3Points)
 )
 
-# Colours
-COLOR_MARKER <- "#FFFFFF"
-COLOR_CORAL <- "#FF95BC"
-COLOR_NOT_CORAL <- "#969696"
-COLOR_TEXT <- "#000000"
-COLOR_CAMERA_CURSOR <- "#FF0000"
+
 
 # Randomly select 3 out of the 6 images (any order)
 img_paths <- sample(img_paths, 3, replace=FALSE)
@@ -237,6 +247,16 @@ generatePoints <- function(numberOfMarkers = NUMBER_OF_MARKERS) {
 
 generatePoints()
 
+## RENDER SCENE
+animals <- a_scene(
+  .children = list_of_children_entities,
+  .websocket = TRUE,
+  .websocket_host = IPv4_ADDRESS,
+  .template = "empty",
+  button_controls = "debug: true;",
+  toggle_menu_listen = ""
+)
+
 rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   translation = function(oldValue) {
     if (oldValue < 0) {
@@ -250,6 +270,7 @@ rangeTranslation <- function(oldMax, oldMin = 0, newMax = 1 , newMin = -1) {
   }
   return(translation)
 }
+
 
 fixedPoints <- function(points) {
   ## Generate the transformation functions
@@ -296,16 +317,6 @@ fixedPoints <- function(points) {
     animals$send_messages(update_entities)
   }
 }
-
-## RENDER SCENE
-animals <- a_scene(
-  .children = list_of_children_entities,
-  .websocket = TRUE,
-  .websocket_host = IPv4_ADDRESS,
-  .template = "empty",
-  button_controls = "debug: true;",
-  toggle_menu_listen = ""
-)
 
 ### FUNCTIONS ###
 
