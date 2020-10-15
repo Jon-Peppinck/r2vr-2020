@@ -39,10 +39,15 @@ img4Points = list(
 
 # 3D image paths (2400x1200px)
 img_paths <- list(
-  list(img = "./inst/ext/images/reef/100030039.jpg", imgPoints = img1Points),
-  list(img = "./inst/ext/images/reef/120261897.jpg", imgPoints = img2Points),
-  list(img = "./inst/ext/images/reef/130030287.jpg", imgPoints = img3Points),
-  list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img4Points)
+  # TODO: update image paths
+  list(img = "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/ext/images/reef/100030039.jpg", imgPoints = img1Points),
+  list(img = "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/ext/images/reef/100030039.jpg", imgPoints = img2Points),
+  list(img = "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/ext/images/reef/100030039.jpg", imgPoints = img3Points),
+  list(img = "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/ext/images/reef/100030039.jpg", imgPoints = img4Points)
+  # list(img = "./inst/ext/images/reef/100030039.jpg", imgPoints = img1Points),
+  # list(img = "./inst/ext/images/reef/120261897.jpg", imgPoints = img2Points),
+  # list(img = "./inst/ext/images/reef/130030287.jpg", imgPoints = img3Points),
+  # list(img = "./inst/ext/images/reef/130050093.jpg", imgPoints = img4Points)
 )
 
 # Colours
