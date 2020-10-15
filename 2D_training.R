@@ -1,7 +1,7 @@
 library(r2vr)
 
-# Set observer here
-USER <- "Jon-Peppinck"
+# Set observer here e.g "John-Doe"
+FULL_NAME <- "Firstname-Lastname"
 
 # Set meta data
 MODULE <- "2d"
