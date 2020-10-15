@@ -27,11 +27,15 @@
 #' )
 
 #' img_paths_and_points <- list(
-#'   list(img = img_paths[1], img_points = img1Points[1]),
-#'   list(img = img_paths[2], img_points = img1Points[2]),
-#'   list(img = img_paths[3], img_points = img1Points[3]),
-#'   list(img = img_paths[4], img_points = img1Points[1])
-#' )                  
+#'   list(img = img_paths[1], img_points = img1Points),
+#'   list(img = img_paths[2], img_points = img1Points),
+#'   list(img = img_paths[3], img_points = img1Points),
+#'   list(img = img_paths[4], img_points = img1Points)
+#' ) 
+#' 
+#' set_random_images(img_paths_and_points)
+#' #' set_random_images(img_paths_and_points, 2)                 
+#'                                                    
 #' }
 #'
 #' @export
