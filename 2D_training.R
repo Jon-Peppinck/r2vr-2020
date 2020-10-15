@@ -22,7 +22,7 @@ COLOR_CAMERA_CURSOR <- "#FF0000"
 # Find the user's IP address as it is required for WebSocket connection
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
-is_IPv4_set <- identical(q, character(0))
+is_IPv4_set <- identical(IPv4_ADDRESS, character(0))
 
 if (!is_IPv4_set) {
   stop('IPv4 Address not found. Please try checking your internet connection!')
