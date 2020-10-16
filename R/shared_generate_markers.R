@@ -9,20 +9,13 @@
 #' }
 #'
 #' @export
-shared_generate_markers <- function(module, module_type) {
+shared_generate_markers <- function(module = MODULE, module_type = MODULE_TYPE) {
   # Append markers to the end of the list of children entities
   list_length <- length(list_of_children_entities)
   
-  # Generate the appropriate number of markers
-  if (module_type == "training") {
-    number_of_markers_to_generate <- length(img_paths_and_points)
-  } else if (module_type == "testing") {
-    number_of_markers_to_generate <- NUMBER_OF_MARKERS
-  }
-  
   # TODO: consider refactoring
   if (module == "2d") {
-    for (i in 1:number_of_markers_to_generate) {
+    for (i in 1:NUMBER_OF_MARKERS) {
       marker_boundary <- a_entity(
         .tag = "ring",
         raycaster_listen = "",
@@ -115,7 +108,7 @@ shared_generate_markers <- function(module, module_type) {
       list_of_children_entities[[list_length + i]] <<- assign(marker_container_number, marker_container)
     }
   } else if (module == "3d") {
-      for (i in 1:number_of_markers_to_generate) {
+      for (i in 1:NUMBER_OF_MARKERS) {
         marker_boundary <- a_entity(
           .tag = "ring",
           look_at = "[cursor]",

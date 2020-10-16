@@ -67,3 +67,9 @@ img_paths_and_points <- list(
 set_random_images(img_paths_and_points)
 
 animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
+
+
+## COMMANDS ##
+
+# start()
+# fixed_markers()

@@ -4,7 +4,7 @@
 \alias{shared_generate_markers}
 \title{Generates the entities needed for the specified number of markers for the module}
 \usage{
-shared_generate_markers(module, module_type)
+shared_generate_markers(module = MODULE, module_type = MODULE_TYPE)
 }
 \arguments{
 \item{module}{String to indicate if "2d" or "3d"}

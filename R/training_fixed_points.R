@@ -109,5 +109,5 @@ fixed_markers <- function(module = MODULE, image_paths_and_points = selected_ima
     )
     animals$send_messages(update_entities)
   }
-  
+
 }
