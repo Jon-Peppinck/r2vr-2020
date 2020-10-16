@@ -27,7 +27,7 @@ shared_setup_scene <- function(module, module_type){
   set_metadata(module, module_type)
   
   cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/js/"
-  js_file <- paste0(module_type, module)
+  js_file <- paste0(module_type, module, ".js")
   js_cdn <- paste0(cdn_js_folder, js_file)
   button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
