@@ -74,3 +74,7 @@ animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
 # start()
 # fixed_markers()
 # go_to()
+# go_to()
+# check(1)
+# check(2)
+# check(3)
