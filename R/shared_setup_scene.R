@@ -1,4 +1,4 @@
-#' Sets up the canvas and camera/cursor for the selected module and module type. Also renders USER and META DATA as invisible entities for the DOM to access data for network requests
+#' Sets up the canvas, camera/cursor, and metadata for the selected module and module type. Also renders USER and META DATA  as invisible entities for the DOM to access data for network requests
 #'
 #' @param module String "2d" || "3d"
 #' @param module_type String "training" || "testing"
@@ -20,6 +20,9 @@ shared_setup_scene <- function(module, module_type){
   } else if (!is_module_type_ok) {
     stop("Invalid module_type param - Please input the string 'training' or 'testing'")
   }
+  
+  # NOTE: Import to set META DATA for network requests
+  set_metadata(module, module_type)
   
   js_file <- paste0(module_type, module)
   js_cdn <- paste0("https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@master/inst/js/", js_file)

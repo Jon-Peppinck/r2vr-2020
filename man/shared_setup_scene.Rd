@@ -2,7 +2,7 @@
 % Please edit documentation in R/shared_setup_scene.R
 \name{shared_setup_scene}
 \alias{shared_setup_scene}
-\title{Sets up the canvas and camera/cursor for the selected module and module type. Also renders USER and META DATA as invisible entities for the DOM to access data for network requests}
+\title{Sets up the canvas, camera/cursor, and metadata for the selected module and module type. Also renders USER and META DATA  as invisible entities for the DOM to access data for network requests}
 \usage{
 shared_setup_scene(module, module_type)
 }
@@ -12,7 +12,7 @@ shared_setup_scene(module, module_type)
 \item{module_type}{String "training" || "testing"}
 }
 \description{
-Sets up the canvas and camera/cursor for the selected module and module type. Also renders USER and META DATA as invisible entities for the DOM to access data for network requests
+Sets up the canvas, camera/cursor, and metadata for the selected module and module type. Also renders USER and META DATA  as invisible entities for the DOM to access data for network requests
 }
 \examples{
 \donttest{

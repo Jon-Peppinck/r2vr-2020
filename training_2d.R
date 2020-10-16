@@ -14,7 +14,7 @@ set_marker_and_props("2d")
 set_colors()
 
 ## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
-# Note: images are 4000x3000 (px)
+# Note: images are 4000x3000 (px) i.e. 0 <= x <= 4000, 0 <= y <= 3000
 img1Points = list(
   list(id = 1, x = 3203, y = 173, isCoral = 0), ## sand (TODO)
   list(id = 2, x = 1726, y = 356, isCoral = 0),
@@ -31,7 +31,17 @@ img3Points = list(
   list(id = 2, x = 4000, y = 3000, isCoral = 0)
 )
 
-R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" #TODO: Subject to change
+img4Points = list(
+  list(id = 1, x = 0, y = 0, isCoral = 0),
+  list(id = 2, x = 4000, y = 3000, isCoral = 0)
+)
+
+img5Points = list(
+  list(id = 1, x = 0, y = 0, isCoral = 0),
+  list(id = 2, x = 4000, y = 3000, isCoral = 0)
+)
+
+R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
 
 R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d/")
 
@@ -50,12 +60,12 @@ img_paths_and_points <- list(
   list(img = img_paths[1], img_points = img1Points),
   list(img = img_paths[2], img_points = img2Points),
   list(img = img_paths[3], img_points = img3Points),
-  list(img = img_paths[4], img_points = img3Points),
-  list(img = img_paths[5], img_points = img3Points)
+  list(img = img_paths[4], img_points = img4Points),
+  list(img = img_paths[5], img_points = img5Points)
 )
 
 set_random_images(img_paths_and_points)
 
-set_metadata("2d", "training") # DON'T CHANGE
+shared_setup_scene("2d", "training") # DON'T CHANGE
 
-shared_setup_scene("2d", "training")
+shared_generate_markers("2d")
