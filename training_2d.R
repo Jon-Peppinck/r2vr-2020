@@ -66,4 +66,4 @@ img_paths_and_points <- list(
 
 set_random_images(img_paths_and_points)
 
-shared_setup_scene("2d", "training") # DON'T CHANGE
+animals <- shared_setup_scene("2d", "training") # DON'T CHANGE

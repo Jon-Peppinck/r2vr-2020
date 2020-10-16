@@ -26,8 +26,12 @@ shared_setup_scene <- function(module, module_type){
   # NOTE: Import to set META DATA for network requests
   set_metadata(module, module_type)
   
+  cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/js/"
   js_file <- paste0(module_type, module)
-  js_cdn <- paste0("https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@master/inst/js/", js_file)
+  js_cdn <- paste0(cdn_js_folder, js_file)
+  button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
+  look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
+
   
   if (module == "2d") {
     # Create a canvas for the image to be attached to
@@ -35,7 +39,7 @@ shared_setup_scene <- function(module, module_type){
       .tag = "plane",
       # TODO: CDN Subject to change
       .js_sources = list(
-        "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master/inst/js/button_controls.js",
+        button_controls_cdn,
         js_cdn
       ),
       .assets = list(image2, image3),
@@ -57,8 +61,8 @@ shared_setup_scene <- function(module, module_type){
     canvas_3d <- a_entity(
       .tag = "sky",
       .js_sources = list(
-        "./inst/js/button_controls.js",
-        "./inst/js/look_at.js",
+        button_controls_cdn,
+        look_at_cdn,
         js_cdn
       ),
       id = "canvas",
@@ -105,7 +109,7 @@ shared_setup_scene <- function(module, module_type){
 
   assign("list_of_children_entities", list(canvas, camera, user, meta_data), envir = .GlobalEnv)
   
-  shared_generate_markers(module)
+  shared_generate_markers(module, module_type)
   ## Render Scene
   animals <- a_scene(
     .children = list_of_children_entities,

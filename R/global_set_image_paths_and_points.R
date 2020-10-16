@@ -46,6 +46,7 @@ set_random_images <- function(image_paths_and_points, number_of_images = 3) {
     stop(paste("Please select between 1 and", length(image_paths_and_points), "images to set. You entered", number_of_images, "but there are only", length(image_paths_and_points), "images to select from" ))
   }
   selected_image_paths_and_points <- sample(image_paths_and_points, 3, replace=FALSE)
+  assign("selected_image_paths_and_points", selected_image_paths_and_points, envir = .GlobalEnv)
   
   # Create image assets for selected images
   for (i in 1:length(selected_image_paths_and_points)) {
