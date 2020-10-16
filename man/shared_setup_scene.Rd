@@ -11,6 +11,9 @@ shared_setup_scene(module, module_type)
 
 \item{module_type}{String "training" || "testing"}
 }
+\value{
+A-Frame entity scene
+}
 \description{
 Sets up the canvas, camera/cursor, and metadata for the selected module and module type. Also renders USER and META DATA  as invisible entities for the DOM to access data for network requests
 }

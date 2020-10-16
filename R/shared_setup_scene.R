@@ -3,6 +3,8 @@
 #' @param module String "2d" || "3d"
 #' @param module_type String "training" || "testing"
 #'
+#' @return A-Frame entity scene
+#'
 #' @examples 
 #' \donttest{
 #' shared_setup_scene("2d", "training")
@@ -102,4 +104,16 @@ shared_setup_scene <- function(module, module_type){
   )
 
   assign("list_of_children_entities", list(canvas, camera, user, meta_data), envir = .GlobalEnv)
+  
+  shared_generate_markers(module)
+  ## Render Scene
+  animals <- a_scene(
+    .children = list_of_children_entities,
+    .websocket = TRUE,
+    .websocket_host = IPv4_ADDRESS,
+    .template = "empty",
+    button_controls = "debug: true;",
+    toggle_menu_listen = ""
+  )
+  return(animals)
 }
