@@ -4,7 +4,7 @@
 \alias{go_to}
 \title{Go to either the next image or navigate to a selected image by index}
 \usage{
-go_to(index = NA, image_paths = img_paths_and_points)
+go_to(index = NA, image_paths = selected_image_paths_and_points)
 }
 \arguments{
 \item{index}{Optional Integer to indicate which image to navigate to}

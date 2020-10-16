@@ -69,4 +69,6 @@ set_random_images <- function(image_paths_and_points, number_of_images = 3) {
     # Assign image<n>Points variable to its corresponding image points
     assign(image_number_points, current_img_points, envir = .GlobalEnv)
   }
+  
+  set_go_to_context(image_paths_and_points)
 }

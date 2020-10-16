@@ -32,6 +32,7 @@ fixed_markers <- function(module = MODULE, image_paths_and_points = selected_ima
   
   # Find which image to generate the points for
   if (!exists("CONTEXT_INDEX")) {
+    # NOTE: Consider removing check when set_go_to_context called before scene created
     selected_image_points <- image_paths_and_points[[1]]$img_points
   } else {
     selected_image_points <- image_paths_and_points[[CONTEXT_INDEX]]$img_points

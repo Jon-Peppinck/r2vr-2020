@@ -12,7 +12,7 @@
 #' }
 #'
 #' @export
-go_to <- function(index = NA, image_paths = img_paths_and_points) {
+go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   if (!is.na(index) && index > length(image_paths)) {
     stop("Please ensure the index does not exceed the total number of images.")
   }
@@ -71,4 +71,9 @@ go_to <- function(index = NA, image_paths = img_paths_and_points) {
     }
   }
   animals$send_messages(setup_scene)
+  
+  # display the fixed markers unless it is the last image, in which case check will handle displaying the markers
+  if (!has_last_image_displayed) {
+    fixed_markers()
+  }
 }
