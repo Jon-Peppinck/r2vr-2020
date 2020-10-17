@@ -109,6 +109,10 @@ shared_setup_scene <- function(module, module_type){
 
   assign("list_of_children_entities", list(canvas, camera, user, meta_data), envir = .GlobalEnv)
   
+  if (module_type == "testing") {
+    generate_evaluation_questions()
+  }
+  
   shared_generate_markers(module, module_type)
   ## Render Scene
   animals <- a_scene(
