@@ -24,7 +24,7 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   if (!has_last_image_displayed && !is.na(index)) {
     stop("Please ensure the index is not passed unless it is the last image and annotation has finished.")
   }
-  # Reset marker colour to white
+  # Reset marker colour to default color (initially white)
   reset_markers_color()
   
   # Relative path of current image
@@ -77,7 +77,7 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
     if (MODULE_TYPE == "training") {
       fixed_markers()
     } else if (MODULE_TYPE == "testing") {
-      print("TODO: randomize_markers()")
+      randomize_markers()
     }
 
   }
