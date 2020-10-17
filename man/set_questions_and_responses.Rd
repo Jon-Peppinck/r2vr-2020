@@ -2,7 +2,7 @@
 % Please edit documentation in R/testing_set_evaluation_questions.R
 \name{set_questions_and_responses}
 \alias{set_questions_and_responses}
-\title{Set the evaluation questions and responses}
+\title{Set the evaluation questions and responses and associated question context (i.e. current question number from evaluation questions)}
 \usage{
 set_questions_and_responses(evaluation_questions)
 }
@@ -10,7 +10,7 @@ set_questions_and_responses(evaluation_questions)
 \item{evaluation_questions}{list of evaluation question lists composed of a 'question', 'answerOne', 'answerTwo', 'answerThree', and an 'answerFour'}
 }
 \description{
-Set the evaluation questions and responses
+Set the evaluation questions and responses and associated question context (i.e. current question number from evaluation questions)
 }
 \examples{
 \donttest{

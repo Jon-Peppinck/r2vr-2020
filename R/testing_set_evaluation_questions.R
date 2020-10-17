@@ -1,4 +1,4 @@
-#' Set the evaluation questions and responses
+#' Set the evaluation questions and responses and associated question context (i.e. current question number from evaluation questions)
 #'
 #' @param evaluation_questions list of evaluation question lists composed of a 'question', 'answerOne', 'answerTwo', 'answerThree', and an 'answerFour'
 #'
@@ -25,4 +25,5 @@ set_questions_and_responses <- function(evaluation_questions) {
   }
   
   assign("QUESTIONS_AND_RESPONSES", evaluation_questions, envir = .GlobalEnv)
+  assign("QUESTION_CONTEXT", 1, envir = .GlobalEnv)
 }
