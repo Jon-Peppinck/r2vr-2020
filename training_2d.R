@@ -79,3 +79,5 @@ animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
 # check(1)
 # check(2)
 # check(3)
+# end()
+# rm(list=ls())

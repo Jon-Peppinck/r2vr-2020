@@ -58,7 +58,7 @@ shared_setup_scene <- function(module, module_type){
     )
   } else if (module == "3d") {
     # Create 3D sky with images
-    canvas_3d <- a_entity(
+    canvas <- a_entity(
       .tag = "sky",
       .js_sources = list(
         button_controls_cdn,
@@ -66,7 +66,7 @@ shared_setup_scene <- function(module, module_type){
         js_cdn
       ),
       id = "canvas",
-      class = img_paths[[1]]$img,
+      class = image1Path,
       src = image1,
       rotation = c(0, 0, 0),
       .assets = list(

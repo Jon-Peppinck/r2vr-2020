@@ -51,9 +51,12 @@ animals <- shared_setup_scene("2d", "testing") # DON'T CHANGE
 
 ## COMMANDS - 2D Testing ##
 
+# rm(list=ls())
 # start()
 # randomize_markers()
 # go_to()
 # go_to()
 # ask_question(1)
 # ask_question(2)
+# end()
+# rm(list=ls())
