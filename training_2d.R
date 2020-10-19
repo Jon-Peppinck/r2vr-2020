@@ -8,7 +8,9 @@ set_user("Jon-Peppinck")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "2d"
-set_marker_and_props("2d") 
+# e.g. set_marker_and_props("2d", 15, "large")
+# set_marker_and_props("2d") 
+set_marker_and_props("2d", 15, "small") 
 
 ## OPTIONAL: '?set_colors'
 set_colors()
@@ -27,15 +29,16 @@ img2Points = list(
 )
 
 img3Points = list(
-  list(id = 1, x = 0, y = 0, isCoral = 0),
-  list(id = 2, x = 4000, y = 3000, isCoral = 0)
+  list(id = 1, x = 300, y = 300, isCoral = 0),
+  list(id = 2, x = 800, y = 800, isCoral = 0)
 )
 
 img4Points = list(
-  list(id = 1, x = 0, y = 0, isCoral = 0),
-  list(id = 2, x = 4000, y = 3000, isCoral = 0)
+  list(id = 1, x = 800, y = 800, isCoral = 0),
+  list(id = 2, x = 1500, y = 1500, isCoral = 0)
 )
 
+# NOTE: The center point of the marker will be at both corners => enough space needs to be allowed for the marker and potentially the menu options as well
 img5Points = list(
   list(id = 1, x = 0, y = 0, isCoral = 0),
   list(id = 2, x = 4000, y = 3000, isCoral = 0)

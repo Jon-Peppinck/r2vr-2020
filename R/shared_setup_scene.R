@@ -99,6 +99,15 @@ shared_setup_scene <- function(module, module_type){
     opacity = 0,
     radius = 0
   )
+  # Invisible entity to store colors
+  colors <- a_entity(
+    .tag = "circle",
+    id = "colors",
+    class = COLORS_RESPONSIVE,
+    checked = FALSE,
+    opacity = 0,
+    radius = 0
+  )
   # Position cursor in center of camera
   camera <- a_entity(
     .tag = "camera",
@@ -107,7 +116,7 @@ shared_setup_scene <- function(module, module_type){
     position = c(0, 0, 0)
   )
 
-  assign("list_of_children_entities", list(canvas, camera, user, meta_data), envir = .GlobalEnv)
+  assign("list_of_children_entities", list(canvas, camera, user, meta_data, colors), envir = .GlobalEnv)
   
   if (module_type == "testing") {
     generate_evaluation_questions()

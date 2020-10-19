@@ -10,6 +10,9 @@ set_colors(
   not_coral = "#969696",
   text = "#000000",
   plane = "#FFFFFF",
+  check_correct = "#00FF00",
+  check_incorrect = "FF0000",
+  evaluation_selection = "00FF00",
   cursor = "#FF0000"
 )
 }
@@ -24,6 +27,12 @@ set_colors(
 
 \item{plane}{Character string of the HEX color}
 
+\item{check_correct}{Character string of the HEX color}
+
+\item{check_incorrect}{Character string of the HEX color}
+
+\item{evaluation_selection}{Character string of the HEX color}
+
 \item{cursor}{Character string of the HEX color}
 }
 \description{
@@ -35,7 +44,7 @@ set_colors()
 
 set_colors("#FFFFFF")
 
-set_colors("#FFFFFF", "#FF95BC", "#969696", "#000000", "#FFFFFF", "#FF0000")
+set_colors("#FFFFFF", "#FF95BC", "#969696", "#000000", "#FFFFFF", "#00FF00", "#FF0000", "#00FF00", "#FF0000")
 }
 
 }
