@@ -45,4 +45,15 @@ evaluation_questions <- list(
 )
 
 ## OPTIONAL: '?set_questions_and_responses'
-set_questions_and_responses()
+set_questions_and_responses(evaluation_questions)
+
+animals <- shared_setup_scene("2d", "testing") # DON'T CHANGE
+
+## COMMANDS - 2D Testing ##
+
+# start()
+# randomize_markers()
+# go_to()
+# go_to()
+# ask_question(1)
+# ask_question(2)

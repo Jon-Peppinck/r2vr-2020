@@ -46,6 +46,7 @@ R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject 
 R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d/")
 
 # TODO: Select images (4000x3000px)
+# NOTE: If have other local images on PC can change img_paths to be a vector of relative file location for the current working directory
 img_paths <- paste0(
   R2VR_2D_IMAGES,
   c("49001074001.jpeg",
@@ -69,7 +70,7 @@ set_random_images(img_paths_and_points)
 animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
 
 
-## COMMANDS ##
+## COMMANDS - 2D TRAINING ##
 
 # start()
 # fixed_markers()
