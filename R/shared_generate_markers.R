@@ -40,7 +40,7 @@ shared_generate_markers <- function(module = MODULE, module_type = MODULE_TYPE) 
       
       coral_label_text_x <- -2 * MARKER_OUTER_RADIUS - TEXT_BOX_EDGE_SIZE
       not_coral_label_text_x <- MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE
-      text_size <- 2.5 * MARKER_OUTER_RADIUS
+      text_size <- 25 * MARKER_OUTER_RADIUS
       
       coral_label <- a_entity(
         .tag = "text",
