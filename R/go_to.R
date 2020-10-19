@@ -72,13 +72,16 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   }
   animals$send_messages(setup_scene)
   
-  # display the fixed markers unless it is the last image, in which case check will handle displaying the markers
-  if (!has_last_image_displayed) {
-    if (MODULE_TYPE == "training") {
+
+  if (MODULE_TYPE == "training") {
+    # Display fixed markers when go_to() next image is called, unless it is the last image, in which case check will handle displaying the markers
+    if (!has_last_image_displayed) {
       fixed_markers()
-    } else if (MODULE_TYPE == "testing") {
+    }
+  } else if (MODULE_TYPE == "testing") {
+    # randomize the position of the markers
       randomize_markers()
     }
-
   }
+  
 }
