@@ -81,7 +81,6 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   } else if (MODULE_TYPE == "testing") {
     # randomize the position of the markers
       randomize_markers()
-    }
   }
   
 }
