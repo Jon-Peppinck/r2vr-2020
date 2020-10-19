@@ -20,7 +20,7 @@
 #' }
 #'
 #' @export
-set_colors <- function(marker = "#FFFFFF", coral = "#FF95BC", not_coral = "#969696", text = "#000000", plane = "#FFFFFF", check_correct = "#00FF00", check_incorrect = "FF0000", evaluation_selection = "00FF00", cursor = "#FF0000") {
+set_colors <- function(marker = "#FFFFFF", coral = "#FF95BC", not_coral = "#969696", text = "#000000", plane = "#FFFFFF", check_correct = "#00FF00", check_incorrect = "#FF0000", evaluation_selection = "#00FF00", cursor = "#FF0000") {
   if (!is.character(marker) || !is.character(coral) || !is.character(not_coral) || !is.character(text) || !is.character(plane) || !is.character(check_correct) || !is.character(check_incorrect) || !is.character(evaluation_selection) || !is.character(cursor)) {
     stop("Please enter either the HEX code or A-Frame color as a Character string")
   }
@@ -34,7 +34,8 @@ set_colors <- function(marker = "#FFFFFF", coral = "#FF95BC", not_coral = "#9696
   assign("COLOR_EVALUATION_SELECTION", evaluation_selection, envir = .GlobalEnv)
   assign("COLOR_CAMERA_CURSOR", cursor, envir = .GlobalEnv)
   
-  responsive_colors <- list(coral = coral, not_coral = not_coral, plane = plane, check_correct = check_correct, check_incorrect = check_incorrect, evaluation_selection = evaluation_selection)
+  # coral/not_coral/plane/check_correct/check_incorrect/evaluation_selection
+  responsive_colors <- paste(coral, not_coral, plane, check_correct, check_incorrect, evaluation_selection, sep="/")
   
   assign("COLORS_RESPONSIVE", responsive_colors, envir = .GlobalEnv)
 }

@@ -6,34 +6,32 @@ const numberAsWordLookup = {
   4: 'Four',
 };
 
-export const EVALUATION_RESPONSE_COLOR = '#00FF00';
-export const EVALUATION_RESPONSE_DEFAULT_COLOR = '#FFFFFF';
-
 export const setOptionColor = (
-  optionResponseNumber: Shared.QuestionResponseOption
+  optionResponseNumber: Shared.QuestionResponseOption,
+  colorHex: string
 ) => {
   const optionNumberAsWord = numberAsWordLookup[optionResponseNumber];
   document
     .getElementById(`option${optionNumberAsWord}Plane`)!
-    .setAttribute('color', EVALUATION_RESPONSE_COLOR);
+    .setAttribute('color', colorHex);
 };
 
-export const resetOptionColor = () => {
+export const resetOptionColor = (colorHex: string) => {
   Object.values(numberAsWordLookup).forEach((optionNumberAsWord) => {
     document
       .getElementById(`option${optionNumberAsWord}Plane`)!
-      .setAttribute('color', EVALUATION_RESPONSE_DEFAULT_COLOR);
+      .setAttribute('color', colorHex);
   });
 };
 
-export const setPostColor = () => {
+export const setPostColor = (colorHex: string) => {
   document
     .getElementById('postPlane')!
-    .setAttribute('color', EVALUATION_RESPONSE_COLOR);
+    .setAttribute('color', colorHex);
 };
 
-export const resetPostColor = () => {
+export const resetPostColor = (colorHex: string) => {
   document
     .getElementById('postPlane')!
-    .setAttribute('color', EVALUATION_RESPONSE_DEFAULT_COLOR);
+    .setAttribute('color', colorHex);
 };

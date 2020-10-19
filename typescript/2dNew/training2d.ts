@@ -6,8 +6,9 @@ import {
   boundPostAnnotation,
   boundUpdateAnnotation,
 } from './store/annotation/AnnotationAction';
-import boundGetUser from './store/user/UserAction';
 import boundGetMetaData from './store/metadata/MetaDataAction';
+import boundGetCustomColors from './store/colors/ColorsAction';
+import boundGetUser from './store/user/UserAction';
 
 import { getImage, imageObserver } from './helpers/image';
 import getMarkerIndex from './helpers/findMarkerIndex';
@@ -41,6 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialImage = getImage();
   boundPushNewImage(initialImage);
   imageObserver();
+
+  const colors = document.getElementById('colors')!.className.split('/');
+  const [coral, notCoral, plane, correct, incorrect, evaluationSelection] = colors;
+  boundGetCustomColors({ coral, notCoral, plane, correct, incorrect, evaluationSelection })
 });
 
 AFRAME.registerComponent('raycaster-listen', {
@@ -71,11 +76,14 @@ AFRAME.registerComponent('raycaster-listen', {
 
         const foundIndex = getMarkerIndex(id);
 
+        const state = store.getState();
+        const { coral, notCoral } = state.colorsReducer;
+
         if (intersectedElId.startsWith('menuCoral')) {
-          setMarkerColor(id, 1);
+          setMarkerColor(id, coral);
           marker = { id, isCoral: 1, x, y };
         } else {
-          setMarkerColor(id, 0);
+          setMarkerColor(id, notCoral);
           marker = { id, isCoral: 0, x, y };
         }
 

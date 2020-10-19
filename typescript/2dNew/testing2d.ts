@@ -11,6 +11,7 @@ import {
   boundPostEvaluation,
   boundSelectEvaluation,
 } from './store/evaluation/EvaluationAction';
+import boundGetCustomColors from './store/colors/ColorsAction';
 import boundGetMetaData from './store/metadata/MetaDataAction';
 import boundGetUser from './store/user/UserAction';
 
@@ -57,6 +58,10 @@ document.addEventListener('DOMContentLoaded', () => {
   evaluationObserver();
   // Detects change in question plane to post last annotation (singleton)
   questionObserver();
+
+  const colors = document.getElementById('colors')!.className.split('/');
+  const [coral, notCoral, plane, correct, incorrect, evaluationSelection] = colors;
+  boundGetCustomColors({ coral, notCoral, plane, correct, incorrect, evaluationSelection })
 });
 
 AFRAME.registerComponent('raycaster-listen', {
@@ -87,11 +92,14 @@ AFRAME.registerComponent('raycaster-listen', {
 
         const foundIndex = getMarkerIndex(id);
 
+        const state = store.getState();
+        const { coral, notCoral } = state.colorsReducer;
+
         if (intersectedElId.startsWith('menuCoral')) {
-          setMarkerColor(id, 1);
+          setMarkerColor(id, coral);
           marker = { id, isCoral: 1, x, y };
         } else {
-          setMarkerColor(id, 0);
+          setMarkerColor(id, notCoral);
           marker = { id, isCoral: 0, x, y };
         }
 
@@ -130,6 +138,7 @@ AFRAME.registerComponent('toggle-menu-listen', {
             isCurrentOptionSelected,
             isCurrentOptionSubmitted,
           } = state.evaluationReducer;
+          const { evaluationSelection, plane } = state.colorsReducer;
 
           const evaluationEl = document.getElementById(
             intersectedElId
@@ -141,11 +150,11 @@ AFRAME.registerComponent('toggle-menu-listen', {
           ) as Shared.QuestionResponseOption;
           if (!isCurrentOptionSubmitted) {
             if (!isCurrentOptionSelected) {
-              setOptionColor(evaluationOption);
+              setOptionColor(evaluationOption, evaluationSelection);
               boundSelectEvaluation(evaluationOption);
             } else {
-              resetOptionColor();
-              setOptionColor(evaluationOption);
+              resetOptionColor(plane);
+              setOptionColor(evaluationOption, evaluationSelection);
               boundChangeEvaluation(evaluationOption);
             }
           }
@@ -156,8 +165,10 @@ AFRAME.registerComponent('toggle-menu-listen', {
             isCurrentOptionSelected,
             isCurrentOptionSubmitted,
           } = state.evaluationReducer;
+          const { evaluationSelection } = state.colorsReducer;
+
           if (!isCurrentOptionSelected || isCurrentOptionSubmitted) return;
-          setPostColor();
+          setPostColor(evaluationSelection);
           boundPostEvaluation();
           postEvaluation();
         }

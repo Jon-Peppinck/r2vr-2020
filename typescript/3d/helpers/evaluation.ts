@@ -1,3 +1,5 @@
+import { store } from '../store/rootStore';
+
 import {
   resetOptionColor,
   resetPostColor,
@@ -6,8 +8,11 @@ import { boundNewEvaluation } from '../store/evaluation/EvaluationAction';
 
 export const evaluationObserver = () => {
   const mutationObserver = new MutationObserver(() => {
-    resetOptionColor();
-    resetPostColor();
+    const state = store.getState();
+    const { plane } = state.colorsReducer;
+
+    resetOptionColor(plane);
+    resetPostColor(plane);
     boundNewEvaluation();
   });
 
