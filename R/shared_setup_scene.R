@@ -32,7 +32,7 @@ shared_setup_scene <- function(module, module_type){
   button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
   # TODO: remove
-  cdn_js_file_dev <- "./inst/js/training2d.js"
+  cdn_js_file_dev <- paste0("./inst/js/", js_file)
 
   
   if (module == "2d") {

@@ -11,7 +11,18 @@ set_user("Jon-Peppinck")
 set_marker_and_props("2d") 
 
 ## OPTIONAL: '?set_colors'
-set_colors()
+# set_colors()
+set_colors(
+  marker = "#0000FF",
+  coral = "#FF00FF",
+  not_coral = "#FFFF00",
+  text = "#FFFFFF",
+  plane = "#000000",
+  check_correct = "#00FFFF",
+  check_incorrect = "#FFDDAA",
+  evaluation_selection = "#FF0000",
+  cursor = "#00FF00"
+)
 
 R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
 

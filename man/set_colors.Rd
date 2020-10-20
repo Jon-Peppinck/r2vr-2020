@@ -11,8 +11,8 @@ set_colors(
   text = "#000000",
   plane = "#FFFFFF",
   check_correct = "#00FF00",
-  check_incorrect = "FF0000",
-  evaluation_selection = "00FF00",
+  check_incorrect = "#FF0000",
+  evaluation_selection = "#00FF00",
   cursor = "#FF0000"
 )
 }
