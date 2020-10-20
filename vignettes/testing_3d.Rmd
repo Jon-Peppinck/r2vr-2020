@@ -1,3 +1,33 @@
+---
+title: "Coral Cover (3D Testing)"
+author: "Jon Peppinck"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_width: 7
+fig_height: 3
+vignette: >
+  %\VignetteIndexEntry{Coral Cover (3D Testing)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r setup, include = FALSE}
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 3,
+  fig.width = 7
+  )
+require(knitr)
+```
+  
+# Annotate 3D Virtual Reality Images by Creating an Interactive WebVR scene
+
+`r2vr` has been extended to be able to help train users to annotate virtual reality images more accurately. The 3D Testing will randomly select `3` images from a pool of images. Users are able to annotate selected markers (for each image) as either `C` or `N` to classify the bounded region as either containing mostly `Coral` or `Not Coral` respectively. The user will also be prompted to answer evaluation questions. The data generated from the 3d training and 3d testing can be read into R for analysis.
+
+## Case Study: Coral Cover
+
+```{r}
 library(r2vr)
 
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
@@ -47,17 +77,18 @@ evaluation_questions <- list(
 set_questions_and_responses(evaluation_questions)
 
 animals <- shared_setup_scene("3d", "testing") # DON'T CHANGE
+```
 
-## COMMANDS - 3D Testing ##
+## COMMANDS - 3D Testing
 
-# rm(list=ls())
-# start()
-# randomize_markers()
-# go_to()
-# go_to()
-# ask_question(1)
-# ask_question(2)
-# end()
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/testing") # TODO: deploy
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")
-# rm(list=ls())
+rm(list=ls())
+start()
+randomize_markers()
+go_to()
+go_to()
+ask_question(1)
+ask_question(2)
+end()
+data.df <- read("https://r2vr.herokuapp.com/api/3d/testing")
+data.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")
+rm(list=ls())

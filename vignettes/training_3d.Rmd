@@ -1,3 +1,33 @@
+---
+title: "Coral Cover (3D Training)"
+author: "Jon Peppinck"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+fig_width: 7
+fig_height: 3
+vignette: >
+  %\VignetteIndexEntry{Coral Cover (3D Training)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r setup, include = FALSE}
+  knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.height = 3,
+  fig.width = 7
+  )
+require(knitr)
+```
+  
+# Annotate 3D Virtual Reality Images by Creating an Interactive WebVR scene
+
+`r2vr` has been extended to be able to help train users to annotate virtual reality images more accurately. The 3D Training will randomly select `3` images from a pool of images. Users are able to annotate selected markers (for each image) as either `C` or `N` to classify the bounded region as either containing mostly `Coral` or `Not Coral` respectively. The user's annotations are then compared to a `gold standard`, which are the correct annotations for the corresponding fixed points in which the user annotated. The user will then be able to receive visual feedback with markers changing to `green` or `red` depending on if they annotated the marker correctly or incorrectly respectively.
+
+## Case Study: Coral Cover
+
+```{r}
 library(r2vr)
 
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
@@ -66,17 +96,17 @@ img_paths_and_points <- list(
 set_random_images(img_paths_and_points)
 
 animals <- shared_setup_scene("3d", "training") # DON'T CHANGE
+```
 
+## COMMANDS - 3D TRAINING
 
-## COMMANDS - 3D TRAINING ##
-
-# start()
-# fixed_markers()
-# go_to()
-# go_to()
-# check(1)
-# check(2)
-# check(3)
-# end()
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/training") # TODO: deploy
-# rm(list=ls())
+start()
+fixed_markers()
+go_to()
+go_to()
+check(1)
+check(2)
+check(3)
+end()
+data.df <- read("https://r2vr.herokuapp.com/api/3d/training")
+rm(list=ls())
