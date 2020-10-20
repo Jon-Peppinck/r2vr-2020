@@ -16,11 +16,11 @@ set_marker_and_props("3d")
 set_colors()
 
 ## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
-# TODO: generate points s.t. they are on the surface of a sphere (same distance from camera)
+# '?random_fixed_3d_marker()'
+# Note: change 'id' and 'isCoral' and remove ',' for last random fixed marker generated
 img1Points = list(
-  list(id = 1, x = -0.268, y = -0.739, z = 0.616, isCoral = 0), # sand ?
-  list(id = 2, x =  -0.8979, y = -0.0452, z = -0.4377, isCoral = 0),
-  list(id = 3, x = -0.4749, y = -0.7584, z = 0.4463, isCoral = 0)
+  list(id = 1, x = -0.635719096717973, y = -0.559076868185302, z = 0.532253967132419, isCoral = 0), # sand?
+  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 0) # coral?
 )
 
 img2Points = list(
