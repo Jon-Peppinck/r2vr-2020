@@ -31,8 +31,8 @@ shared_setup_scene <- function(module, module_type){
   js_cdn <- paste0(cdn_js_folder, js_file)
   button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
-  # TODO: remove
-  cdn_js_file_dev <- paste0("./inst/js/", js_file)
+  # TODO: dev
+  # cdn_js_file_dev <- paste0("./inst/js/", js_file)
 
   
   if (module == "2d") {
@@ -42,8 +42,8 @@ shared_setup_scene <- function(module, module_type){
       # TODO: CDN Subject to change
       .js_sources = list(
         button_controls_cdn,
-        # js_cdn
-        cdn_js_file_dev
+        js_cdn
+        # cdn_js_file_dev
       ),
       .assets = list(image2, image3),
       id = "canvas",
