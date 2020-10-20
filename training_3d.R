@@ -8,12 +8,12 @@ set_user("Jon-Peppinck")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "3d"
-set_marker_and_props("3d") 
+set_marker_and_props("3d")
+# set_marker_and_props("3d", marker_size = "extra-large") 
 
 ## OPTIONAL: '?set_colors'
 # e.g. set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
-# set_colors()
-set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
+set_colors()
 
 ## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
 # TODO: generate points s.t. they are on the surface of a sphere (same distance from camera)

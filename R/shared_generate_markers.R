@@ -138,13 +138,17 @@ shared_generate_markers <- function(module = MODULE, module_type = MODULE_TYPE) 
         TEXT_BOX_EDGE_SIZE <- 0.5
         DELTA <- 0.0001 # Make primitive box of text label small enought so it is hidden
         
+        coral_label_text_x <- -2 * MARKER_OUTER_RADIUS - TEXT_BOX_EDGE_SIZE
+        not_coral_label_text_x <- MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE
+        text_size <- 25 * MARKER_OUTER_RADIUS
+        
         coral_label <- a_entity(
           .tag = "text",
           id = paste0("coralText", i),
           value = "C",
-          width = 100,
+          width = text_size,
           color = COLOR_TEXT,
-          position = c(-MENU_OPTION_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0.1),
+          position = c(coral_label_text_x, 0, 0.2),
           geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA),
         )
         
@@ -152,9 +156,9 @@ shared_generate_markers <- function(module = MODULE, module_type = MODULE_TYPE) 
           .tag = "text",
           id = paste0("notCoralText", i),
           value = "N",
-          width = 1.2, # TODO: check
+          width = text_size,
           color = COLOR_TEXT,
-          position = c(MARKER_OUTER_RADIUS + TEXT_BOX_EDGE_SIZE, 0, 0),
+          position = c(not_coral_label_text_x, 0, 0.2),
           geometry = list(primitive = "box", width = DELTA, height = DELTA, depth = DELTA),
         )
         
