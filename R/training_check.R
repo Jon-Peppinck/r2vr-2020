@@ -27,10 +27,10 @@ check <- function(img_number) {
   image_path <- selected_image_paths_and_points[[img_number]]$img
   # Determine the gold standard of the image to be checked
   image_gold_standard <- selected_image_paths_and_points[[img_number]]$img_points #
-  # Display fixed points in the location previously annotated
-  fixed_markers()
   # Display the image to be checked
   go_to(img_number)
+  # Display fixed points in the location previously annotated
+  fixed_markers()
   # Pick out id and isCoral from correctly annotated markers
   mutated_image_gold_standard <- list()
   # Select id and isCoral from mutated_image_gold_standard

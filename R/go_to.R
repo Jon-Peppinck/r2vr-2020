@@ -38,6 +38,12 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   # Indicate if the last image has displayed (Allows to go back to an image to check it)
   if (CONTEXT_INDEX == length(image_paths)) {
     assign("has_last_image_displayed", TRUE, envir = .GlobalEnv)
+  } else if (exists("has_last_image_displayed")) {
+    if (!exists("go_to_called_after_last_image_displayed_count")) {
+      assign("go_to_called_after_last_image_displayed_count", 1, envir = .GlobalEnv)
+    } else {
+      go_to_called_after_last_image_displayed_count = go_to_called_after_last_image_displayed_count + 1
+    }
   }
   # Set the next image path and ID
   next_image <- image_paths[[CONTEXT_INDEX]]$img
@@ -75,7 +81,7 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
 
   if (MODULE_TYPE == "training") {
     # Display fixed markers when go_to() next image is called, unless it is the last image, in which case check will handle displaying the markers
-    if (!has_last_image_displayed) {
+    if (!has_last_image_displayed || go_to_called_after_last_image_displayed_count == 1) {
       fixed_markers()
     }
   } else if (MODULE_TYPE == "testing") {

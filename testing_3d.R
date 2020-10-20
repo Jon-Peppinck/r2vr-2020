@@ -58,4 +58,6 @@ animals <- shared_setup_scene("3d", "testing") # DON'T CHANGE
 # ask_question(1)
 # ask_question(2)
 # end()
+# data.df <- read("https://r2vr.herokuapp.com/api/3d/testing") # TODO: deploy
+# data.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")
 # rm(list=ls())

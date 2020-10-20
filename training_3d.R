@@ -19,8 +19,8 @@ set_colors()
 # '?random_fixed_3d_marker()'
 # Note: change 'id' and 'isCoral' and remove ',' for last random fixed marker generated
 img1Points = list(
-  list(id = 1, x = -0.635719096717973, y = -0.559076868185302, z = 0.532253967132419, isCoral = 0), # sand?
-  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 0) # coral?
+  list(id = 1, x = -0.635719096717973, y = -0.559076868185302, z = 0.532253967132419, isCoral = 1), # coral?
+  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 1) # coral?
 )
 
 img2Points = list(
@@ -78,4 +78,5 @@ animals <- shared_setup_scene("3d", "training") # DON'T CHANGE
 # check(2)
 # check(3)
 # end()
+# data.df <- read("https://r2vr.herokuapp.com/api/3d/training") # TODO: deploy
 # rm(list=ls())
