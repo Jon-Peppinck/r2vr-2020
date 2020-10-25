@@ -14,8 +14,8 @@ set_marker_and_props("2d")
 
 ## OPTIONAL: '?set_colors'
 # e.g. set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
-# set_colors()
-set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
+set_colors()
+# set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
 
 ## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
 # Note: images are 4000x3000 (px) i.e. 0 <= x <= 4000, 0 <= y <= 3000

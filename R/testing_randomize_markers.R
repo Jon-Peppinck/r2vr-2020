@@ -50,7 +50,7 @@ randomize_markers <- function(module = MODULE) {
             id = paste0("markerContainer", n),
             component = "position",
             attributes = list(
-              x = random_coordinate_x, y = random_coordinate_y, z = canvas_z + 0.01
+              x = random_coordinate_x, y = random_coordinate_y, z = canvas_z + 0.02
             )
           ),
           # Update the specified number of points to be visible
