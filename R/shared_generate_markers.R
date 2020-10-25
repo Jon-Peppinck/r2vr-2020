@@ -100,7 +100,7 @@ shared_generate_markers <- function(module = MODULE, module_type = MODULE_TYPE) 
         .children = list(marker_boundary, marker_inner, menu_coral, menu_not_coral),
         id = paste0("markerContainer", i),
         class = "marker-container",
-        position = c(0, 0, canvas_z + 0.02),
+        position = c(0, 0, canvas_z + 0.03),
         radius_inner = 0.00001, # TODO: check 0?
         radius_outer = 0.00001,
         opacity = 0,
