@@ -9,7 +9,7 @@ set_user("Jon-Peppinck")
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "2d"
 # e.g. set_marker_and_props("2d", 15, "small") 
-set_marker_and_props("2d") 
+set_marker_and_props("2d")
 
 
 ## OPTIONAL: '?set_colors'

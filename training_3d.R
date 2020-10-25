@@ -15,6 +15,7 @@ set_marker_and_props("3d")
 # e.g. set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
 set_colors()
 
+
 ## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
 # '?random_fixed_3d_marker()'
 # Note: change 'id' and 'isCoral' and remove ',' for last random fixed marker generated

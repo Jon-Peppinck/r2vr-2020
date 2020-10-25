@@ -26,7 +26,7 @@ shared_setup_scene <- function(module, module_type){
   # NOTE: Import to set META DATA for network requests
   set_metadata(module, module_type)
   
-  cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@r2vr-build/inst/js/"
+  cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@master/inst/js/"
   js_file <- paste0(module_type, module, ".js")
   js_cdn <- paste0(cdn_js_folder, js_file)
   button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
