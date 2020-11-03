@@ -23,7 +23,7 @@ set_marker_and_props("3d")
 #   evaluation_selection = "#FF0000",
 #   cursor = "#00FF00"
 # )
-set_colors(not_coral = "#b8b27b")
+set_colors()
 
 R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
 
