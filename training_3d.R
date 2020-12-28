@@ -50,26 +50,25 @@ img4Points = list(
   list(id = 3, x = -0.741564092459525 , y = -0.0768210007796801 , z = -0.66646922705695, isCoral = 0) 
 )
 
-R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
+R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master"
 
-R2VR_3D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/3d/")
+R2VR_3D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/3d_training/")
 
 # TODO: Select images
 # NOTE: If have other local images on PC can change img_paths to be a vector of relative file location for the current working directory
 img_paths <- paste0(
   R2VR_3D_IMAGES,
   c("100030039.jpg",
-    "120261897.jpg",
-    "130030287.jpg",
-    "130050093.jpg")
+    "120050111.jpg",
+    "150280102.jpg")
 )
+
 
 img_paths_and_points <- list(
   # 3D image paths
   list(img = img_paths[1], img_points = img1Points),
   list(img = img_paths[2], img_points = img1Points),
-  list(img = img_paths[3], img_points = img1Points),
-  list(img = img_paths[4], img_points = img1Points)
+  list(img = img_paths[3], img_points = img1Points)
 )
 
 set_random_images(img_paths_and_points)

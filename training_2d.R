@@ -60,9 +60,9 @@ img3Points = list(
   list(id = 10, x = 3363, y = 2745, isCoral = 1) # Coral - Hard corals
 )
 
-R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
+R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master"
 
-R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d/")
+R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d_training/")
 
 # TODO: Select images (4000x3000px)
 # NOTE: If have other local images on PC can change img_paths to be a vector of relative file location for the current working directory

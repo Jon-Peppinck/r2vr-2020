@@ -25,27 +25,23 @@ set_colors()
 #   cursor = "#00FF00"
 # )
 
-R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
+R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master"
 
-R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d/")
+R2VR_2D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/2d_testing/")
 
 # TODO: Select images (4000x3000px)
 img_paths <- paste0(
   R2VR_2D_IMAGES,
-  c("49001074001.jpeg",
-    "49002256001.jpeg",
-    "51010026001.jpeg",
-    "49004035001.jpeg",
-    "50003181001.jpeg")
+  c("56017030401.jpeg",
+    "51017045001.jpeg",
+    "58036392301.jpeg")
 )
 
 img_paths_and_points <- list(
   # 2D image paths  4000x3000
   list(img = img_paths[1]),
   list(img = img_paths[2]),
-  list(img = img_paths[3]),
-  list(img = img_paths[4]),
-  list(img = img_paths[5])
+  list(img = img_paths[3])
 )
 
 set_random_images(img_paths_and_points) # TODO: allow for img_paths w/o points (training)
