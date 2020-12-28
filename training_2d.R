@@ -4,7 +4,7 @@ IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
 ## TODO: SET full name here
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("John-Doe")
+set_user("x-y")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "2d"
@@ -59,6 +59,7 @@ img3Points = list(
   list(id = 9, x = 2030, y = 2521, isCoral = 0), # Not Coral - sand
   list(id = 10, x = 3363, y = 2745, isCoral = 1) # Coral - Hard corals
 )
+
 
 R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master"
 

@@ -18,7 +18,7 @@ set_marker_and_props <- function(module, number_of_markers = 15, marker_size = "
   if (!is_module_ok) {
     stop("Invalid module param - Please input the string '2d' or '3d'")
   } else if (number_of_markers != as.integer(number_of_markers) || number_of_markers <= 0) {
-    stop("Please enter and integer between 1 and 20 for the number of markers")
+    stop("Please enter an integer between 1 and 20 for the number of markers")
   } else if (number_of_markers > 20) {
     stop("For performance reasons, please select 20 or less markers.")
   } else if (!is_marker_size_ok) {

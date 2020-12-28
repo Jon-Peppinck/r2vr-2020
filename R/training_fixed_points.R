@@ -15,8 +15,7 @@
 #' fixed_markers()
 #' fixed_markers("2d")
 #' fixed_markers("3d")
-#' fixed_markers("3d", 80)
-#' fixed_markers("3d", 90, selected_img_paths_and_points)              
+#' fixed_markers("3d", selected_img_paths_and_points, 90)              
 #'                                                    
 #' }
 #'
