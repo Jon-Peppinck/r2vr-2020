@@ -60,6 +60,8 @@ set_questions_and_responses(evaluation_questions)
 
 animals <- shared_setup_scene("3d", "testing") # DON'T CHANGE
 
+# vignette("testing_3d", package = "r2vr")
+
 ## COMMANDS - 3D Testing ##
 
 # rm(list=ls())
@@ -70,6 +72,6 @@ animals <- shared_setup_scene("3d", "testing") # DON'T CHANGE
 # ask_question(1)
 # ask_question(2)
 # end()
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/testing")
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")
+# testing_3d.df <- read("https://r2vr.herokuapp.com/api/3d/testing")
+# evaluation_3d.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")
 # rm(list=ls())

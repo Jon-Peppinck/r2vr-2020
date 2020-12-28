@@ -21,7 +21,15 @@ set_colors()
 # Note: change 'id' and 'isCoral' and remove ',' for last random fixed marker generated
 img1Points = list(
   list(id = 1, x = -0.635719096717973, y = -0.559076868185302, z = 0.532253967132419, isCoral = 1), # coral?
-  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 1) # coral?
+  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 1), # coral?
+  list(id = 3, x = -0.992318381661775, y = -0.123144897107894, z = -0.0118137095123529, isCoral = 0),
+  list(id = 4, x = 0.18522025240936, y = -0.424382221323645, z = 0.886336949653924, isCoral = 0),
+  list(id = 5, x = 0.337620467181165, y = -0.022623316592305, z = 0.941010417416692, isCoral = 0),
+  list(id = 6, x = -0.0346468959746449, y = -0.981810188606288, z = -0.186677117366344, isCoral = 0),
+  list(id = 7, x = -0.375322088954052, y = -0.913977365707525, z = 0.154203451704234, isCoral = 0),
+  list(id = 8, x = -0.889996244793003, y = -0.239441343946092, z = 0.388039337005466, isCoral = 0),
+  list(id = 9, x = -0.918161366572604, y = -0.0674773201816006, z = -0.390418386086822, isCoral = 0),
+  list(id = 10, x = 0.441945589834022, y = -0.449494144475618, z = -0.776298338081688, isCoral = 0)
 )
 
 img2Points = list(
@@ -59,14 +67,17 @@ img_paths <- paste0(
 img_paths_and_points <- list(
   # 3D image paths
   list(img = img_paths[1], img_points = img1Points),
-  list(img = img_paths[2], img_points = img2Points),
-  list(img = img_paths[3], img_points = img3Points),
-  list(img = img_paths[4], img_points = img4Points)
+  list(img = img_paths[2], img_points = img1Points),
+  list(img = img_paths[3], img_points = img1Points),
+  list(img = img_paths[4], img_points = img1Points)
 )
 
 set_random_images(img_paths_and_points)
 
 animals <- shared_setup_scene("3d", "training") # DON'T CHANGE
+
+
+# vignette("training_3d", package = "r2vr")
 
 
 ## COMMANDS - 3D TRAINING ##
@@ -79,5 +90,5 @@ animals <- shared_setup_scene("3d", "training") # DON'T CHANGE
 # check(2)
 # check(3)
 # end()
-# data.df <- read("https://r2vr.herokuapp.com/api/3d/training") # TODO: deploy
+# training_3d.df <- read("https://r2vr.herokuapp.com/api/3d/training")
 # rm(list=ls())

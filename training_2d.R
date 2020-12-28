@@ -4,7 +4,7 @@ IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
 ## TODO: SET full name here
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("Jon-Peppinck")
+set_user("John-Doe")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "2d"
@@ -85,6 +85,8 @@ set_random_images(img_paths_and_points)
 animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
 
 
+# vignette("training_2d", package = "r2vr")
+
 ## COMMANDS - 2D TRAINING ##
 
 # start()
@@ -95,5 +97,5 @@ animals <- shared_setup_scene("2d", "training") # DON'T CHANGE
 # check(2)
 # check(3)
 # end()
-# data.df <- read("https://r2vr.herokuapp.com/api/2d/training") # TODO: deploy
+# training_2d.df <- read("https://r2vr.herokuapp.com/api/2d/training")
 # rm(list=ls())

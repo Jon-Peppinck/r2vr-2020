@@ -12,18 +12,18 @@ set_user("Jon-Peppinck")
 set_marker_and_props("2d", 10, "large")
 
 ## OPTIONAL: '?set_colors'
-# set_colors()
-set_colors(
-  marker = "#0000FF",
-  coral = "#FF00FF",
-  not_coral = "#FFFF00",
-  text = "#FFFFFF",
-  plane = "#000000",
-  check_correct = "#00FFFF",
-  check_incorrect = "#FFDDAA",
-  evaluation_selection = "#FF0000",
-  cursor = "#00FF00"
-)
+set_colors()
+# set_colors(
+#   marker = "#0000FF",
+#   coral = "#FF00FF",
+#   not_coral = "#FFFF00",
+#   text = "#FFFFFF",
+#   plane = "#000000",
+#   check_correct = "#00FFFF",
+#   check_incorrect = "#FFDDAA",
+#   evaluation_selection = "#FF0000",
+#   cursor = "#00FF00"
+# )
 
 R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@experiment" # NOTE: Subject to change
 
@@ -61,6 +61,8 @@ set_questions_and_responses(evaluation_questions)
 
 animals <- shared_setup_scene("2d", "testing") # DON'T CHANGE
 
+# vignette("testing_2d", package = "r2vr")
+
 ## COMMANDS - 2D Testing ##
 
 # rm(list=ls())
@@ -71,6 +73,6 @@ animals <- shared_setup_scene("2d", "testing") # DON'T CHANGE
 # ask_question(1)
 # ask_question(2)
 # end()
-# data.df <- read("https://r2vr.herokuapp.com/api/2d/testing")
-# data.df <- read("https://r2vr.herokuapp.com/api/2d/evaluation")
+# testing_2d.df <- read("https://r2vr.herokuapp.com/api/2d/testing")
+# evaluation_2d.df <- read("https://r2vr.herokuapp.com/api/2d/evaluation")
 # rm(list=ls())
