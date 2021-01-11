@@ -2,9 +2,8 @@ library(r2vr)
 
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
-## TODO: SET full name here
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("x-y")
+set_user("EXP-A")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "3d"
@@ -15,8 +14,6 @@ set_marker_and_props("3d")
 # e.g. set_colors(coral = "#FFFF00", not_coral = "#FF00FF", evaluation_selection = "#0000FF")
 set_colors()
 
-
-## TODO: SET the 'Gold Standard points' for the corresponding 'img_paths' (set below)
 # '?random_fixed_3d_marker()'
 # Note: change 'id' and 'isCoral' and remove ',' for last random fixed marker generated
 # 100030039.jpg
@@ -66,7 +63,6 @@ R2VR_CDN <- "https://cdn.jsdelivr.net/gh/ACEMS/r2vr@master"
 
 R2VR_3D_IMAGES <- paste0(R2VR_CDN, "/inst/ext/images/3d_training/")
 
-# TODO: Select images
 # NOTE: If have other local images on PC can change img_paths to be a vector of relative file location for the current working directory
 img_paths <- paste0(
   R2VR_3D_IMAGES,
@@ -74,7 +70,6 @@ img_paths <- paste0(
     "120050111.jpg",
     "150280102.jpg")
 )
-
 
 img_paths_and_points <- list(
   # 3D image paths
@@ -89,7 +84,6 @@ animals <- shared_setup_scene("3d", "training") # DON'T CHANGE
 
 
 # vignette("training_3d", package = "r2vr")
-
 
 ## COMMANDS - 3D TRAINING ##
 

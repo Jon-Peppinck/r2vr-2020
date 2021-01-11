@@ -2,9 +2,8 @@ library(r2vr)
 
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
-## TODO: SET full name here
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("x-y")
+set_user("EXP-A")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "3d"
@@ -23,6 +22,7 @@ set_marker_and_props("3d", 10)
 #   evaluation_selection = "#FF0000",
 #   cursor = "#00FF00"
 # )
+
 set_colors()
 
 # 130010712.jpg
@@ -127,10 +127,10 @@ img_paths_and_points <- list(
 
 set_random_images(img_paths_and_points)
 
-## TODO: SET evaluation question and responses here
 evaluation_questions <- list(
-  list(question = "Did you enjoy this experiment?", answerOne = "Very much", answerTwo = "Yes", answerThree = "A little", answerFour = "No"),
-  list(question = "On a scale of 1-4, how would you rate your experience?", answerOne = "1", answerTwo = "2", answerThree = "3", answerFour = "4")
+  list(question = "How much did the visual display quality interfere or distract you from performing assigned tasks or required activities?", answerOne = "Not at all", answerTwo = "A bit", answerThree = "A lot", answerFour = "Completely"),
+  list(question = "How involved were you in the virtual environment experience?", answerOne = "Not at all", answerTwo = "A bit", answerThree = "A lot", answerFour = "Completely"),
+  list(question = "Did you find completing the training helpful to annotate the testing images more accurately?", answerOne = "Not at all", answerTwo = "A bit", answerThree = "A lot", answerFour = "Completely")
 )
 
 ## OPTIONAL: '?set_questions_and_responses'
