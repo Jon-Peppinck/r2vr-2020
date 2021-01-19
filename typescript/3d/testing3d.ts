@@ -212,7 +212,7 @@ AFRAME.registerComponent('r2vr-message-router', {
       );
     }
     
-    console.error(67, hostData);
+    console.error(66, hostData);
 
     var ws = new WebSocket('ws://' + hostData + ':' + this.data.port) ;
 
