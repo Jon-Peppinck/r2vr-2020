@@ -198,15 +198,23 @@ AFRAME.registerComponent('r2vr-message-router', {
   },
 
   init: function () {
-    console.log(66, this.data, this.data.host);
+    console.error(65, this.data, this.data.host);
 
-    let hostAddress = this.data.host.length > 1 
-    ? this.data.host[0] 
-    : this.data.host
+    let hostData;
+
+    if (typeof this.data.host === "string") {
+      hostData = this.data.host
+    } else if (Array.isArray(this.data.host) && this.data.host.length >= 1) {
+      hostData = this.data.host[0];
+    } else {
+      throw new Error(
+        `Expecting one IP address as a string, host = ${this.data.host}`
+      );
+    }
     
-    console.log(67, hostAddress);
+    console.error(67, hostData);
 
-    var ws = new WebSocket('ws://' + hostAddress + ':' + this.data.port) ;
+    var ws = new WebSocket('ws://' + hostData + ':' + this.data.port) ;
 
     // var ws = new WebSocket('ws://' + this.data.host + ':' + this.data.port);
 
