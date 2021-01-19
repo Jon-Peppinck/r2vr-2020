@@ -3,33 +3,20 @@ library(r2vr)
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("EXP-A")
+set_user("Gold-Standard")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "3d"
-set_marker_and_props("3d", 10) 
+set_marker_and_props("3d", 20) 
 
 ## OPTIONAL: '?set_colors'
-# set_colors()
-# set_colors(
-#   marker = "#0000FF",
-#   coral = "#FF00FF",
-#   not_coral = "#FFFF00",
-#   text = "#FFFFFF",
-#   plane = "#000000",
-#   check_correct = "#00FFFF",
-#   check_incorrect = "#FFDDAA",
-#   evaluation_selection = "#FF0000",
-#   cursor = "#00FF00"
-# )
-
 set_colors()
 
 # 130010712.jpg
 ### TODO: All image points have isCoral set to 0 and need to be annotated
 img1Points = list(
   list(id = 1, x = -0.635719096717973, y = -0.559076868185302, z = 0.532253967132419, isCoral = 0), # e.g. Coral/Not Coral - Hard Coral / Sand
-  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 0),
+  list(id = 2, x = 0.11002160221726, y = -0.919201260096651, z = -0.378106189426035, isCoral = 0), # TODO: change: e.g. Coral - Hard Coral
   list(id = 3, x = 0.4020168212195, y = -0.778777269414547, z = 0.481547962408513, isCoral = 0),
   list(id = 4, x = 0.18522025240936, y = -0.424382221323645, z = 0.886336949653924, isCoral = 0),
   list(id = 5, x = 0.228054080660746, y = -0.598287532680161, z = -0.768142802175134, isCoral = 0),
@@ -120,9 +107,9 @@ select_random_fixed_points <- function(img_points, number_to_select) {
 
 img_paths_and_points <- list(
   # 2D image paths  4000x3000
-  list(img = img_paths[1], img_points = select_random_fixed_points(img1Points, 10)),
-  list(img = img_paths[2], img_points = select_random_fixed_points(img2Points, 10)),
-  list(img = img_paths[3], img_points = select_random_fixed_points(img3Points, 10))
+  list(img = img_paths[1], img_points = select_random_fixed_points(img1Points, 20)),
+  list(img = img_paths[2], img_points = select_random_fixed_points(img2Points, 20)),
+  list(img = img_paths[3], img_points = select_random_fixed_points(img3Points, 20))
 )
 
 set_random_images(img_paths_and_points)
@@ -144,12 +131,12 @@ animals <- shared_setup_scene("3d", "testing") # DON'T CHANGE
 
 # rm(list=ls())
 # start()
-# randomize_markers() ## Testing
-# fixed_markers() ## Experiment Testing - random 10 from 20 fixed
+# fixed_markers()
 # go_to()
 # go_to()
 # ask_question(1)
 # ask_question(2)
+# ask_question(3)
 # end()
 # testing_3d.df <- read("https://r2vr.herokuapp.com/api/3d/testing")
 # evaluation_3d.df <- read("https://r2vr.herokuapp.com/api/3d/evaluation")

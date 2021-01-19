@@ -3,7 +3,7 @@ library(r2vr)
 IPv4_ADDRESS <- find_IP() # Note: If not on Windows, enter IP directly
 
 # set_user("Firstname-Lastname") # default to be overridden
-set_user("EXP-A")
+set_user("EXP-H")
 
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "3d"

@@ -198,7 +198,17 @@ AFRAME.registerComponent('r2vr-message-router', {
   },
 
   init: function () {
-    var ws = new WebSocket('ws://' + this.data.host + ':' + this.data.port);
+    console.log(67, this.data, this.data.host);
+
+    let hostAddress = this.data.host.length > 1 
+    ? this.data.host[0] 
+    : this.data.host
+    
+    console.log(68, hostAddress);
+
+    var ws = new WebSocket('ws://' + hostAddress + ':' + this.data.port) ;
+
+    // var ws = new WebSocket('ws://' + this.data.host + ':' + this.data.port);
 
     ws.onopen = function () {
       console.log(
