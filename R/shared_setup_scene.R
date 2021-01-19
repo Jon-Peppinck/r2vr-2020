@@ -36,7 +36,7 @@ shared_setup_scene <- function(module, module_type){
   
   # TODO: TEMP ONLY - DEBUG
   if (module == "3d" && module_type == "testing") {
-    cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@temp/inst/js/"
+    cdn_js_folder <<- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@temp/inst/js/"
   }
 
   
