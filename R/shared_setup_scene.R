@@ -27,18 +27,16 @@ shared_setup_scene <- function(module, module_type){
   set_metadata(module, module_type)
   
   cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@master/inst/js/"
+  # TODO: TEMP ONLY - DEBUG
+  if (module == "3d" && module_type == "testing") {
+    cdn_js_folder <<- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@temp/inst/js/"
+  }
   js_file <- paste0(module_type, module, ".js")
   js_cdn <- paste0(cdn_js_folder, js_file)
   button_controls_cdn <- paste0(cdn_js_folder, "button_controls.js")
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
   # TODO: dev
   # cdn_js_file_dev <- paste0("./inst/js/", js_file)
-  
-  # TODO: TEMP ONLY - DEBUG
-  if (module == "3d" && module_type == "testing") {
-    cdn_js_folder <<- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@temp/inst/js/"
-  }
-
   
   if (module == "2d") {
     # Create a canvas for the image to be attached to
