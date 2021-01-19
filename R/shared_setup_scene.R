@@ -33,6 +33,11 @@ shared_setup_scene <- function(module, module_type){
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
   # TODO: dev
   # cdn_js_file_dev <- paste0("./inst/js/", js_file)
+  
+  # TODO: TEMP ONLY - DEBUG
+  if (module == "3d" && module_type == "testing") {
+    cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@temp/inst/js/"
+  }
 
   
   if (module == "2d") {
