@@ -26,7 +26,7 @@ shared_setup_scene <- function(module, module_type){
   # NOTE: Import to set META DATA for network requests
   set_metadata(module, module_type)
   
-  cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@antarctica/inst/js/"
+  cdn_js_folder <- "https://cdn.jsdelivr.net/gh/Jon-Peppinck/r2vr-2020@antarctica2/inst/js/"
 
   # TODO: TEMP ONLY - DEBUG
   # if (module == "3d" && module_type == "testing") {
