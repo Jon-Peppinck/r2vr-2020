@@ -1,7 +1,5 @@
 import { store } from '../store/rootStore';
 
-// import { URL } from '@shared/http/url'; // TODO dotenv?
-// const url = 'http://localhost:3000/api';
 const url = 'http://r2vr-antarctica.herokuapp.com/api';
 
 const numberAsWordLookup = {
@@ -34,7 +32,7 @@ const postEvaluation = async () => {
     question: question,
     response: answer,
   };
-  console.log(5, data);
+
   try {
     const response = await fetch(`${url}/3d/evaluation`, {
       method: 'POST',
