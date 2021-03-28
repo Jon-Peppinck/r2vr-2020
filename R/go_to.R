@@ -16,7 +16,6 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   if (!is.na(index) && index > length(image_paths)) {
     stop("Please ensure the index does not exceed the total number of images.")
   }
-  # Prevent image change if last image has showed and no args for index have been passed
   
   # Relative path of current image
   current_image <<- image_paths[[CONTEXT_INDEX]]$img
@@ -28,7 +27,7 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   )
 
   if (CONTEXT_INDEX > length(image_paths)) {
-    CONTEXT_INDEX <- 1
+    CONTEXT_INDEX <<- 1
   }
 
   # Set the next image path and ID
