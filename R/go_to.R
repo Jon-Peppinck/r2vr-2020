@@ -27,6 +27,10 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
                            no = CONTEXT_INDEX + 1
   )
 
+  if (CONTEXT_INDEX > length(image_paths)) {
+    CONTEXT_INDEX <- 1
+  }
+
   # Set the next image path and ID
   next_image <- image_paths[[CONTEXT_INDEX]]$img
   next_image_el_id <- paste0("#img", CONTEXT_INDEX)
