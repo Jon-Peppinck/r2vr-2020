@@ -39,13 +39,9 @@
 #' }
 #'
 #' @export
-set_random_images <- function(image_paths_and_points, number_of_images = 3) {
-  if (number_of_images != as.integer(number_of_images)) {
-    stop("Please enter an integer for the number of images to set")
-  } else if (number_of_images <= 0 || number_of_images > length(image_paths_and_points)) {
-    stop(paste("Please select between 1 and", length(image_paths_and_points), "images to set. You entered", number_of_images, "but there are only", length(image_paths_and_points), "images to select from" ))
-  }
-  selected_image_paths_and_points <- sample(image_paths_and_points, 3, replace=FALSE)
+set_random_images <- function(image_paths_and_points) {
+  number_of_images <- length(image_paths_and_points)
+  selected_image_paths_and_points <- sample(image_paths_and_points, number_of_images, replace=FALSE)
   assign("selected_image_paths_and_points", selected_image_paths_and_points, envir = .GlobalEnv)
   
   # Create image assets for selected images
