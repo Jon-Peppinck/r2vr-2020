@@ -65,53 +65,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
 AFRAME.registerComponent('raycaster-listen', {
   init: function () {
-    this.el.addEventListener('raycaster-intersected', (e: any) => {
-      let { x, y, z } = e.detail.intersection?.point;
-      if ([x, y, z].every((coordinate) => coordinate === 0)) return;
-      intersectedElId = e.currentTarget.id;
-      if (!intersectedElId) return;
-      const matches = intersectedElId.match(/(\d+)/);
-      if (matches) {
-        const id = +matches[0];
-        const isMenuOptionSelected = [
-          `menuCoral${id}`,
-          `menuNotCoral${id}`,
-        ].includes(intersectedElId);
+    return;
+    // this.el.addEventListener('raycaster-intersected', (e: any) => {
+    //   let { x, y, z } = e.detail.intersection.point;
+    //   if ([x, y, z].every((coordinate) => coordinate === 0)) return;
+    //   intersectedElId = e.currentTarget.id;
+    //   if (!intersectedElId) return;
+    //   const matches = intersectedElId.match(/(\d+)/);
+    //   if (matches) {
+    //     const id = +matches[0];
+    //     const isMenuOptionSelected = [
+    //       `menuCoral${id}`,
+    //       `menuNotCoral${id}`,
+    //     ].includes(intersectedElId);
 
-        if (!isMenuOptionSelected) return;
-        displayMenuOptions(id, 'hide');
+    //     if (!isMenuOptionSelected) return;
+    //     displayMenuOptions(id, 'hide');
 
-        let marker: Shared.Marker;
+    //     let marker: Shared.Marker;
 
-        const markerContainer = document.getElementById(
-          `markerContainer${id}`
-        )! as Entity;
-        const x = markerContainer.getAttribute('position').x;
-        const y = markerContainer.getAttribute('position').y;
-        const z = markerContainer.getAttribute('position').z;
+    //     const markerContainer = document.getElementById(
+    //       `markerContainer${id}`
+    //     )! as Entity;
+    //     const x = markerContainer.getAttribute('position').x;
+    //     const y = markerContainer.getAttribute('position').y;
+    //     const z = markerContainer.getAttribute('position').z;
 
-        const foundIndex = getMarkerIndex(id);
+    //     const foundIndex = getMarkerIndex(id);
 
-        const state = store.getState();
-        const { coral, notCoral } = state.colorsReducer;
+    //     const state = store.getState();
+    //     const { coral, notCoral } = state.colorsReducer;
 
-        if (intersectedElId.startsWith('menuCoral')) {
-          setMarkerColor(id, coral);
-          marker = { id, isCoral: 1, x, y, z };
-        } else {
-          setMarkerColor(id, notCoral);
-          marker = { id, isCoral: 0, x, y, z };
-        }
+    //     if (intersectedElId.startsWith('menuCoral')) {
+    //       setMarkerColor(id, coral);
+    //       marker = { id, isCoral: 1, x, y, z };
+    //     } else {
+    //       setMarkerColor(id, notCoral);
+    //       marker = { id, isCoral: 0, x, y, z };
+    //     }
 
-        foundIndex === -1
-          ? boundPostAnnotation(marker)
-          : boundUpdateAnnotation(marker);
-      }
-    });
-    this.el.addEventListener('raycaster-intersected-cleared', () => {
-      if (intersectedElId === '') return;
-      intersectedElId = '';
-    });
+    //     foundIndex === -1
+    //       ? boundPostAnnotation(marker)
+    //       : boundUpdateAnnotation(marker);
+    //   }
+    // });
+    // this.el.addEventListener('raycaster-intersected-cleared', () => {
+    //   if (intersectedElId === '') return;
+    //   intersectedElId = '';
+    // });
   },
 });
 
