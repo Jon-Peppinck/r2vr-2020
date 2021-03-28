@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 AFRAME.registerComponent('raycaster-listen', {
   init: function () {
     this.el.addEventListener('raycaster-intersected', (e: any) => {
-      let { x, y, z } = e.detail.intersection.point;
+      let { x, y, z } = e.detail.intersection?.point;
       if ([x, y, z].every((coordinate) => coordinate === 0)) return;
       intersectedElId = e.currentTarget.id;
       if (!intersectedElId) return;
