@@ -66,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 AFRAME.registerComponent('raycaster-listen', {
   init: function () {
-    console.warn(99, 'return')
     return;
   },
 });
