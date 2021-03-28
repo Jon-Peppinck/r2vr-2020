@@ -132,6 +132,7 @@ shared_setup_scene <- function(module, module_type){
   shared_generate_markers(module, module_type)
   ## Render Scene
   animals <- a_scene(
+    .aframe_version = "1.2.0",
     .children = list_of_children_entities,
     .websocket = TRUE,
     .websocket_host = IPv4_ADDRESS,

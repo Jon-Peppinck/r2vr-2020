@@ -8,7 +8,7 @@ set_user("EXP-H")
 ## OPTIONAL: '?set_marker_and_props' shows configuration options
 # i.e. Number of markers and size of markers, but keep "2d"
 # set_marker_and_props("2d") 
-set_marker_and_props("2d", 10, "small")
+set_marker_and_props("2d", 20, "small")
 
 ## OPTIONAL: '?set_colors'
 set_colors()
@@ -106,9 +106,9 @@ select_random_fixed_points <- function(img_points, number_to_select) {
 
 img_paths_and_points <- list(
   # 2D image paths  4000x3000
-  list(img = img_paths[1], img_points = select_random_fixed_points(img1Points, 10)),
-  list(img = img_paths[2], img_points = select_random_fixed_points(img2Points, 10)),
-  list(img = img_paths[3], img_points = select_random_fixed_points(img3Points, 10))
+  list(img = img_paths[1], img_points = select_random_fixed_points(img1Points, 20)),
+  list(img = img_paths[2], img_points = select_random_fixed_points(img2Points, 20)),
+  list(img = img_paths[3], img_points = select_random_fixed_points(img3Points, 20))
 )
 
 set_random_images(img_paths_and_points) # TODO: allow for img_paths w/o points (training)
