@@ -17,15 +17,6 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
     stop("Please ensure the index does not exceed the total number of images.")
   }
   # Prevent image change if last image has showed and no args for index have been passed
-  if (has_last_image_displayed && is.na(index)) {
-    stop("Please ensure the index is passed when it is the last image.")
-  }
-  # Prevent image change if an index has been passed but the last image has not displayed
-  if (!has_last_image_displayed && !is.na(index)) {
-    stop("Please ensure the index is not passed unless it is the last image and annotation has finished.")
-  }
-  # Reset marker colour to default color (initially white)
-  reset_markers_color()
   
   # Relative path of current image
   current_image <<- image_paths[[CONTEXT_INDEX]]$img
@@ -35,16 +26,7 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
                            yes = index,
                            no = CONTEXT_INDEX + 1
   )
-  # Indicate if the last image has displayed (Allows to go back to an image to check it)
-  if (CONTEXT_INDEX == length(image_paths)) {
-    assign("has_last_image_displayed", TRUE, envir = .GlobalEnv)
-  } else if (exists("has_last_image_displayed")) {
-    if (!exists("go_to_called_after_last_image_displayed_count")) {
-      assign("go_to_called_after_last_image_displayed_count", 1, envir = .GlobalEnv)
-    } else {
-      go_to_called_after_last_image_displayed_count = go_to_called_after_last_image_displayed_count + 1
-    }
-  }
+
   # Set the next image path and ID
   next_image <- image_paths[[CONTEXT_INDEX]]$img
   next_image_el_id <- paste0("#img", CONTEXT_INDEX)
@@ -78,19 +60,5 @@ go_to <- function(index = NA, image_paths = selected_image_paths_and_points) {
   }
   animals$send_messages(setup_scene)
   
-  # NOTE: Experiment requires random fixed points
-  if (!has_last_image_displayed || go_to_called_after_last_image_displayed_count == 1) {
-    fixed_markers()
-  }
-  
-  # if (MODULE_TYPE == "training") {
-  #   # Display fixed markers when go_to() next image is called, unless it is the last image, in which case check will handle displaying the markers
-  #   if (!has_last_image_displayed || go_to_called_after_last_image_displayed_count == 1) {
-  #     fixed_markers()
-  #   }
-  # } else if (MODULE_TYPE == "testing") {
-  #   # randomize the position of the markers
-  #   randomize_markers()
-  # }
   
 }
