@@ -44,7 +44,7 @@ shared_setup_scene <- function(module, module_type){
   for (i in 2:length(img_paths)) {
     # print(img_paths[[i]]$img)
     image_number <- paste0("image", i)
-    list_of_non_first_images[[length(list_of_non_first_images) + 1]] <- image_number
+    list_of_non_first_images[[length(list_of_non_first_images) + 1]] <- noquote(image_number)
   }
   
   if (module == "2d") {
@@ -57,7 +57,7 @@ shared_setup_scene <- function(module, module_type){
         js_cdn
         # cdn_js_file_dev
       ),
-      .assets = noquote(list_of_non_first_images),
+      .assets = list_of_non_first_images,
       id = "canvas",
       src = image1,
       class = image1Path,
@@ -84,7 +84,7 @@ shared_setup_scene <- function(module, module_type){
       class = image1Path,
       src = image1,
       rotation = c(0, 0, 0),
-      .assets = noquote(list_of_non_first_images)
+      .assets = list_of_non_first_images
     )
     # Create a cursor
     cursor <- a_entity(
