@@ -39,6 +39,14 @@ shared_setup_scene <- function(module, module_type){
   # TODO: dev
   # cdn_js_file_dev <- paste0("./inst/js/", js_file)
   
+  list_of_non_first_images <- list()
+  
+  for (i in 2:length(img_paths)) {
+    # print(img_paths[[i]]$img)
+    image_number <- paste0("image", i)
+    list_of_non_first_images[[length(list_of_non_first_images) + 1]] <- image_number
+  }
+  
   if (module == "2d") {
     # Create a canvas for the image to be attached to
     canvas <- a_entity(
@@ -49,7 +57,7 @@ shared_setup_scene <- function(module, module_type){
         js_cdn
         # cdn_js_file_dev
       ),
-      .assets = list(image2, image3),
+      .assets = noquote(list_of_non_first_images),
       id = "canvas",
       src = image1,
       class = image1Path,
@@ -76,10 +84,7 @@ shared_setup_scene <- function(module, module_type){
       class = image1Path,
       src = image1,
       rotation = c(0, 0, 0),
-      .assets = list(
-        image2,
-        image3
-      )
+      .assets = noquote(list_of_non_first_images)
     )
     # Create a cursor
     cursor <- a_entity(
