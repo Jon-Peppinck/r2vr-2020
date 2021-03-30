@@ -33,8 +33,7 @@
 #'   list(img = img_paths[4], img_points = img1Points)
 #' ) 
 #' 
-#' set_random_images(img_paths_and_points)
-#' #' set_random_images(img_paths_and_points, 2)                 
+#' set_random_images(img_paths_and_points)            
 #'                                                    
 #' }
 #'

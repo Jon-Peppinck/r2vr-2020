@@ -197,7 +197,7 @@ AFRAME.registerComponent('r2vr-message-router', {
           );
         } else if (r2vr_message.class == 'update') {
           console.log(555, target, r2vr_message.id, r2vr_message.component);
-          target.setAttribute(
+          target?.setAttribute(
             r2vr_message.component,
             r2vr_message.attributes,
             r2vr_message.replaces_component
