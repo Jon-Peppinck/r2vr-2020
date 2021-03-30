@@ -47,6 +47,8 @@ set_random_images <- function(image_paths_and_points) {
   }
   selected_image_paths_and_points <- sample(image_paths_and_points, number_of_images, replace=FALSE)
   assign("selected_image_paths_and_points", selected_image_paths_and_points, envir = .GlobalEnv)
+
+  list_of_non_first_images <- list()
   
   # Create image assets for selected images
   for (i in 1:length(selected_image_paths_and_points)) {
@@ -62,6 +64,12 @@ set_random_images <- function(image_paths_and_points) {
       src = current_img_path
     )
     
+    # Assign list of images
+    if (i > 1) {
+    list_of_non_first_images[[length(list_of_non_first_images) + 1]] <- current_image
+    assign("list_of_non_first_images", list_of_non_first_images, envir = .GlobalEnv)
+    }
+
     # Assign image<n> variable to its corresponding image asset
     assign(image_number, current_image, envir = .GlobalEnv)
     # Assign image<n>Path variable to its corresponding image path

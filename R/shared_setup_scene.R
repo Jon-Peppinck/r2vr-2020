@@ -38,14 +38,7 @@ shared_setup_scene <- function(module, module_type){
   look_at_cdn <- paste0(cdn_js_folder, "look_at.js")
   # TODO: dev
   # cdn_js_file_dev <- paste0("./inst/js/", js_file)
-  
-  list_of_non_first_images <- list()
-  
-  for (i in 2:length(img_paths)) {
-    # print(img_paths[[i]]$img)
-    image_number <- paste0("image", i)
-    list_of_non_first_images[[length(list_of_non_first_images) + 1]] <- noquote(image_number)
-  }
+
   
   if (module == "2d") {
     # Create a canvas for the image to be attached to
